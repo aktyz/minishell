@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2024/12/30 17:12:47 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/02 15:02:32 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@
 #  define PIPEX_BUFF 50
 # endif
 
+// TODO: wouldn't it be better if this is an array?
 # define PATH_1 "/bin/"
 # define PATH_2 "/usr/bin/"
+# define PATH_3 "/usr/.local/bin"
 
 typedef struct s_executable
 {
@@ -69,7 +71,6 @@ void	ft_get_executable_data(t_executable **executable, char *cmd, char *in_file)
 void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
 void	ft_allocate_execve_arg(t_list **argv, char *cmd, int start_i,
 			int nb_chars);
-void	ft_execute(t_process ***pipex);
 
 char	**ft_lst_to_arr(t_list *argv);
 void	ft_delete_lst_node(t_list *node);

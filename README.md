@@ -1,25 +1,41 @@
 
 # TODO for minishell
 - [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function
-- [ ] create a list of different Linux command calls in chain (test cases)
-- [ ] start working on parsing, the output of the parsing being a simplified procecss structure:
+- [x] create a list of different Linux command calls in chain (test cases)
+- [ ] (Zytka) start working on parsing, the output of the parsing being an array of strings
+- [ ] (Marlenka) start working on a inbetween pipes string parse into a list node with struct:
 ```
-typedef struct s_process
+typedef struct s_exec
 {
-	char	*cmd_with_flags; //I already have functions to split into array
-	int		in_fd;
-	int		out_fd;
-	int		child_pid;
-}	t_process;
+	char	*path;
+	int		execve_argc;
+	char	**execve_argv;
+}	t_exec;
+
+typedef struct s_proc
+{
+	t_exec	*executable; //I already have functions to split into array
+	char	*infile_name;
+	bool	is_in_pipe;
+	char	*outfile_name;
+	bool	is_out_pipe;
+	int		child_pid; (do we need it here??)
+	int		in_pipex[2];
+	int		out_pipex[2];
+}	t_proc;
 ```
+
+so that our program after compile can execute:
+```./minishell "infile1 > grep a1 | wc -l >> outfile"```<br><br><br>
+
 - [ ] move ```ft_get_executable_data()``` into the t_process structure creation, with table as an output keept in structure
 - [ ] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
-- [ ] learn BST and if they would be usefull for keeping my processes
-- [ ] figure out the structure to keep multiple commands
+- [x] figure out the structure to keep multiple commands -> KISS - list
 - [ ] How to make parent process fail gracefully when child is exiting with ERROR(?)
+- [ ] learn BST and if they would be usefull for keeping my processes
 
 # Terminal tests commands
-```./pipex infile1 "blahblah a1" "grep pipex" outfile```<br>
+```./minishell "infile1 > grep a1 | wc -l >> outfile"```<br>
 ```./pipex infile1 "ls -la" "grep pipex"```<br>
 ```./pipex infile0 "grep a1" "wc -l" outfile```<br>
 ```./pipex infile1 "ls -la" "grep pipex" outfile```<br>
