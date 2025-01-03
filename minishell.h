@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/02 15:02:32 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:26:04 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
 # include "libft.h"
 # include <errno.h>  // errno
@@ -25,10 +25,6 @@
 
 # define TRIM_SET " \t\n"
 
-# ifndef PIPEX_BUFF
-#  define PIPEX_BUFF 50
-# endif
-
 // TODO: wouldn't it be better if this is an array?
 # define PATH_1 "/bin/"
 # define PATH_2 "/usr/bin/"
@@ -37,8 +33,7 @@
 typedef struct s_executable
 {
 	char	*path;
-	char	*infile_name;
-	char	*outfile_name;
+	char	*file_name;
 	int		execve_argc;
 	char	**execve_argv;
 }	t_executable;
@@ -46,8 +41,8 @@ typedef struct s_executable
 typedef struct s_process
 {
 	int				pipe_parent[2];
-	int				pipe_send; // bool
-	int				pipe_receive; // bool
+	int				pipe_send;
+	int				pipe_receive;
 	int				file_send;
 	int				file_receive;
 	int				in_file_fd;
@@ -58,19 +53,14 @@ typedef struct s_process
 	t_executable	*executable;
 }	t_process;
 
+void	ft_process(t_process **proc);
 
+void	ft_error(t_process ***proc, char **string);
+void	ft_clean_up(t_process **proc);
 
-void	ft_process(t_process **pipex);
-
-void	ft_error(t_process ***pipex, char **string);
-void	ft_clean_up(t_process **pipex);
-
-void	ft_get_input_from_fd(t_process **pipex, int fd);
-
-void	ft_get_executable_data(t_executable **executable, char *cmd, char *in_file);
+void	ft_get_executable_data(t_executable **executable, char *cmd,
+	char *file_name);
 void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
-void	ft_allocate_execve_arg(t_list **argv, char *cmd, int start_i,
-			int nb_chars);
 
 char	**ft_lst_to_arr(t_list *argv);
 void	ft_delete_lst_node(t_list *node);

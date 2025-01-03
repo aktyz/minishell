@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2024/12/30 17:09:18 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:26:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 int			main(int argc, char *argv[]);
-void		ft_clean_up(t_process **pipex);
-void		ft_error(t_process ***pipex, char **string);
-static void	ft_create_process_data(t_process ***pipex);
+void		ft_clean_up(t_process **proc);
+void		ft_error(t_process ***proc, char **string);
+static void	ft_create_process_data(t_process ***proc);
 char		**ft_trim_user_input(char **argv, int argc);
 
 int	main(int argc, char *argv[])
 {
 	t_process	**process;
 	char		**trimmed_argvs;
-	// list of pipes strucutres missing
 	
 	process = ft_calloc(1, sizeof(t_process *));
 	*process = ft_calloc(sizeof(t_process), 1);
@@ -35,16 +34,8 @@ int	main(int argc, char *argv[])
 		ft_printf("<infile> <cmd1> <cmd2> <outfile>\n");
 		exit(EXIT_FAILURE);
 	}
-	// while loop missing for separate processes depending on arguments passed from terminal
-	/**
-	 * Structure I would need for each process:
-	 * - string storing command with flags
-	 * - something storing the cmd input fd
-	 * - something storing the cmd output fd
-	 */
 	ft_create_process_data(&process);
 	trimmed_argvs = ft_trim_user_input(argv, argc);
-	// function to start moving through the list of processes missing
 	if ((*process)->child_pid == 0)
 	{
 		(*process)->pipe_send = 1;
@@ -62,19 +53,17 @@ int	main(int argc, char *argv[])
 	exit(EXIT_SUCCESS);
 }
 
-void	ft_clean_up(t_process **pipex)
+void	ft_clean_up(t_process **proc)
 {
 	int			i;
 	t_process	*clean;
 
-	clean = *pipex;
+	clean = *proc;
 	if (clean->executable->execve_argv)
 		ft_clear_char_array(&(clean->executable->execve_argv),
 			clean->executable->execve_argc + 1);
-	if (clean->executable->infile_name)
-		free(clean->executable->infile_name);
-	if (clean->executable->outfile_name)
-		free(clean->executable->outfile_name);
+	if (clean->executable->file_name)
+		free(clean->executable->file_name);
 	if (clean->executable->path)
 		free(clean->executable->path);
 	if (clean->executable)
@@ -82,32 +71,32 @@ void	ft_clean_up(t_process **pipex)
 	free(clean);
 }
 
-void	ft_error(t_process ***pipex, char **string)
+void	ft_error(t_process ***proc, char **string)
 {
 	perror(strerror(errno));
-	if (**pipex)
-		ft_clean_up(*pipex);
+	if (**proc)
+		ft_clean_up(*proc);
 	if (string)
 		free(string);
 	exit(EXIT_FAILURE);
 }
 
-static void	ft_create_process_data(t_process ***pipex)
+static void	ft_create_process_data(t_process ***proc)
 {
 	int			c;
 	t_process	*process;
 
-	process = **pipex;
+	process = **proc;
 	(process)->executable = ft_calloc(1, sizeof(t_executable));
 	if (!(process)->executable)
-		ft_error(pipex, NULL);
+		ft_error(proc, NULL);
 	(process)->pipe_receive = 1;
 	c = pipe((process)->pipe_parent);
 	if (c == -1)
-		ft_error(pipex, NULL);
+		ft_error(proc, NULL);
 	(process)->child_pid = (int) fork();
 	if ((process)->child_pid == -1)
-		ft_error(pipex, NULL);
+		ft_error(proc, NULL);
 }
 
 char		**ft_trim_user_input(char **argv, int argc)

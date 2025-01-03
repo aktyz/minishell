@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_arg_split.c                                  :+:      :+:    :+:   */
+/*   execve_args_allocation.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 03:53:28 by zslowian          #+#    #+#             */
-/*   Updated: 2024/12/16 21:37:36 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:12:47 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
-void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
-void	ft_allocate_execve_arg(t_list **argv, char *cmd, int start_i,
+void		ft_allocate_execve_argv(t_executable **exe, char *cmd);
+static void	ft_allocate_execve_arg(t_list **argv, char *cmd, int start_i,
 			int nb_chars);
 
 /**
- * Function is a parser of the second argument of the program. It split this
- * argument by space character and allocates command members in a list
- * in pipex structure
+ * Function takes structure storing necessary parts to call execve()
+ * function and a string containing bash command string with it's arguments.
+ * 
+ * Command string is split and store in exe structure as an array and
+ * number of arguments of this array is stored in argc element of the
+ * structure so that later we can clean the array nicely.
  *
  */
 void	ft_allocate_execve_argv(t_executable **exe, char *cmd)
@@ -57,7 +60,7 @@ void	ft_allocate_execve_argv(t_executable **exe, char *cmd)
  * there.
  *
  */
-void	ft_allocate_execve_arg(t_list **argv, char *cmd, int start_i,
+static void	ft_allocate_execve_arg(t_list **argv, char *cmd, int start_i,
 			int nb_chars)
 {
 	t_list		*new;

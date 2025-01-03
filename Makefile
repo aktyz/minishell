@@ -6,11 +6,11 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2024/12/16 19:18:26 by zslowian         ###   ########.fr        #
+#    Updated: 2025/01/03 18:26:22 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = pipex
+NAME = minishell
 LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I $(LIBFT_F)/headers
@@ -19,12 +19,11 @@ FLAGS = -Wall -Wextra -Werror
 LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 
-SRC = pipex.c \
-	pipex_arg_split.c \
-	pipex_ft_get_execve_data.c \
-	pipex_ft_get_input_data.c \
-	pipex_ft_lst_to_arr.c \
-	pipex_ft_process.c
+SRC = main.c \
+	execve_args_allocation.c \
+	execve_data_allocation.c \
+	ft_process.c \
+	libft_functions.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -42,7 +41,6 @@ $(LIBFT):
 
 fclean: clean
 	@$(RM) $(NAME) $(OBJ)
-	@$(RM) ./understanding_pipex/a.out
 
 clean:
 	@$(RM) $(OBJ)

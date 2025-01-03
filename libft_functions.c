@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_ft_lst_to_arr.c                              :+:      :+:    :+:   */
+/*   libft_functions.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:03:10 by zslowian          #+#    #+#             */
-/*   Updated: 2024/12/16 20:13:26 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/03 18:20:10 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 char	**ft_lst_to_arr(t_list *argv);
 void	ft_delete_lst_node(t_list *node);

@@ -28,17 +28,18 @@ typedef struct s_proc
 so that our program after compile can execute:
 ```./minishell "infile1 > grep a1 | wc -l >> outfile"```<br><br><br>
 
+- [ ] (Zytka) rework/tidy up Libft list functions so that we can move ```libft_functions.c``` there
 - [ ] move ```ft_get_executable_data()``` into the t_process structure creation, with table as an output keept in structure
 - [ ] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
 - [x] figure out the structure to keep multiple commands -> KISS - list
 - [ ] How to make parent process fail gracefully when child is exiting with ERROR(?)
-- [ ] learn BST and if they would be usefull for keeping my processes
+- [ ] learn AST (Abstract Syntax Three) and if they would be usefull for keeping my processes
 
 # Terminal tests commands
-```./minishell "infile1 > grep a1 | wc -l >> outfile"```<br>
-```./pipex infile1 "ls -la" "grep pipex"```<br>
-```./pipex infile0 "grep a1" "wc -l" outfile```<br>
-```./pipex infile1 "ls -la" "grep pipex" outfile```<br>
+```./minishell infile0 "grep a1" "wc -l" outfile```<br>
+```./minishell infile1 "ls -la" "grep minishell" outfile```<br>
+```./minishell infile1 "ls -la" "grep minishell"```<br>
+```./minishell infile1 "not a command" "grep minishell" outfile```<br>
 
 # TODO
 - [x] figure out how to free memory from a string to resolve my cleak even after my program clean-up function (leak des at the bottom of this file)
