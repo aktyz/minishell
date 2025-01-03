@@ -1,17 +1,45 @@
 
-# TODO for bonus/minishell
+# TODO for minishell
 - [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function
+- [x] create a list of different Linux command calls in chain (test cases)
+- [ ] (Zytka) start working on parsing, the output of the parsing being an array of strings
+- [ ] (Marlenka) start working on a inbetween pipes string parse into a list node with struct:
+```
+typedef struct s_exec
+{
+	char	*path;
+	int		execve_argc;
+	char	**execve_argv;
+}	t_exec;
+
+typedef struct s_proc
+{
+	t_exec	*executable; //I already have functions to split into array
+	char	*infile_name;
+	bool	is_in_pipe;
+	char	*outfile_name;
+	bool	is_out_pipe;
+	int		child_pid; (do we need it here??)
+	int		in_pipex[2];
+	int		out_pipex[2];
+}	t_proc;
+```
+
+so that our program after compile can execute:
+```./minishell "infile1 > grep a1 | wc -l >> outfile"```<br><br><br>
+
+- [ ] (Zytka) rework/tidy up Libft list functions so that we can move ```libft_functions.c``` there
 - [ ] move ```ft_get_executable_data()``` into the t_process structure creation, with table as an output keept in structure
-- [ ] move ```pipex``` files into minishell git project
 - [ ] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
-- [ ] learn BST and if they would be usefull for keeping my processes
-- [ ] figure out the structure to keep multiple commands
+- [x] figure out the structure to keep multiple commands -> KISS - list
+- [ ] How to make parent process fail gracefully when child is exiting with ERROR(?)
+- [ ] learn AST (Abstract Syntax Three) and if they would be usefull for keeping my processes
 
 # Terminal tests commands
-```./pipex infile1 "blahblah a1" "grep pipex" outfile```<br>
-```./pipex infile1 "ls -la" "grep pipex"```<br>
-```./pipex infile0 "grep a1" "wc -l" outfile```<br>
-```./pipex infile1 "ls -la" "grep pipex" outfile```<br>
+```./minishell infile0 "grep a1" "wc -l" outfile```<br>
+```./minishell infile1 "ls -la" "grep minishell" outfile```<br>
+```./minishell infile1 "ls -la" "grep minishell"```<br>
+```./minishell infile1 "not a command" "grep minishell" outfile```<br>
 
 # TODO
 - [x] figure out how to free memory from a string to resolve my cleak even after my program clean-up function (leak des at the bottom of this file)
@@ -139,41 +167,7 @@ Upon successful completion, these functions shall open the file and return a non
 ### wait
 ### waitpid
 
-# Leak reports
+# Leak reports/Segmentation fault
 
-## 4th Dec 2024
 ```
-➜  pipex git:(main) ✗ valgrind --leak-check=full --show-leak-kinds=all ./pipex infile "ls -l" "wc -l" outfile
-==184103== Memcheck, a memory error detector
-==184103== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==184103== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==184103== Command: ./pipex infile ls\ -l wc\ -l outfile
-==184103== 
-"infile"
-"ls -l"
-"wc -l"
-"outfile"
-"infile"
-"ls -l"
-"wc -l"
-"outfile"
-==184103== 
-==184103== HEAP SUMMARY:
-==184103==     in use at exit: 56 bytes in 1 blocks
-==184103==   total heap usage: 13 allocs, 12 frees, 32,851 bytes allocated
-==184103== 
-==184103== 56 bytes in 1 blocks are still reachable in loss record 1 of 1
-==184103==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==184103==    by 0x40271D: ft_calloc (ft_calloc.c:36)
-==184103==    by 0x4011BF: main (pipex.c:27)
-==184103== 
-==184103== LEAK SUMMARY:
-==184103==    definitely lost: 0 bytes in 0 blocks
-==184103==    indirectly lost: 0 bytes in 0 blocks
-==184103==      possibly lost: 0 bytes in 0 blocks
-==184103==    still reachable: 56 bytes in 1 blocks
-==184103==         suppressed: 0 bytes in 0 blocks
-==184103== 
-==184103== For lists of detected and suppressed errors, rerun with: -s
-==184103== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
