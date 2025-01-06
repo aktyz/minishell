@@ -6,38 +6,14 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 16:03:10 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/03 18:20:10 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:50:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**ft_lst_to_arr(t_list *argv);
 void	ft_delete_lst_node(t_list *node);
 void	ft_delete_lst(t_list **node, int size);
-
-char	**ft_lst_to_arr(t_list *argv)
-{
-	int		size;
-	char	**arr;
-	char	**tmp;
-
-	size = ft_lstsize(argv) + 1;
-	arr = malloc(sizeof(char *) * size);
-	if (!arr)
-		return (NULL);
-	tmp = arr;
-	while (size > 1)
-	{
-		*tmp = ft_calloc(sizeof(char), ft_strlen(argv->content) + 1);
-		ft_strlcpy(*tmp, argv->content, ft_strlen(argv->content));
-		argv = argv->next;
-		tmp++;
-		size--;
-	}
-	*tmp = NULL;
-	return (arr);
-}
 
 void	ft_delete_lst_node(t_list *node)
 {

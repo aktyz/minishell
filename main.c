@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/03 19:26:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/06 19:23:09 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int	main(int argc, char *argv[])
 	ft_get_executable_data(&(*process)->executable, trimmed_argvs[2], trimmed_argvs[3]);
 	ft_clear_char_array(&trimmed_argvs, argc - 1);
 	ft_process(process);
-	ft_clean_up(process);
-	exit(EXIT_SUCCESS);
 }
 
 void	ft_clean_up(t_process **proc)
