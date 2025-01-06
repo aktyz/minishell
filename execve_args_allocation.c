@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 03:53:28 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/06 19:22:57 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/06 19:35:00 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ static char	**ft_arr_to_argv_array(char **argv);
  * Function takes structure storing necessary parts to call execve()
  * function and a string containing bash command string with it's arguments.
  * 
- * Command string is split and store in exe structure as a list and
- * number of arguments of this list is stored in argc element of the
+ * Command string is split and store in exe structure as a array and
+ * number of arguments of this array is stored in argc element of the
  * structure so that later we can clean the array nicely.
  *
  */
@@ -56,7 +56,7 @@ static char	**ft_arr_to_argv_array(char **argv)
 		size++;
 		tmp++;
 	}
-	i = size + 1; //For null entry in the array
+	i = size + 1;
 	arr = malloc(sizeof(char *) * i);
 	if (!arr)
 		return (NULL);
