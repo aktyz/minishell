@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/03 19:26:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:50:57 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	ft_get_executable_data(t_executable **executable, char *cmd,
 	char *file_name);
 void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
 
-char	**ft_lst_to_arr(t_list *argv);
 void	ft_delete_lst_node(t_list *node);
 void	ft_delete_lst(t_list **node, int size);
 

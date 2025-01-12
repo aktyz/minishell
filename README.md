@@ -2,9 +2,16 @@
 # TODO for minishell
 - [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function
 - [x] create a list of different Linux command calls in chain (test cases)
-- [ ] (Zytka) start working on parsing, the output of the parsing being an array of strings
+- [x] (Zytka) start working on parsing, the output of the parsing being an array of strings - we have a ft_split() in Libft
 - [ ] (Marlenka) start working on a inbetween pipes string parse into a list node with struct:
 ```
+typedef struct s_io_redirect
+{
+	char	*in;
+	char	*out;
+	char	*err;
+}	t_io_redirect;
+
 typedef struct s_exec
 {
 	char	*path;
