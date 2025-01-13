@@ -53,6 +53,34 @@ typedef struct s_process
 	t_executable	*executable;
 }	t_process;
 
+typedef struct s_node_for_token
+{
+	char	*str;
+	int		type;
+	struct	s_node_for_token	*prev;
+	struct	s_node_for_token	*next;
+}	t_token;
+
+enum	token_types
+{
+	SPACES = 1,
+	WORD,
+	VAR,
+	PIPE,
+	INPUT,
+	TRUNC,
+	HEREDOC,
+	APPEND,
+	END
+};
+
+enum	quotes_status
+{
+	DEFAULT,
+	SQUOTE,
+	DQUOTE
+}
+
 void	ft_process(t_process **proc);
 
 void	ft_error(t_process ***proc, char **string);
