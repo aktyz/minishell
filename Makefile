@@ -22,6 +22,7 @@ RM = rm -f
 SRC = main.c \
 	execve_args_allocation.c \
 	execve_data_allocation.c \
+	utils_for_tokens.c \
 	ft_process.c \
 	libft_functions.c
 
@@ -31,7 +32,7 @@ OBJ = $(SRC:.c=.o)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -g -pthread
 
 $(NAME): $(OBJ) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)  -l readline
 
 all: $(LIBFT) $(NAME)
 

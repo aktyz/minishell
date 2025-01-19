@@ -12,17 +12,52 @@
 
 #include "minishell.h"
 
-int			main(int argc, char *argv[]);
+// int			main(int argc, char *argv[]);
 void		ft_clean_up(t_process **proc);
 void		ft_error(t_process ***proc, char **string);
 static void	ft_create_process_data(t_process ***proc);
 char		**ft_trim_user_input(char **argv, int argc);
 
+
+void print_tokens(t_token *list)
+{
+	t_token *temp;
+	
+	temp = list;
+	while (temp) 		
+	{
+		printf("%s \n", temp->str);
+		temp = temp->next;
+	}
+}
+
+void	minishell_interactive(t_global *global)
+{
+	while (1)
+	{
+		// set signals for interactive
+		global->user_input = readline(PROMPT);
+		tokenization(global);
+		print_tokens(global->token);
+		// set signals for noniteractive
+	}
+}
+
+
+int		main(int ac, char **av, char **env)
+{
+	t_global	global; // NOTE originally data
+
+	minishell_interactive(&global);
+	return (0);
+}
+
+/*
 int	main(int argc, char *argv[])
 {
 	t_process	**process;
 	char		**trimmed_argvs;
-	
+
 	process = ft_calloc(1, sizeof(t_process *));
 	*process = ft_calloc(sizeof(t_process), 1);
 	if (!(*process))
@@ -50,6 +85,7 @@ int	main(int argc, char *argv[])
 	ft_clear_char_array(&trimmed_argvs, argc - 1);
 	ft_process(process);
 }
+*/
 
 void	ft_clean_up(t_process **proc)
 {
@@ -97,7 +133,7 @@ static void	ft_create_process_data(t_process ***proc)
 		ft_error(proc, NULL);
 }
 
-char		**ft_trim_user_input(char **argv, int argc)
+char	**ft_trim_user_input(char **argv, int argc)
 {
 	int		i;
 	int		j;
