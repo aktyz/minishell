@@ -26,8 +26,9 @@ void	add_node(t_token **list, t_token *new_node)
 	}
 	if (list && *list && new_node)
 	{
-		while (start->next != NULL)
+		while (start->next != NULL) {
 			start = start->next;
+		}
 		start->next = new_node;
 		new_node->prev = start;
 	}
@@ -159,7 +160,7 @@ int	tokenization(t_global *global)
 	i = -1;
 	start = 0;
 	status = DEFAULT;
-	while (++i < strlen(str)) //ft_strlen!!!
+	while (++i <= ft_strlen(str))
 	{
 		status = set_status(status, str, i);
 		if (status == DEFAULT)

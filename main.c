@@ -37,6 +37,7 @@ void	minishell_interactive(t_global *global)
 	{
 		// set signals for interactive
 		global->user_input = readline(PROMPT);
+		global->token = NULL;
 		tokenization(global);
 		print_tokens(global->token);
 		// set signals for noniteractive
@@ -47,7 +48,6 @@ void	minishell_interactive(t_global *global)
 int		main(int ac, char **av, char **env)
 {
 	t_global	global; // NOTE originally data
-
 	minishell_interactive(&global);
 	return (0);
 }

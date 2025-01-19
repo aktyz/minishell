@@ -28,7 +28,7 @@ void	add_node(t_token **list, t_token *new_node)
 	}
 	if (list && *list && new_node)
 	{
-		while (start != NULL && start->next != NULL)
+		while (start != NULL)
 			start = start->next;
 		start->next = new_node;
 		new_node->prev = start;
