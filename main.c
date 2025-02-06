@@ -12,15 +12,24 @@
 
 #include "minishell.h"
 
-// int			main(int argc, char *argv[]);
 void		ft_clean_up(t_process **proc);
 void		ft_error(t_process ***proc, char **string);
 static void	ft_create_process_data(t_process ***proc);
 char		**ft_trim_user_input(char **argv, int argc);
 
+void		print_tokens(t_token *list);
+void		minishell_interactive(t_global *global);
+
+int	main(int ac, char **av, char **env)
+{
+	t_global	global; // NOTE originally data
+	minishell_interactive(&global);
+	return (0);
+}
+
 void	print_tokens(t_token *list)
 {
-	t_token *temp;
+	t_token	*temp;
 
 	temp = list;
 	while (temp)
@@ -42,48 +51,6 @@ void	minishell_interactive(t_global *global)
 		// set signals for noniteractive
 	}
 }
-
-int	main(int ac, char **av, char **env)
-{
-	t_global	global; // NOTE originally data
-	minishell_interactive(&global);
-	return (0);
-}
-
-/*
-int	main(int argc, char *argv[])
-{
-	t_process	**process;
-	char		**trimmed_argvs;
-
-	process = ft_calloc(1, sizeof(t_process *));
-	*process = ft_calloc(sizeof(t_process), 1);
-	if (!(*process))
-		ft_error(&process, NULL);
-	if (argc != 5)
-	{
-		ft_printf("Invalid number of arguments given!\n");
-		ft_printf("Please try again providing four arguments:\n");
-		ft_printf("<infile> <cmd1> <cmd2> <outfile>\n");
-		exit(EXIT_FAILURE);
-	}
-	ft_create_process_data(&process);
-	trimmed_argvs = ft_trim_user_input(argv, argc);
-	if ((*process)->child_pid == 0)
-	{
-		(*process)->pipe_send = 1;
-		(*process)->pipe_receive = 0;
-		ft_get_executable_data(&(*process)->executable, trimmed_argvs[1], trimmed_argvs[0]);
-		ft_clear_char_array(&trimmed_argvs, argc - 1);
-		ft_process(process);
-	}
-	else
-		waitpid((*process)->child_pid, NULL, 0);
-	ft_get_executable_data(&(*process)->executable, trimmed_argvs[2], trimmed_argvs[3]);
-	ft_clear_char_array(&trimmed_argvs, argc - 1);
-	ft_process(process);
-}
-*/
 
 void	ft_clean_up(t_process **proc)
 {
@@ -148,3 +115,4 @@ char	**ft_trim_user_input(char **argv, int argc)
 	}
 	return (result);
 }
+
