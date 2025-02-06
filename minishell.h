@@ -36,7 +36,6 @@
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
-
 typedef struct s_executable
 {
 	char	*path;
@@ -68,7 +67,7 @@ typedef struct s_node_for_token
 	struct s_node_for_token	*next;
 }	t_token;
 
-typedef struct s_global 
+typedef struct s_global
 {
 	bool		interactive;
 	t_token		*token;
@@ -107,9 +106,8 @@ void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
 
 //lexer
 
-int	tokenization(t_global *global);
+int		tokenization(t_global *global);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
-
 
 #endif

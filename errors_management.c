@@ -1,66 +1,66 @@
 #include "minishell.h"
 
-void    if_variable(t_token **node)
+void	if_variable(t_token **node)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while ((*node->str[i])) //checks string in one node 
-    {
-        if (*node->str[i] == '$')
-        {
-            if(*node->prev && *node->prev->type == HEREDOC) //if '<' in the previous node
-                break;
-            *node->type = VAR; //if not '<' in the previous node, than change the type for '$' for VAR
-            return;
-        }
-        i++;
-    }
+	i = 0;
+	while ((*node->str[i])) //checks string in one node
+	{
+		if (*node->str[i] == '$')
+		{
+			if (*node->prev && *node->prev->type == HEREDOC) //if '<' in the previous nod
+				break;
+			*node->type = VAR; //if not '<' in the previous node, than change the type for '$' for VAR
+			return;
+		}
+		i++;
+	}
 }
 
-static bool    forbidden_consecutives(t_token *token_node)
+static bool	forbidden_consecutives(t_token *token_node)
 {
-    if (token_node->prev)
-    {
-        if (token_node->type == PIPE && token_node->prev->type == PIPE)
-            return (TRUE);
-        if (token_node->type > PIPE && token_node->prev->type > PIPE)
-            return (TRUE);
-        if (token_node->type == END && token_node->prev->type >= PIPE)
-            return (TRUE);
-    }
-    return (FALSE);
+	if (token_node->prev)
+	{
+		if (token_node->type == PIPE && token_node->prev->type == PIPE)
+			return (TRUE);
+		if (token_node->type > PIPE && token_node->prev->type > PIPE)
+			return (TRUE);
+		if (token_node->type == END && token_node->prev->type >= PIPE)
+			return (TRUE);
+	}
+	return (FALSE);
 }
 
-int     check_var(t_token **token_lst)
+int	check_var(t_token **token_lst)
 {
-    t_token *tmp;
-
-    tmp = *token_lst;
-    if (tmp->type == PIPE) //the first node cannot be PIPE
-    {
-        write(2, "syntax error\n", 13);
-        return (FAILUER);
-    }
-    while (tmp) //now we check the list of tokens
-    {
-        if_variable(&tmp);
-        if (forbidden_consecutives(&tmp))
-        {
-            write(2, "syntax error\n", 13);
-            return (FAILURE);
-        }
-            
-        tmp = tmp->next;
-    }
-    return (SUCCESS);
+	t_token	*tmp;
+	
+	tmp = *token_lst;
+	if (tmp->type == PIPE) //the first node cannot be PIPE
+	{
+		write(2, "syntax error\n", 13);
+		return (FAILUER);
+	}
+	while (tmp) //now we check the list of tokens
+	{
+		if_variable(&tmp);
+		if (forbidden_consecutives(&tmp))
+		{
+			write(2, "syntax error\n", 13);
+			return (FAILURE);
+		}
+		tmp = tmp->next;
+	}
+	return (SUCCESS);
 }
+
 static bool	input_is_space(char *input) //for checking if the input is only space
 {
-    int	i;
-    
-    i = 0;
-    while (input[i])
+	int	i;
+	
+	i = 0;
+	while (input[i])
 	{
 		if (!ft_isspace(input[i]))
 			return (false);
