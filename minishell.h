@@ -23,12 +23,18 @@
 # include <sys/stat.h> // open()
 # include <sys/wait.h> //
 
+# include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
 # define TRIM_SET " \t\n"
 
 // TODO: wouldn't it be better if this is an array?
 # define PATH_1 "/bin/"
 # define PATH_2 "/usr/bin/"
 # define PATH_3 "/usr/.local/bin"
+
+# define PROMPT "\e[0;35mminishell$ \e[0m"
 
 typedef struct s_executable
 {
@@ -53,16 +59,55 @@ typedef struct s_process
 	t_executable	*executable;
 }	t_process;
 
+typedef struct s_node_for_token
+{
+	char					*str;
+	int						type;
+	struct s_node_for_token	*prev;
+	struct s_node_for_token	*next;
+}	t_token;
+
+typedef struct s_global
+{
+	bool		interactive;
+	t_token		*token;
+	char		*user_input;
+	char		**env;
+}	t_global;
+
+enum	e_token_types
+{
+	SPACES = 1,
+	WORD,
+	VAR,
+	PIPE,
+	INPUT,
+	TRUNC,
+	HEREDOC,
+	APPEND,
+	END
+};
+
+enum	e_quotes_status
+{
+	DEFAULT,
+	SQUOTE,
+	DQUOTE
+};
+
 void	ft_process(t_process **proc);
 
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
 
 void	ft_get_executable_data(t_executable **executable, char *cmd,
-	char *file_name);
+			char *file_name);
 void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
 
-void	ft_delete_lst_node(t_list *node);
-void	ft_delete_lst(t_list **node, int size);
+//lexer
+
+int		tokenization(t_global *global);
+// void	ft_delete_lst_node(t_list *node);
+// void	ft_delete_lst(t_list **node, int size);
 
 #endif
