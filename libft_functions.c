@@ -11,27 +11,3 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_delete_lst_node(t_list *node);
-void	ft_delete_lst(t_list **node, int size);
-
-void	ft_delete_lst_node(t_list *node)
-{
-	if (node->content)
-		free(node->content);
-	if (node)
-		free(node);
-}
-
-void	ft_delete_lst(t_list **node, int size)
-{
-	t_list		*lst;
-
-	while (size > 0)
-	{
-		lst = (*node)->next;
-		ft_delete_lst_node(*node);
-		*node = lst;
-		size--;
-	}
-}
