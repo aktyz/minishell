@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/06 19:23:09 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/26 22:22:02 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	minishell_interactive(t_global *global)
 		/*
 		print_tokens(global->token);
 		*/
+		ft_process(global);
 	}
 }
 

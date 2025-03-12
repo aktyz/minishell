@@ -17,89 +17,68 @@ make
 
 
 
-# TODO for minishell
-- [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function
-- [x] create a list of different Linux command calls in chain (test cases)
-- [x] (Zytka) start working on parsing, the output of the parsing being an array of strings - we have a ft_split() in Libft
-- [ ] (Marlenka) start working on a inbetween pipes string parse into a list node with struct:
+# Main program informations
+
+## Structures used in the program
+
+Structure to keep commands in <what kind of data structure are we using> structure:
 ```
-typedef struct s_io_redirect
+typedef struct s_command
 {
-	char	*in;
-	char	*out;
-	char	*err;
-}	t_io_redirect;
+	char				*command;
+	char				*path;
+	char				**args;
+	bool				pipe_output;
+	int					*pipe_fd;
+	t_io_fds			*io_fds;
+	struct s_command	*next;
+	struct s_command	*prev;
+}	t_command;
+```
+The idea is that the execution part will iterate through those in order to provide final output.
 
-typedef struct s_exec
+Structure to keep global state of the program:
+```
+typedef struct s_data
 {
-	char	*path;
-	int		execve_argc;
-	char	**execve_argv;
-}	t_exec;
-
-typedef struct s_proc
-{
-	t_exec	*executable; //I already have functions to split into array
-	char	*infile_name;
-	bool	is_in_pipe;
-	char	*outfile_name;
-	bool	is_out_pipe;
-	int		child_pid; (do we need it here??)
-	int		in_pipex[2];
-	int		out_pipex[2];
-}	t_proc;
+	bool		interactive;
+	t_token		*token;
+	char		*user_input;
+	char		**env;
+	char		*working_dir;
+	char		*old_working_dir;
+	t_command	*cmd;
+	pid_t		pid;
+}	t_data;
 ```
 
-so that our program after compile can execute:
-```./minishell "infile1 > grep a1 | wc -l >> outfile"```<br><br><br>
+## Code organization
+[TODO]
 
+
+## TODO for minishell (aka. our Backlog)
+- [ ] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part
 - [ ] (Zytka) rework/tidy up Libft list functions so that we can move ```libft_functions.c``` there
 - [ ] move ```ft_get_executable_data()``` into the t_process structure creation, with table as an output keept in structure
 - [ ] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
-- [x] figure out the structure to keep multiple commands -> KISS - list
 - [ ] How to make parent process fail gracefully when child is exiting with ERROR(?)
 - [ ] learn AST (Abstract Syntax Three) and if they would be usefull for keeping my processes
+- [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function
+- [x] create a list of different Linux command calls in chain (test cases)
+- [x] (Zytka) start working on parsing, the output of the parsing being an array of strings - we have a ft_split() in Libft
+- [x] figure out the structure to keep multiple commands -> KISS - list
+- [x] (Marlenka) start working on a inbetween pipes string parse into a list node with struct so that our program after compile can execute:<br>
+```./minishell "./test_files/infile1 > grep a1 | wc -l >> ./test_files/outfile"```
+## Test cases
+```./test_files/infile0 "grep a1" "wc -l" ./test_files/outfile```<br>
+```./test_files/infile1 "ls -la" "grep minishell" ./test_files/outfile```<br>
+```./test_files/infile1 "ls -la" "grep minishell"```<br>
+```./test_files/infile1 "not a command" "grep minishell" ./test_files/outfile```<br>
 
-# Terminal tests commands
-```./minishell infile0 "grep a1" "wc -l" outfile```<br>
-```./minishell infile1 "ls -la" "grep minishell" outfile```<br>
-```./minishell infile1 "ls -la" "grep minishell"```<br>
-```./minishell infile1 "not a command" "grep minishell" outfile```<br>
+# BASH Notes (Minishell concept notes for allowed functions)
 
-# TODO
-- [x] figure out how to free memory from a string to resolve my cleak even after my program clean-up function (leak des at the bottom of this file)
-- [x] norminette on main program structure
-- [x] how to handle the save of the data passed from child to parent - it will have unknown size... and structure depending on the commands called
-- [x] check if ```input``` variable prints correctly in ```ft_child_process()``` line 43
-- [x] figure out how to trigger excve process in child and then push the output into the pipe
-- [x] find the bug overriding the name of the input in void	ft_child_process(t_pipex **pipex)
-- [x] adapt your functions to the parent process
-- [x] how to make execve() function aware of the input data?
-	ie. handle properly: ```./pipex infile "grep a1" ls outfile``` output should be the <i>same</i> as ```< infile grep a1```
-- [x] Difficult norm
-- [x] Valgrind on proper exit
-- [x] Valgrind on Error
-- [x] //TODO: check if it still works without the else clause in ```pipex.c``` -> yes it works
-- [x] //TODO: check if it still works with this out? in ```pipex_parent.c``` -> yest it works
-
-# Libft TODO
-- [x] OOO: create a more comprehensive trim function: ```ft_trim("ls   -l")``` resulted in ```"ls   -l"``` instead of ```"ls -l"```
-- [x] fix properly and test ft_strjoin in libft so that you can use it
-- [x] gnl to test and fix - instead of "My first line read?" it reads "rst line read?r" skipping the first BUFFER size of the input
-
-# BASH Notes
+## Usefull resources
 <i>[Whitespace functions as a separator between commands and/or variables. Whitespace consists of either spaces, tabs, blank lines, or any combination thereof.](https://tldp.org/LDP/abs/html/special-chars.html#WHITESPACEREF)</i>
-
-# Bonus/Minishell concept notes
-## Pipes between processes
-In my basic pipex, parent process opened a pipe from which it later read. I will follow this read-write direction in bonus/minishell:
-- pipe_parent[2] will contain fds from which:
-	- parent process will read
-	- child process will write
-- pipe_child[2] will contain fds from which:
-	- child process will read
-	- parent process will write
-Pipe_child still needs some rethinking once we figure out the structure to hold our processes in the right execution order.
 
 ## <unistd.h> Library
 
@@ -206,7 +185,7 @@ data -> global
 
 
 * implement and understand missing functions used in parse_user_input
-    [x] check_if_var -> check_var 
+    [x] check_if_var -> check_var
         [x] TESTS
     [x] var_expander
         [x] TESTS
