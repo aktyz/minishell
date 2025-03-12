@@ -1,0 +1,18 @@
+# todo.txt
+
+* implement and understand missing functions used in parse_user_input
+    [ ] check_if_var
+    [ ] var_expander
+    [ ] handle quotes
+    [ ] create_commands (skeleton)
+
+* implement functions used by create_commands
+    [ ] lst_add_back_cmd
+    [ ] parse_word
+    [ ] parse_input
+    [ ] parse_trunc
+    [ ] parse_heredoc
+    [ ] parse_append
+    [ ] parse_pipe
+
+    [ ] prep_no_arg_commands

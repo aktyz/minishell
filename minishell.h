@@ -95,6 +95,31 @@ enum	e_quotes_status
 	DQUOTE
 };
 
+typedef struct s_io_fds
+{
+	char	*infile;
+	char	*outfile;
+	char	*heredoc_delimiter;
+	bool	heredoc_quotes;
+	int	fd_in;
+	int	fd_out;
+	int	stdin_backup;
+	int	stdout_backup;
+}	t_io_fds;
+
+typedef struct s_command
+{
+	char	*command;
+	char	*path;
+	char	**args;
+	bool	pipe_output;
+	int		*pipe_fd;
+	t_io_fds	*io_fds;
+	struct	s_command	*next;
+	struct	s_command	*prev;
+}	t_command;
+
+
 void	ft_process(t_process **proc);
 
 void	ft_error(t_process ***proc, char **string);
