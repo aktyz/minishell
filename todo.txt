@@ -1,10 +1,19 @@
+# renames
+
+data -> global
+
 # todo.txt
 
+
 * implement and understand missing functions used in parse_user_input
-    [ ] check_if_var
-    [ ] var_expander
+    [x] check_if_var -> check_var 
+        [x] TESTS
+    [x] var_expander
+        [ ] TESTS
     [ ] handle quotes
+        [ ] TESTS
     [ ] create_commands (skeleton)
+
 
 * implement functions used by create_commands
     [ ] lst_add_back_cmd

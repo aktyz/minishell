@@ -8,7 +8,9 @@ t_token	*new_node(char *str, int type, int status)
 	if (!new_node)
 		return (NULL);
 	new_node->str = str;
+	new_node->var_exists = false;
 	new_node->type = type;
+	new_node->status = status;
 	new_node->prev = NULL;
 	new_node->next = NULL;
 	return (new_node);
@@ -94,9 +96,10 @@ int	add_word(t_token **token, char *str, int index, int start)
 	return (0);
 }
 
+
 int	which_separator(char *str, int i)
 {
-	if ((str[i] > 8 && str[i] < 14 || str[i] == 32))
+	if ((str[i] > 8 && str[i] < 14) || str[i] == 32)
 		return (SPACES);
 	else if (str[i] == '|')
 		return (PIPE);
@@ -117,7 +120,6 @@ int	which_separator(char *str, int i)
 int	add_word_or_sep(int *i, char *str, int start, t_global *global)
 {
 	int	type;
-
 	type = which_separator(str, (*i));
 	if (type)
 	{
@@ -168,9 +170,9 @@ int	tokenization(t_global *global)
 	if (status != DEFAULT)
 	{
 		if (status == DQUOTE)
-			printf("Close \"");
+			printf("Close \"\n");
 		else if (status == SQUOTE)
-			printf("Close \'");
+			printf("Close \'\n");
 		return (1);
 	}
 	return (0);
