@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 13:16:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/12 13:49:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:53:41 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	one_command(t_command **command)
 	t_command	*cmd;
 	char		**i;
 
-	cmd = ft_calloc(1, sizeof(t_command));
+	cmd = *command;
 	cmd->command = "ls";
 	cmd->path = ft_strjoin(PATH_1, "ls");
 	if (access(cmd->path, X_OK) == -1)
@@ -32,5 +32,4 @@ void	one_command(t_command **command)
 	*i = "-la";
 	i++;
 	*i = NULL;
-	command = &cmd;
 }

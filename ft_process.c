@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/12 13:45:12 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:52:21 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@
  */
 void	ft_process(t_global *global)
 {
-	t_command	*command;
-
 	global->cmd = ft_calloc(1, sizeof(t_command *));
-	command = global->cmd;
-	one_command(&command);
+	one_command(&(global->cmd));
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
 	{
@@ -63,6 +60,6 @@ void	ft_process(t_global *global)
 	}
 	else
 		ft_error(&proc, NULL);*/
-	execve(command->path, command->args, NULL);
+	execve(global->cmd->path, global->cmd->args, NULL);
 	//ft_error(&proc, NULL);
 }
