@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/18 15:52:21 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:05:13 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@
  */
 void	ft_process(t_global *global)
 {
-	global->cmd = ft_calloc(1, sizeof(t_command *));
-	one_command(&(global->cmd));
+	global->cmd = ft_calloc(1, sizeof(t_command *)); // 
+	//- strucutres will be populated from parser
+	one_command(&(global->cmd)); // [test execution of "ls -la"] TODO: remove when merging with Marlena's work
+	
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
 	{

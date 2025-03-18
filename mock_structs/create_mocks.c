@@ -6,12 +6,16 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 13:16:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/18 15:53:41 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:03:11 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/**
+ * This function is considered a test function,
+ * mocking an execution of "ls -la" bash command
+ *
+ */
 void	one_command(t_command **command)
 {
 	t_command	*cmd;
