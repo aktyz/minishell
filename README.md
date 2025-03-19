@@ -57,11 +57,10 @@ typedef struct s_data
 
 
 ## TODO for minishell (aka. our Backlog)
-- [ ] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part
+- [x] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part
 	- [x] program executes a single command with one argument
-	- [ ] program executes two commands separated by a pipe
+	- [x] program executes single command with variable inside `$VAR`
 - [ ] (Zytka) rework/tidy up Libft list functions so that we can move ```libft_functions.c``` there
-- [ ] move ```ft_get_executable_data()``` into the t_process structure creation, with table as an output keept in structure
 - [ ] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
 - [ ] How to make parent process fail gracefully when child is exiting with ERROR(?)
 - [ ] learn AST (Abstract Syntax Three) and if they would be usefull for keeping my processes

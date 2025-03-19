@@ -6,39 +6,40 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 03:53:28 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/06 19:35:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:15:15 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_allocate_execve_argv(t_executable **exe, char *cmd);
+void	ft_allocate_execve_argv(t_command **cmd, char *str);
 static char	**ft_arr_to_argv_array(char **argv);
 
 /**
  * Function takes structure storing necessary parts to call execve()
  * function and a string containing bash command string with it's arguments.
  * 
- * Command string is split and store in exe structure as a array and
+ * Command string is split and store in cmd structure as a array and
  * number of arguments of this array is stored in argc element of the
  * structure so that later we can clean the array nicely.
  *
  */
-void	ft_allocate_execve_argv(t_executable **exe, char *cmd)
+void	ft_allocate_execve_argv(t_command **cmd, char *str)
 {
 	int			len;
 	char		**args;
 	char		**tmp;
 
-	(*exe)->execve_argc = 0;
-	args = ft_split((const char *) cmd, ' ');
-	(*exe)->execve_argv = ft_arr_to_argv_array(args);
-	tmp = (*exe)->execve_argv;
+	(*cmd)->args_size = 0;
+	args = ft_split((const char *) str, ' ');
+	(*cmd)->args = ft_arr_to_argv_array(args);
+	tmp = (*cmd)->args;
 	while (*tmp)
 	{
-		((*exe)->execve_argc)++;
+		((*cmd)->args_size)++;
 		tmp++;
 	}
+	(*cmd)->command = (*cmd)->args[0];
 }
 
 static char	**ft_arr_to_argv_array(char **argv)

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/26 22:30:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/26 22:42:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_command
 {
 	char				*command;
 	char				*path;
+	int					args_size;
 	char				**args;
 	bool				pipe_output;
 	int					*pipe_fd;
@@ -138,14 +139,14 @@ typedef struct s_command
 }	t_command;
 
 void	ft_process(t_global *global);
-void	one_command(t_command **command);
+void	test_single_cmd(t_command **command);
 
-void	ft_error(t_process ***proc, char **string);
-void	ft_clean_up(t_process **proc);
+void	ft_error(t_global ***proc, char **string);
+void	ft_clean_up(t_global **proc);
 
-void	ft_get_executable_data(t_executable **executable, char *cmd,
+void	ft_get_path_and_args(t_command **exe, char *cmd,
 			char *file_name);
-void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
+void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
 //initialization
 

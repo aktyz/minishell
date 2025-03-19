@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/03/26 22:25:59 by zslowian         ###   ########.fr        #
+#    Updated: 2025/03/26 22:40:35 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,5 +59,7 @@ re: fclean all
 
 debug: $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -g -pthread -l readline
+
+rebug: fclean debug clean
 
 .PHONY: all clean fclean libft re

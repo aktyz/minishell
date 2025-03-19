@@ -6,11 +6,14 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/18 16:05:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:10:53 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_clean_command(t_command *cmd);
+void		ft_process(t_global *global);
 
 /**
  * Function that will eventually call our executable.
@@ -22,9 +25,10 @@
  */
 void	ft_process(t_global *global)
 {
-	global->cmd = ft_calloc(1, sizeof(t_command *)); // 
-	//- strucutres will be populated from parser
-	one_command(&(global->cmd)); // [test execution of "ls -la"] TODO: remove when merging with Marlena's work
+	pid_t	child_proc;
+
+	global->cmd = ft_calloc(1, sizeof(t_command)); // TODO: remove when merging with Marlena's work
+	test_single_cmd(&(global->cmd)); // populates cmd list with single command test cases
 	
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
@@ -62,6 +66,32 @@ void	ft_process(t_global *global)
 	}
 	else
 		ft_error(&proc, NULL);*/
-	execve(global->cmd->path, global->cmd->args, NULL);
-	//ft_error(&proc, NULL);
+	while (global->cmd)
+	{
+		child_proc = fork();
+		if (child_proc == -1)
+			ft_printf("Forking failed\n");
+		if(!child_proc)
+			execve(global->cmd->path, global->cmd->args, NULL);
+		if(global->cmd->next)
+		{
+			global->cmd = global->cmd->next;
+			if (global->cmd->prev)
+				ft_clean_command(global->cmd->prev);
+		}
+		else
+		{
+			ft_clean_command(global->cmd);
+			break;
+		}
+		waitpid(child_proc, NULL, 0);
+	}
+}
+
+static void	ft_clean_command(t_command *cmd)
+{
+	ft_clear_char_array(&cmd->args, cmd->args_size);
+	if (cmd)
+		free(cmd);
+	cmd = NULL;
 }
