@@ -9,6 +9,9 @@ bool	is_var_compliant(char c)
 		return (true);
 }
 
+/* returns number of characters in the first encountered variable that starts with $ 
+
+*/
 int	var_length(char *str)
 {
 	int		i;
@@ -126,6 +129,8 @@ static char	*erase_and_replace(t_token **token_node, char *str,
 
 int	replace_var(t_token **token_node, char *var_value, int index)
 {
+	// TODO do we need erase_var function?
+	// We could use erase_and_replace with empty string ""
 	if (var_value == NULL)
 	{
 		if (erase_var(token_node, (*token_node)->str, index) == 1)
@@ -286,12 +291,7 @@ static bool	is_next_char_a_sep(char c)
 static bool	var_between_quotes(char *str, int i)
 {
 	if (i > 0)
-	{
-		if (str[i - 1] == '\"' && str[i + 1] == '\"')
-			return (true);
-		else
-			return (false);
-	}
+		return (str[i - 1] == '\"' && str[i + 1] == '\"');
 	return (false);
 }
 
@@ -313,8 +313,8 @@ int	var_expander(t_global *global, t_token **token_lst)
 			{
 				update_status(&temp, temp->str[i]);
 				if (temp->str[i] == '$'
-					&& is_next_char_a_sep(temp->str[i + 1]) == false
-					&& var_between_quotes(temp->str, i) == false
+					&& !is_next_char_a_sep(temp->str[i + 1])
+					&& !var_between_quotes(temp->str, i)
 					&& (temp->status == DEFAULT || temp->status == DQUOTE))
 					replace_var(&temp,
 						recover_val(temp, temp->str + i, global), i);

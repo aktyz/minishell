@@ -25,6 +25,7 @@ SRC = main.c \
 	utils_for_tokens.c \
 	errors_management.c \
 	var_expander.c \
+	quotes.c \
 	ft_process.c \
 	libft_functions.c \
 	initialization.c \

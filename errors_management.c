@@ -88,7 +88,7 @@ void	errmsg(char *errmsg, char *detail, int quotes)
 }
 
 
-static void	if_variable(t_token **node)
+static void	set_variable(t_token **node)
 {
 	int	i;
 
@@ -157,7 +157,7 @@ int	check_var(t_token **token_lst)
 	}
 	while (tmp) //now we check the list of tokens
 	{
-		if_variable(&tmp);
+		set_variable(&tmp);
 		if (check_consecutives(&tmp))
 		{
 			write(2, "syntax error\n", 13);
@@ -213,7 +213,7 @@ bool	parse_user_input(t_global *global)
 	if (check_var(&global->token) != 0)
 		return (false);
 	var_expander(global, &global->token);
-	// handle_quotes(global);
+	handle_quotes(global);
 	// create_commands(global, global->token);
 	return (true);
 }

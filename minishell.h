@@ -68,6 +68,7 @@ typedef struct s_node_for_token
 	bool var_exists;
 	int						type;
 	int status;
+	bool			join;
 	struct s_node_for_token	*prev;
 	struct s_node_for_token	*next;
 }	t_token;
@@ -157,18 +158,21 @@ bool	parse_user_input(t_global *global);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
 
-
 int	check_var(t_token **token_lst);
+
 
 // errors
 int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
 
 
-
-
-// var_expander
+// env variables
 
 int	var_expander(t_global *global, t_token **token_lst);
+
+
+// quotes
+
+int handle_quotes(t_global *global);
 
 // debug
 

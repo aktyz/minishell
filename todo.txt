@@ -9,7 +9,8 @@ data -> global
     [x] check_if_var -> check_var 
         [x] TESTS
     [x] var_expander
-        [ ] TESTS
+        [x] TESTS
+        [ ] understand tests
     [ ] handle quotes
         [ ] TESTS
     [ ] create_commands (skeleton)
