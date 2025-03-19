@@ -130,7 +130,7 @@ int	check_consecutives(t_token **token_lst)
 	temp = *token_lst;
 	while (temp)
 	{
-		if (forbidden_consecutives(temp) == true)
+		if (forbidden_consecutives(temp))
 		{
 			if (temp->type == END && temp->prev && temp->prev->type > PIPE)
 				write(2, "syntax error\n", 13);

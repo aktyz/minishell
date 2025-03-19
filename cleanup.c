@@ -30,7 +30,7 @@ void	free_global(t_global *global, bool clear_history)
 	// 	lstclear_token(&global->token, &free_ptr);
 	// if (global && global->cmd)
 	// 	lst_clear_cmd(&global->cmd, &free_ptr);
-	// if (clear_history == true)
+	// if (clear_history)
 	// {
 	// 	if (global && global->working_dir)
 	// 		free_ptr(global->working_dir);

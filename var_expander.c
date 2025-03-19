@@ -3,10 +3,7 @@
 
 bool	is_var_compliant(char c)
 {
-	if (ft_isalnum(c) == 0 && c != '_')
-		return (false);
-	else
-		return (true);
+	return ft_isalnum(c) || c == '_';
 }
 
 /* returns number of characters in the first encountered variable that starts with $ 
@@ -26,7 +23,7 @@ int	var_length(char *str)
 		return (count + 1);
 	while (str[i])
 	{
-		if (is_var_compliant(str[i]) == false)
+		if (!is_var_compliant(str[i]))
 			break ;
 		count++;
 		i++;
@@ -75,35 +72,6 @@ char	*get_new_token_string(char *oldstr, char *var_value,
 	return (new_str);
 }
 
-static int	erase_var(t_token **token_node, char *str, int index)
-{
-	int		i;
-	int		j;
-	int		len;
-	char	*new_str;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(str) - var_length(str + index);
-	new_str = (char *)malloc(sizeof(char) * len + 1);
-	if (!new_str)
-		return (1);
-	while (str[i])
-	{
-		if (str[i] == '$' && i == index)
-		{
-			i = i + var_length(str + index) + 1;
-			if (str[i] == '\0')
-				break ;
-		}
-		new_str[j++] = str[i++];
-	}
-	new_str[j] = '\0';
-	free_ptr((*token_node)->str);
-	(*token_node)->str = new_str;
-	return (0);
-}
-
 // Changed return type from int to char * to adapt the function
 // to work for heredoc variable expansion. Heredoc has no tokens
 // so token_node becomes optional.
@@ -129,24 +97,16 @@ static char	*erase_and_replace(t_token **token_node, char *str,
 
 int	replace_var(t_token **token_node, char *var_value, int index)
 {
-	// TODO do we need erase_var function?
-	// We could use erase_and_replace with empty string ""
-	if (var_value == NULL)
-	{
-		if (erase_var(token_node, (*token_node)->str, index) == 1)
-		{
-			free_ptr(var_value);
-			return (1);
-		}
+	// NOTE: removed erase_var as it looks like a special case for replace with empty string.
+	if (var_value == NULL) {
+		var_value = malloc(1);
+		var_value[0] = '\0';
 	}
-	else
+	if (erase_and_replace(token_node, (*token_node)->str, \
+	var_value, index) == NULL)
 	{
-		if (erase_and_replace(token_node, (*token_node)->str, \
-		var_value, index) == NULL)
-		{
-			free_ptr(var_value);
-			return (1);
-		}
+		free_ptr(var_value);
+		return (1);
 	}
 	free_ptr(var_value);
 	return (0);
@@ -282,17 +242,12 @@ static void	update_status(t_token **token_node, char c)
 
 static bool	is_next_char_a_sep(char c)
 {
-	if (c == '$' || c == ' ' || c == '=' || c == '\0')
-		return (true);
-	else
-		return (false);
+	return (c == '$' || c == ' ' || c == '=' || c == '\0');
 }
 
 static bool	var_between_quotes(char *str, int i)
 {
-	if (i > 0)
-		return (str[i - 1] == '\"' && str[i + 1] == '\"');
-	return (false);
+	return (i > 0 && str[i - 1] == '\"' && str[i + 1] == '\"');
 }
 
 // NOTE: why both global is passed and token_lst?
@@ -340,8 +295,8 @@ char	*var_expander_heredoc(t_global *global, char *str)
 	while (str[i])
 	{
 		if (str[i] == '$'
-			&& is_next_char_a_sep(str[i + 1]) == false
-			&& var_between_quotes(str, i) == false)
+			&& !is_next_char_a_sep(str[i + 1])
+			&& !var_between_quotes(str, i))
 			str = replace_str_heredoc(str, recover_val(NULL, str + i, global), i);
 		else
 			i++;

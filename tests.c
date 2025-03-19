@@ -8,8 +8,8 @@
 
 Test(input_is_space, simple_tests)
 {
-	assert( input_is_space("     ") == true);
-	assert( input_is_space("  abc  ") == false);
+	assert( input_is_space("     "));
+	assert( ! input_is_space("  abc  "));
 }
 
 
@@ -206,7 +206,7 @@ Test(handle_quotes, remove_single_quotes) {
 	handle_quotes(&global);
 
 	assert(strcmp(head->str, "hello") == 0);
-	assert(head->join == true);
+	assert(head->join);
 
 	free_tokens(head);
 }
@@ -218,7 +218,7 @@ Test(handle_quotes, remove_double_quotes) {
 	handle_quotes(&global);
 
 	assert(strcmp(head->str, "world") == 0);
-	assert(head->join == true);
+	assert(head->join);
 
 	free_tokens(head);
 }
@@ -230,7 +230,7 @@ Test(handle_quotes, mixed_quotes_inside_string) {
 	handle_quotes(&global);
 
 	assert(strcmp(head->str, "The quick brown fox") == 0);
-	assert(head->join == true);
+	assert(head->join);
 
 	free_tokens(head);
 }
@@ -242,7 +242,7 @@ Test(handle_quotes, no_quotes_should_remain_unchanged) {
 	handle_quotes(&global);
 
 	assert(strcmp(head->str, "justtext") == 0);
-	assert(head->join == false);
+	assert(! head->join);
 
 	free_tokens(head);
 }
@@ -259,7 +259,7 @@ Test(handle_quotes, heredoc_should_not_remove_quotes) {
 	handle_quotes(&global);
 
 	assert(strcmp(quoted_token->str, "'do_not_remove'") == 0);
-	assert(quoted_token->join == false);
+	assert(! quoted_token->join);
 
 	free_tokens(heredoc);
 }
@@ -279,9 +279,9 @@ Test(handle_quotes, multiple_tokens_mixed) {
 	assert(strcmp(t1->str, "alpha") == 0);
 	assert(strcmp(t2->str, "beta") == 0);
 	assert(strcmp(t3->str, "gamma") == 0);
-	assert(t1->join == true);
-	assert(t2->join == true);
-	assert(t3->join == false);
+	assert(t1->join);
+	assert(t2->join);
+	assert(! t3->join);
 
 	free_tokens(t1);
 }

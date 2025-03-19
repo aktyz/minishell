@@ -75,12 +75,12 @@ int	remove_quotes(t_token **token_node)
 		return (1);
 	while ((*token_node)->str[i])
 	{
-		if (if_quotes_and_default(token_node, i) == true)
+		if (if_quotes_and_default(token_node, i))
 		{
 			change_status_to_quote(token_node, &i);
 			continue ;
 		}
-		else if (change_back_to_default(token_node, &i) == true)
+		else if (change_back_to_default(token_node, &i))
 			continue ;
 		new_line[j++] = (*token_node)->str[i++];
 	}
@@ -113,7 +113,7 @@ int	handle_quotes(t_global *global)
 	temp = global->token;
 	while (temp)
 	{
-		if (quotes_in_string(temp->str) == true
+		if (quotes_in_string(temp->str)
 			&& (!temp->prev || (temp->prev && temp->prev->type != HEREDOC)))
 			remove_quotes(&temp);
 		temp = temp->next;
