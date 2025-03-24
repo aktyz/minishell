@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 
-bool	is_var_compliant(char c)
+bool	is_variable_character(char c)
 {
 	return ft_isalnum(c) || c == '_';
 }
@@ -23,7 +23,7 @@ int	var_length(char *str)
 		return (count + 1);
 	while (str[i])
 	{
-		if (!is_var_compliant(str[i]))
+		if (!is_variable_character(str[i]))
 			break ;
 		count++;
 		i++;

@@ -23,7 +23,7 @@ SRC = main.c \
 	execve_args_allocation.c \
 	execve_data_allocation.c \
 	utils_for_tokens.c \
-	errors_management.c \
+	parser.c \
 	var_expander.c \
 	quotes.c \
 	ft_process.c \
