@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/06 18:50:57 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:35:04 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,12 @@ int handle_quotes(t_global *global);
 // debug
 
 void	print_token_list(t_token **tokens);
+
+// builtins
+void	ft_echo(char **args);
+
+// Test functions
+void	test_ft_echo();
 
 
 #endif

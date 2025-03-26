@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/01/03 18:26:22 by zslowian         ###   ########.fr        #
+#    Updated: 2025/03/26 17:01:40 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,9 @@ SRC = main.c \
 	initialization.c \
 	cleanup.c \
 	debug.c \
-	tests.c 
+	tests/test_ft_echo.c \
+	builtins/echo.c \
+	tests.c
 
 
 OBJ = $(SRC:.c=.o)
