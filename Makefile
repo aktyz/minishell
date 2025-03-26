@@ -13,18 +13,26 @@
 NAME = minishell
 LIBFT = libft
 LIBFT_F = ./libft
-INCLUDES = -I $(LIBFT_F)/headers
+INCLUDES = -I . -I $(LIBFT_F)/headers
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g
-LIB = -L $(LIBFT_F) -lft
+LIB = -L $(LIBFT_F) -lft -lcriterion
 RM = rm -f
 
 SRC = main.c \
 	execve_args_allocation.c \
 	execve_data_allocation.c \
 	utils_for_tokens.c \
+	parser.c \
+	var_expander.c \
+	quotes.c \
 	ft_process.c \
-	libft_functions.c
+	libft_functions.c \
+	initialization.c \
+	cleanup.c \
+	debug.c \
+	tests.c 
+
 
 OBJ = $(SRC:.c=.o)
 

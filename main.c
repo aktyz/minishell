@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 void		ft_clean_up(t_process **proc);
 void		ft_error(t_process ***proc, char **string);
 static void	ft_create_process_data(t_process ***proc);
@@ -20,12 +21,23 @@ char		**ft_trim_user_input(char **argv, int argc);
 void		print_tokens(t_token *list);
 void		minishell_interactive(t_global *global);
 
+
+
+
+// NOTE: comment this function to run test cases from tests.c
+// criterion test runner adds its own main function
+
+/***/
 int	main(int ac, char **av, char **env)
 {
+
 	t_global	global; // NOTE originally data
+	if (!init_global(&global, env))
+		exit_shell(NULL, EXIT_FAILURE);
 	minishell_interactive(&global);
 	return (0);
 }
+/**/
 
 void	print_tokens(t_token *list)
 {
@@ -43,12 +55,22 @@ void	minishell_interactive(t_global *global)
 {
 	while (1)
 	{
-		// set signals for interactive
+		// set_signals_interactive();
 		global->user_input = readline(PROMPT);
+		// set_signals_noninteractive()
+		if (parse_user_input(global)) {
+			printf("parsed user input\n");
+			print_token_list(&global->token);
+		}
+			//g_last_exit_code = execute(global);
+		//else
+		//	g_last_exit_code = 1;
+
+		free_global(global, false);
 		global->token = NULL;
-		tokenization(global);
+		/*
 		print_tokens(global->token);
-		// set signals for noniteractive
+		*/
 	}
 }
 

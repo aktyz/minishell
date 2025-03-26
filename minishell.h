@@ -36,6 +36,9 @@
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
+extern int	g_last_exit_code;
+
+
 typedef struct s_executable
 {
 	char	*path;
@@ -62,7 +65,10 @@ typedef struct s_process
 typedef struct s_node_for_token
 {
 	char					*str;
+	bool var_exists;
 	int						type;
+	int status;
+	bool			join;
 	struct s_node_for_token	*prev;
 	struct s_node_for_token	*next;
 }	t_token;
@@ -95,6 +101,32 @@ enum	e_quotes_status
 	DQUOTE
 };
 
+typedef struct s_io_fds
+{
+	char	*infile;
+	char	*outfile;
+	char	*heredoc_delimiter;
+	bool	heredoc_quotes;
+	int	fd_in;
+	int	fd_out;
+	int	stdin_backup;
+	int	stdout_backup;
+}	t_io_fds;
+
+typedef struct s_command
+{
+	char	*command;
+	char	*path;
+	char	**args;
+	bool	pipe_output;
+	int		*pipe_fd;
+	t_io_fds	*io_fds;
+	struct	s_command	*next;
+	struct	s_command	*prev;
+}	t_command;
+
+
+
 void	ft_process(t_process **proc);
 
 void	ft_error(t_process ***proc, char **string);
@@ -104,10 +136,47 @@ void	ft_get_executable_data(t_executable **executable, char *cmd,
 			char *file_name);
 void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
 
+//initialization
+
+
+bool	init_global(t_global *global, char **env);
+
+
+
+//cleanup
+
+void	free_ptr(void *ptr);
+void	free_global(t_global *global, bool clear_history);
+
+void	exit_shell(t_global *global, int exno);
+
 //lexer
 
 int		tokenization(t_global *global);
+bool input_is_space(char * input);
+bool	parse_user_input(t_global *global);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
+
+int	check_var(t_token **token_lst);
+
+
+// errors
+int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
+
+
+// env variables
+
+int	var_expander(t_global *global, t_token **token_lst);
+
+
+// quotes
+
+int handle_quotes(t_global *global);
+
+// debug
+
+void	print_token_list(t_token **tokens);
+
 
 #endif
