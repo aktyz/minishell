@@ -1,3 +1,21 @@
+# Installing & using criterion library
+
+* Run the following command
+
+```
+sudo apt-get install libcriterion-dev
+```
+
+
+* Comment the main function in `main.c` since criterion is adding it's own main function to run the tests.
+
+* Compile and run minishell (will run the tests)
+```
+make
+./minishell
+```
+
+
 
 # TODO for minishell
 - [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function

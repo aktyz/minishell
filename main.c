@@ -27,7 +27,7 @@ void		minishell_interactive(t_global *global);
 // NOTE: comment this function to run test cases from tests.c
 // criterion test runner adds its own main function
 
-/** 
+/***/
 int	main(int ac, char **av, char **env)
 {
 
