@@ -6,14 +6,14 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/03/26 22:40:35 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/01 16:22:34 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 LIBFT = libft
 LIBFT_F = ./libft
-INCLUDES = -I . -I $(LIBFT_F)/headers
+INCLUDES = -I ./includes -I $(LIBFT_F)/headers
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g
 LIB = -L $(LIBFT_F) -lft -lcriterion
@@ -27,12 +27,13 @@ SRC = main.c \
 	var_expander.c \
 	quotes.c \
 	ft_process.c \
-	libft_functions.c \
 	initialization.c \
 	cleanup.c \
 	debug.c \
-	tests.c \
-	./mock_structs/create_mocks.c
+	tests/test_ft_echo.c \
+	builtins/echo.c \
+	tests.c
+
 
 OBJ = $(SRC:.c=.o)
 
