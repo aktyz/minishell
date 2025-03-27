@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/06 18:50:57 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/26 22:42:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,20 @@ extern int	g_last_exit_code;
 
 typedef struct s_executable
 {
-	char	*path;
-	char	*file_name;
+	char	*path; //path
+	char	*file_name; //command
 	int		execve_argc;
-	char	**execve_argv;
+	char	**execve_argv; // args
 }	t_executable;
 
 typedef struct s_process
 {
-	int				pipe_parent[2];
-	int				pipe_send;
-	int				pipe_receive;
-	int				file_send;
-	int				file_receive;
-	int				in_file_fd;
+	int				pipe_parent[2]; // to_go
+	int				pipe_send; // to_go
+	int				pipe_receive; // to_go
+	int				file_send; // to_go
+	int				file_receive; // to_go
+	int				in_file_fd; // to_go
 	char			*input_data;
 	int				out_file_fd;
 	char			*output_data;
@@ -73,12 +73,25 @@ typedef struct s_node_for_token
 	struct s_node_for_token	*next;
 }	t_token;
 
+typedef struct s_command
+{
+	char				*command;
+	char				*path;
+	int					args_size;
+	char				**args;
+	bool				pipe_output;
+	int					*pipe_fd;
+	struct s_command	*next;
+	struct s_command	*prev;
+}	t_command;
+
 typedef struct s_global
 {
 	bool		interactive;
 	t_token		*token;
 	char		*user_input;
 	char		**env;
+	t_command	*cmd;
 }	t_global;
 
 enum	e_token_types
@@ -125,16 +138,15 @@ typedef struct s_command
 	struct	s_command	*prev;
 }	t_command;
 
+void	ft_process(t_global *global);
+void	test_single_cmd(t_command **command);
 
+void	ft_error(t_global ***proc, char **string);
+void	ft_clean_up(t_global **proc);
 
-void	ft_process(t_process **proc);
-
-void	ft_error(t_process ***proc, char **string);
-void	ft_clean_up(t_process **proc);
-
-void	ft_get_executable_data(t_executable **executable, char *cmd,
+void	ft_get_path_and_args(t_command **exe, char *cmd,
 			char *file_name);
-void	ft_allocate_execve_argv(t_executable **exe, char *cmd);
+void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
 //initialization
 

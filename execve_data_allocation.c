@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 05:58:59 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/03 19:17:46 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:31:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,24 @@
  * later down the line.
  *
  */
-void	ft_get_executable_data(t_executable **executable, char *cmd,
+void	ft_get_path_and_args(t_command **command, char *str,
 	char *file_name)
 {
-	t_executable	*exe;
+	t_command	*cmd;
 
-	exe = *executable;
-	ft_allocate_execve_argv(executable, cmd);
-	if (*file_name)
+	cmd = *command;
+	(void) file_name; // t_command will have file FD in case of file servicing
+	ft_allocate_execve_argv(command, str);
+	cmd->path = ft_strjoin(PATH_1,
+		cmd->args[0]);
+	if (access(cmd->path, X_OK) == -1)
 	{
-		exe->file_name = ft_calloc(sizeof(char), ft_strlen(file_name) + 1);
-		ft_strlcpy(exe->file_name, file_name, ft_strlen(file_name));
-	}
-	exe->path = ft_strjoin(PATH_1,
-		exe->execve_argv[0]);
-	if (access(exe->path, X_OK) == -1)
-	{
-		free(exe);
-		exe->path = ft_strjoin(PATH_2,
-				exe->execve_argv[0]);
-		if (access(exe->path, X_OK) == -1)
+		free(cmd);
+		cmd->path = ft_strjoin(PATH_2,
+				cmd->args[0]);
+		if (access(cmd->path, X_OK) == -1)
 		{
-			free(exe);
+			free(cmd);
 		}
 	}
 }

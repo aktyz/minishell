@@ -6,11 +6,14 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/01/03 19:16:47 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:10:53 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_clean_command(t_command *cmd);
+void		ft_process(t_global *global);
 
 /**
  * Function that will eventually call our executable.
@@ -20,46 +23,75 @@
  * - executing using execve() function
  *
  */
-void	ft_process(t_process **proc)
+void	ft_process(t_global *global)
 {
-	t_process	*process;	
+	pid_t	child_proc;
 
-	process = *proc;
-	if (process->pipe_send)
+	global->cmd = ft_calloc(1, sizeof(t_command)); // TODO: remove when merging with Marlena's work
+	test_single_cmd(&(global->cmd)); // populates cmd list with single command test cases
+	
+	// I don't need to close anything because I don't serve pipes yet
+	/**if (command->pipe_send)
 	{
-		close(process->pipe_parent[0]);
-		dup2(process->pipe_parent[1], STDOUT_FILENO);
-		close(process->pipe_parent[1]);
+		close(command->pipe_parent[0]);
+		dup2(command->pipe_parent[1], STDOUT_FILENO);
+		close(command->pipe_parent[1]);
 	}
 	else
 	{
-		close(process->pipe_parent[1]);
-		process->out_file_fd = open(process->executable->file_name, O_RDWR | O_CREAT, 0644);
-		if (process->out_file_fd == -1)
+		close(command->pipe_parent[1]);
+		command->out_file_fd = open(command->executable->file_name, O_RDWR | O_CREAT, 0644);
+		if (command->out_file_fd == -1)
 			ft_error(&proc, NULL);
-		if (!access(process->executable->file_name, F_OK))
+		if (!access(command->executable->file_name, F_OK))
 		{
-			dup2(process->out_file_fd, STDOUT_FILENO);
-			close(process->out_file_fd);
+			dup2(command->out_file_fd, STDOUT_FILENO);
+			close(command->out_file_fd);
 		}
 		else
 			ft_error(&proc, NULL);
 	}
-	if (process->pipe_receive)
+	if (command->pipe_receive)
 	{
-		dup2(process->pipe_parent[0], STDIN_FILENO);
-		close(process->pipe_parent[0]);
+		dup2(command->pipe_parent[0], STDIN_FILENO);
+		close(command->pipe_parent[0]);
 	}
-	else if (!access(process->executable->file_name, F_OK & R_OK))
+	else if (!access(command->executable->file_name, F_OK & R_OK))
 	{
-		process->in_file_fd = open(process->executable->file_name, O_RDONLY);
-		if (process->in_file_fd == -1)
+		command->in_file_fd = open(command->executable->file_name, O_RDONLY);
+		if (command->in_file_fd == -1)
 			ft_error(&proc, NULL);
-		dup2(process->in_file_fd, STDIN_FILENO);
-		close(process->in_file_fd);
+		dup2(command->in_file_fd, STDIN_FILENO);
+		close(command->in_file_fd);
 	}
 	else
-		ft_error(&proc, NULL);
-	execve(process->executable->path, process->executable->execve_argv, NULL);
-	ft_error(&proc, NULL);
+		ft_error(&proc, NULL);*/
+	while (global->cmd)
+	{
+		child_proc = fork();
+		if (child_proc == -1)
+			ft_printf("Forking failed\n");
+		if(!child_proc)
+			execve(global->cmd->path, global->cmd->args, NULL);
+		if(global->cmd->next)
+		{
+			global->cmd = global->cmd->next;
+			if (global->cmd->prev)
+				ft_clean_command(global->cmd->prev);
+		}
+		else
+		{
+			ft_clean_command(global->cmd);
+			break;
+		}
+		waitpid(child_proc, NULL, 0);
+	}
+}
+
+static void	ft_clean_command(t_command *cmd)
+{
+	ft_clear_char_array(&cmd->args, cmd->args_size);
+	if (cmd)
+		free(cmd);
+	cmd = NULL;
 }
