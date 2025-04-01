@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/26 22:39:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:14:58 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	main(int ac, char **av, char **env)
 {
 
 	t_global	global; // NOTE originally data
+
+	test_ft_echo();
 	if (!init_global(&global, env))
 		exit_shell(NULL, EXIT_FAILURE);
 	minishell_interactive(&global);

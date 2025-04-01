@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/26 22:42:33 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:22:13 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
 extern int	g_last_exit_code;
-
+typedef struct s_io_fds t_io_fds;
 
 typedef struct s_executable
 {
@@ -81,6 +81,7 @@ typedef struct s_command
 	char				**args;
 	bool				pipe_output;
 	int					*pipe_fd;
+	t_io_fds			*io_fds;
 	struct s_command	*next;
 	struct s_command	*prev;
 }	t_command;
@@ -114,7 +115,7 @@ enum	e_quotes_status
 	DQUOTE
 };
 
-typedef struct s_io_fds
+struct s_io_fds
 {
 	char	*infile;
 	char	*outfile;
@@ -124,19 +125,7 @@ typedef struct s_io_fds
 	int	fd_out;
 	int	stdin_backup;
 	int	stdout_backup;
-}	t_io_fds;
-
-typedef struct s_command
-{
-	char	*command;
-	char	*path;
-	char	**args;
-	bool	pipe_output;
-	int		*pipe_fd;
-	t_io_fds	*io_fds;
-	struct	s_command	*next;
-	struct	s_command	*prev;
-}	t_command;
+};
 
 void	ft_process(t_global *global);
 void	test_single_cmd(t_command **command);
@@ -189,6 +178,12 @@ int handle_quotes(t_global *global);
 // debug
 
 void	print_token_list(t_token **tokens);
+
+// builtins
+void	ft_echo(char **args);
+
+// Test functions
+void	test_ft_echo();
 
 
 #endif
