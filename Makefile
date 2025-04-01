@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/01 16:22:34 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/01 18:47:29 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRC = main.c \
 	cleanup.c \
 	debug.c \
 	tests/test_ft_echo.c \
+	tests/test_single_cmd.c \
 	builtins/echo.c \
 	tests.c
 
