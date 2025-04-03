@@ -7,9 +7,13 @@ sudo apt-get install libcriterion-dev
 ```
 
 
-* Comment the main function in `main.c` since criterion is adding it's own main function to run the tests.
+* Compile and run tests
+```
+make 
+./tests
+```
 
-* Compile and run minishell (will run the tests)
+# Running minishell
 ```
 make
 ./minishell
