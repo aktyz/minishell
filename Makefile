@@ -11,12 +11,13 @@
 # **************************************************************************** #
 
 NAME = minishell
+NAME_TEST = tests
 LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g
-LIB = -L $(LIBFT_F) -lft -lcriterion
+LIB = -L $(LIBFT_F) -lft 
 RM = rm -f
 
 SRC = main.c \
@@ -32,6 +33,18 @@ SRC = main.c \
 	ft_process.c \
 	initialization.c \
 	cleanup.c \
+	debug.c 
+
+SRC_TEST = execve_args_allocation.c \
+	execve_data_allocation.c \
+	utils_for_tokens.c \
+	parser.c \
+	var_expander.c \
+	quotes.c \
+	ft_process.c \
+	libft_functions.c \
+	initialization.c \
+	cleanup.c \
 	debug.c \
 	tests/test_exe_functions.c \
 	tests/test_ft_echo.c \
@@ -42,31 +55,36 @@ SRC = main.c \
 	tests.c
 
 OBJ = $(SRC:.c=.o)
+OBJ_TEST = $(SRC_TEST:.c=.o)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -g -pthread
 
-$(NAME): $(OBJ) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)  -l readline
+all: $(LIBFT) $(NAME) $(NAME_TEST)
 
-all: $(LIBFT) $(NAME)
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline
+
+$(NAME_TEST): $(OBJ_TEST) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ_TEST) $(LIB) -o $(NAME_TEST)  -l readline -lcriterion
 
 $(LIBFT):
 	@git submodule update --init --recursive
-	@$(MAKE) -C $(LIBFT_F)
+	$(MAKE) -C $(LIBFT_F)
 
 fclean: clean
-	@$(RM) $(NAME) $(OBJ)
+	@$(RM) $(NAME) $(NAME_TEST) $(OBJ) $(OBJ_TEST)
 
 clean:
-	@$(RM) $(OBJ)
+	@$(RM) $(OBJ) $(OBJ_TEST)
 	@$(MAKE) -C $(LIBFT_F) fclean
 
 re: fclean all
 
-debug: $(OBJ) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -g -pthread -l readline
-
 rebug: fclean debug clean
+
+debug: $(OBJ) $(OBJ_TEST) $(LIBFT)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline -g -pthread
+	@$(CC) $(CFLAGS) $(OBJ_TEST) $(LIB) -o $(NAME_TEST) -lcriterion -lreadline -g -pthread
 
 .PHONY: all clean fclean libft re
