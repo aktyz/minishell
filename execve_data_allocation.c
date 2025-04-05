@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 05:58:59 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/19 13:31:43 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/05 19:14:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,7 @@ void	ft_get_path_and_args(t_command **command, char *str,
 	t_command	*cmd;
 
 	cmd = *command;
-	(void) file_name; // t_command will have file FD in case of file servicing
+	(void) file_name;
 	ft_allocate_execve_argv(command, str);
-	cmd->path = ft_strjoin(PATH_1,
-		cmd->args[0]);
-	if (access(cmd->path, X_OK) == -1)
-	{
-		free(cmd);
-		cmd->path = ft_strjoin(PATH_2,
-				cmd->args[0]);
-		if (access(cmd->path, X_OK) == -1)
-		{
-			free(cmd);
-		}
-	}
+	//cmd->path = ft_get_valid_exe_path(extract_env_var("PATH", global->env));
 }

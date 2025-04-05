@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/05 18:57:11 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/05 20:42:57 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC = main.c \
 	execve_args_allocation.c \
 	execve_data_allocation.c \
 	extract_env_var.c \
+	find_valid_exec_path.c \
 	utils_for_tokens.c \
 	parser.c \
 	var_expander.c \

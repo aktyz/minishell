@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/05 18:56:10 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/05 20:42:41 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	main(int ac, char **av, char **env)
 	test_ft_echo();
 	path = extract_env_var("PATH", env); // live tests
 	cmd = extract_env_var("_", env);  // live tests
-	path = extract_env_var("blahnotfound", env);
+	path = extract_env_var("blahnotfound", env);   // live tests
+	global.cmd->path = ft_get_valid_exe_path(path, "ls");   // live tests
+	ft_printf("\n%s\n\n", global.cmd->path);   // live tests
 	if (!init_global(&global, env))
 		exit_shell(NULL, EXIT_FAILURE);
 	minishell_interactive(&global);

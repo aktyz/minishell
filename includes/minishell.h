@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/05 18:12:38 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/05 20:16:05 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ struct s_io_fds
 };
 
 void	ft_process(t_global *global);
-void	test_single_cmd(t_command **command);
+void	test_single_cmd(t_global *global);
 
 void	ft_error(t_global ***proc, char **string);
 void	ft_clean_up(t_global **proc);
@@ -141,6 +141,7 @@ void	ft_get_path_and_args(t_command **exe, char *cmd,
 void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
 char	*extract_env_var(char *var_name, char **env);
+char	*ft_get_valid_exe_path(char *path, char *cmd);
 
 //initialization
 

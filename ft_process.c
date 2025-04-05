@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/19 17:10:53 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/05 20:07:47 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_process(t_global *global)
 	pid_t	child_proc;
 
 	global->cmd = ft_calloc(1, sizeof(t_command)); // TODO: remove when merging with Marlena's work
-	test_single_cmd(&(global->cmd)); // populates cmd list with single command test cases
+	test_single_cmd(global); // populates cmd list with single command test cases
 	
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
