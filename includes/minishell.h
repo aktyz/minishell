@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/01 16:22:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/05 18:12:38 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ void	ft_clean_up(t_global **proc);
 void	ft_get_path_and_args(t_command **exe, char *cmd,
 			char *file_name);
 void	ft_allocate_execve_argv(t_command **cmd, char *str);
+
+char	*extract_env_var(char *var_name, char **env);
 
 //initialization
 
