@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:07:34 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/05 18:51:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/05 18:55:14 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*extract_env_var(char *var_name, char **env)
 	char	**i;
 	int		len;
 
+	res = NULL;
 	i = env;
 	len = ft_strlen(var_name);
 	while (*i)
