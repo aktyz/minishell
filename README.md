@@ -10,7 +10,7 @@ sudo apt-get install libcriterion-dev
 * Compile and run tests
 ```
 make 
-./tests
+./tester
 ```
 
 # Running minishell
