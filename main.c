@@ -27,7 +27,7 @@ int	main(int ac, char **av, char **env)
 
 	t_global	global; // NOTE originally data
 
-	test_ft_echo();
+	// test_ft_echo();
 	if (!init_global(&global, env))
 		exit_shell(NULL, EXIT_FAILURE);
 	minishell_interactive(&global);
