@@ -758,7 +758,7 @@ static char	*get_expanded_var_line(t_global *global, char *line)
 *	to signify that we should stop reading with readline. Otherwise, returns
 *	true.
 */
-static bool	evaluate_heredoc_line(t_data *data, char **line,
+static bool	evaluate_heredoc_line(t_global *global, char **line,
 									t_io_fds *io, bool *ret)
 {
 	if (*line == NULL)
@@ -775,7 +775,7 @@ static bool	evaluate_heredoc_line(t_data *data, char **line,
 	}
 	if (io->heredoc_quotes == false && ft_strchr(*line, '$'))
 	{
-		*line = get_expanded_var_line(data, *line);
+		*line = get_expanded_var_line(global, *line);
 		if (!(*line))
 		{
 			free_ptr(*line);
@@ -792,7 +792,7 @@ static bool	evaluate_heredoc_line(t_data *data, char **line,
 *	like $USER, expands the variable before writing to the heredoc.
 *	Returns true on success, false on failure.
 */
-bool	fill_heredoc(t_data *data, t_io_fds *io, int fd)
+bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 {
 	char	*line;
 	bool	ret;
@@ -804,7 +804,7 @@ bool	fill_heredoc(t_data *data, t_io_fds *io, int fd)
 		set_signals_interactive();
 		line = readline(">");
 		set_signals_noninteractive();
-		if (!evaluate_heredoc_line(data, &line, io, &ret))
+		if (!evaluate_heredoc_line(global, &line, io, &ret))
 			break ;
 		ft_putendl_fd(line, fd);
 		free_ptr(line);

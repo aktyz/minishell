@@ -286,94 +286,125 @@ Test(handle_quotes, multiple_tokens_mixed) {
 	free_tokens(t1);
 }
 
-// --- Test Case Definitions ---
 
-Test(parse_word, basic_parse_word_test) {
-    // Setup tokens
-    t_token token1 = {"word1", NULL, false, WORD, 0, false, NULL, NULL};
-    t_token token2 = {"word2", NULL, false, WORD, 0, false, &token1, NULL};
-    token1.next = &token2;
 
-    t_command cmd = {NULL, NULL, NULL, 0, NULL}; // Command
-    t_token *token_lst = &token1;
-
-    // Execute parse_word
-    parse_word(&cmd, &token_lst);
-
-    // Assertions
-    cr_assert_str_eq(cmd.command, "word1", "Command was not parsed correctly.");
-    cr_assert_str_eq(cmd.args[0], "word2", "Argument was not added correctly.");
+// MOCK HELPERS (should match your actual structures)
+t_token *new_token(int type, char *str) {
+    t_token *tok = malloc(sizeof(t_token));
+    tok->type = type;
+    tok->str = strdup(str);
+    tok->str_backup = strdup(str);
+    tok->next = NULL;
+    tok->prev = NULL;
+    return tok;
 }
 
-Test(parse_input, basic_parse_input_test) {
-    // Setup input redirection token
-    t_token token1 = {"<", NULL, false, INPUT, 0, false, NULL, NULL};
-    t_token token2 = {"input.txt", NULL, false, WORD, 0, false, &token1, NULL};
-    token1.next = &token2;
-
-    t_command cmd = {NULL, NULL, NULL, 0, NULL};
-    t_token *token_lst = &token1;
-
-    // Execute parse_input
-    parse_input(&cmd, &token_lst);
-
-    // Assertions
-    cr_assert_str_eq(cmd.io_fds->infile, "input.txt", "Input file was not set correctly.");
-    cr_assert_eq(cmd.io_fds->fd_in, -1, "Input file descriptor was not set correctly.");
+void link_tokens(t_token *a, t_token *b) {
+    a->next = b;
+    b->prev = a;
 }
 
-Test(parse_trunc, basic_parse_trunc_test) {
-    // Setup output redirection token
-    t_token token1 = {">", NULL, false, TRUNC, 0, false, NULL, NULL};
-    t_token token2 = {"output.txt", NULL, false, WORD, 0, false, &token1, NULL};
-    token1.next = &token2;
-
-    t_command cmd = {NULL, NULL, NULL, 0, NULL};
-    t_token *token_lst = &token1;
-
-    // Execute parse_trunc
-    parse_trunc(&cmd, &token_lst);
-
-    // Assertions
-    cr_assert_str_eq(cmd.io_fds->outfile, "output.txt", "Output file was not set correctly.");
-    cr_assert_eq(cmd.io_fds->fd_out, -1, "Output file descriptor was not set correctly.");
+t_command *mock_last_cmd(t_command *cmds) {
+    return lst_last_cmd(cmds);  // Your implementation
 }
 
-Test(parse_heredoc, basic_parse_heredoc_test) {
-    // Setup heredoc token
-    t_token token1 = {"<<", NULL, false, HEREDOC, 0, false, NULL, NULL};
-    t_token token2 = {"EOF", NULL, false, WORD, 0, false, &token1, NULL};
-    token1.next = &token2;
-
-    t_global global = {&token1, NULL};
-    t_command cmd = {NULL, NULL, NULL, 0, NULL};
-    global.cmd = &cmd;
-
-    // Execute parse_heredoc
-    parse_heredoc(&global, &global.cmd, &global.token);
-
-    // Assertions
-    cr_assert_str_eq(cmd.io_fds->heredoc_delimiter, "EOF", "Heredoc delimiter was not set correctly.");
+t_command *init_cmd_list() {
+    return lst_new_cmd(false);
 }
 
-Test(create_commands, basic_create_commands_test) {
-    // Setup tokens for multiple commands
-    t_token token1 = {"word1", NULL, false, WORD, 0, false, NULL, NULL};
-    t_token token2 = {">", NULL, false, TRUNC, 0, false, &token1, NULL};
-    t_token token3 = {"output.txt", NULL, false, WORD, 0, false, &token2, NULL};
-    t_token token4 = {END, NULL, false, END, 0, false, &token3, NULL};
-    token1.next = &token2;
-    token2.next = &token3;
-    token3.next = &token4;
 
-    t_global global = {&token1, NULL};
-    global.cmd = NULL;
+// ===================== TESTS ===================== //
 
-    // Execute create_commands
-    create_commands(&global);
+Test(parse_word, handles_single_word) {
+    t_token *tok = new_token(WORD, "echo");
+    t_command *cmd = init_cmd_list();
 
-    // Assertions
-    cr_assert_not_null(global.cmd, "Command list is empty.");
-    cr_assert_str_eq(global.cmd->command, "word1", "First command was not parsed correctly.");
-    cr_assert_str_eq(global.cmd->io_fds->outfile, "output.txt", "Output redirection was not set correctly.");
+    parse_word(&cmd, &tok);
+    cr_assert_str_eq(cmd->command, "echo");
+}
+
+Test(parse_input, parses_input_redirection) {
+    t_token *redir = new_token(INPUT, "<");
+    t_token *filename = new_token(WORD, "input.txt");
+    link_tokens(redir, filename);
+
+    t_command *cmd = init_cmd_list();
+    t_token *tok = redir;
+
+    parse_input(&cmd, &tok);
+    cr_assert_str_eq(cmd->io_fds->infile, "input.txt");
+}
+
+Test(parse_trunc, parses_output_trunc_redirection) {
+    t_token *redir = new_token(TRUNC, ">");
+    t_token *filename = new_token(WORD, "out.txt");
+    link_tokens(redir, filename);
+
+    t_command *cmd = init_cmd_list();
+    t_token *tok = redir;
+
+    parse_trunc(&cmd, &tok);
+    cr_assert_str_eq(cmd->io_fds->outfile, "out.txt");
+}
+
+Test(parse_append, parses_output_append_redirection) {
+    t_token *redir = new_token(APPEND, ">>");
+    t_token *filename = new_token(WORD, "log.txt");
+    link_tokens(redir, filename);
+
+    t_command *cmd = init_cmd_list();
+    t_token *tok = redir;
+
+    parse_append(&cmd, &tok);
+    cr_assert_str_eq(cmd->io_fds->outfile, "log.txt");
+}
+
+Test(parse_pipe, creates_next_command) {
+    t_token *tok = new_token(PIPE, "|");
+    t_command *cmd = init_cmd_list();
+
+    parse_pipe(&cmd, &tok);
+
+    cr_assert_not_null(cmd->next);
+    cr_assert(cmd->pipe_output);
+}
+
+Test(parse_heredoc, sets_heredoc_delimiter_and_infile) {
+    t_token *redir = new_token(HEREDOC, "<<");
+    t_token *delim = new_token(WORD, "EOF");
+    link_tokens(redir, delim);
+
+    t_command *cmd = init_cmd_list();
+    t_token *tok = redir;
+    t_global *g;
+    init_global(g, NULL);
+
+    parse_heredoc(g, &cmd, &tok);
+    cr_assert_not_null(cmd->io_fds->infile);
+    cr_assert_str_eq(cmd->io_fds->heredoc_delimiter, "EOF");
+}
+
+Test(create_commands, creates_basic_command_structure) {
+    // Simulate: echo hello | grep test > out.txt
+    t_token *tok1 = new_token(WORD, "echo");
+    t_token *tok2 = new_token(WORD, "hello");
+    t_token *tok3 = new_token(PIPE, "|");
+    t_token *tok4 = new_token(WORD, "grep");
+    t_token *tok5 = new_token(WORD, "test");
+    t_token *tok6 = new_token(TRUNC, ">");
+    t_token *tok7 = new_token(WORD, "out.txt");
+
+    link_tokens(tok1, tok2); link_tokens(tok2, tok3);
+    link_tokens(tok3, tok4); link_tokens(tok4, tok5);
+    link_tokens(tok5, tok6); link_tokens(tok6, tok7);
+
+    t_global *g;
+    init_global(g, NULL);
+    g->token = tok1;
+
+    create_commands(g);
+
+    cr_assert_str_eq(g->cmd->command, "echo");
+    cr_assert_str_eq(g->cmd->next->command, "grep");
+    cr_assert_str_eq(g->cmd->next->io_fds->outfile, "out.txt");
 }

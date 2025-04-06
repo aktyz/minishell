@@ -179,7 +179,14 @@ int handle_quotes(t_global *global);
 
 // parse commands
 void		create_commands(t_global *global);
-
+void	parse_word(t_command **cmd, t_token **token_lst);
+void	parse_input(t_command **last_cmd, t_token **token_lst);
+void	parse_trunc(t_command **last_cmd, t_token **token_lst);
+void	parse_append(t_command **last_cmd, t_token **token_lst);
+void	parse_pipe(t_command **last_cmd, t_token **token_lst);
+void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst);
+t_command	*lst_last_cmd(t_command *cmd);
+t_command	*lst_new_cmd(bool value);
 
 // signals
 
