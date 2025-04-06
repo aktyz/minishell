@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = minishell
-NAME_TEST = tests
+NAME_TEST = tester
 LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
@@ -30,6 +30,7 @@ SRC = main.c \
 	ft_process.c \
 	initialization.c \
 	cleanup.c \
+	tests/test_single_cmd.c \
 	debug.c 
 
 SRC_TEST = execve_args_allocation.c \
@@ -39,14 +40,18 @@ SRC_TEST = execve_args_allocation.c \
 	var_expander.c \
 	quotes.c \
 	ft_process.c \
-	libft_functions.c \
 	initialization.c \
 	cleanup.c \
 	debug.c \
-	tests/test_ft_echo.c \
-	tests/test_single_cmd.c \
 	builtins/echo.c \
+	tests/test_single_cmd.c \
 	tests.c
+
+
+# libft_functions.c \
+# tests/test_ft_echo.c \
+
+	
 
 
 OBJ = $(SRC:.c=.o)

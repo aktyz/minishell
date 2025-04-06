@@ -183,7 +183,7 @@ void	print_token_list(t_token **tokens);
 void	ft_echo(char **args);
 
 // Test functions
-void	test_ft_echo();
+// void	test_ft_echo();
 
 
 #endif
