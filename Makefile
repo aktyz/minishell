@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME = minishell
-NAME_TEST = tests
+NAME_TEST = tester
 LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
@@ -35,6 +35,7 @@ SRC = main.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
+	tests/test_single_cmd.c \
 	debug.c 
 
 SRC_TEST = execve_args_allocation.c \
@@ -44,7 +45,6 @@ SRC_TEST = execve_args_allocation.c \
 	var_expander.c \
 	quotes.c \
 	ft_process.c \
-	libft_functions.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
@@ -57,6 +57,15 @@ SRC_TEST = execve_args_allocation.c \
 	signals.c \
 	tests.c
 
+
+
+# libft_functions.c \
+# tests/test_ft_echo.c \
+
+	
+
+
+>>>>>>> 27b625a (make works)
 OBJ = $(SRC:.c=.o)
 OBJ_TEST = $(SRC_TEST:.c=.o)
 
