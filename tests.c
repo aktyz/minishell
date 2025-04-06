@@ -285,3 +285,95 @@ Test(handle_quotes, multiple_tokens_mixed) {
 
 	free_tokens(t1);
 }
+
+// --- Test Case Definitions ---
+
+Test(parse_word, basic_parse_word_test) {
+    // Setup tokens
+    t_token token1 = {"word1", NULL, false, WORD, 0, false, NULL, NULL};
+    t_token token2 = {"word2", NULL, false, WORD, 0, false, &token1, NULL};
+    token1.next = &token2;
+
+    t_command cmd = {NULL, NULL, NULL, 0, NULL}; // Command
+    t_token *token_lst = &token1;
+
+    // Execute parse_word
+    parse_word(&cmd, &token_lst);
+
+    // Assertions
+    cr_assert_str_eq(cmd.command, "word1", "Command was not parsed correctly.");
+    cr_assert_str_eq(cmd.args[0], "word2", "Argument was not added correctly.");
+}
+
+Test(parse_input, basic_parse_input_test) {
+    // Setup input redirection token
+    t_token token1 = {"<", NULL, false, INPUT, 0, false, NULL, NULL};
+    t_token token2 = {"input.txt", NULL, false, WORD, 0, false, &token1, NULL};
+    token1.next = &token2;
+
+    t_command cmd = {NULL, NULL, NULL, 0, NULL};
+    t_token *token_lst = &token1;
+
+    // Execute parse_input
+    parse_input(&cmd, &token_lst);
+
+    // Assertions
+    cr_assert_str_eq(cmd.io_fds->infile, "input.txt", "Input file was not set correctly.");
+    cr_assert_eq(cmd.io_fds->fd_in, -1, "Input file descriptor was not set correctly.");
+}
+
+Test(parse_trunc, basic_parse_trunc_test) {
+    // Setup output redirection token
+    t_token token1 = {">", NULL, false, TRUNC, 0, false, NULL, NULL};
+    t_token token2 = {"output.txt", NULL, false, WORD, 0, false, &token1, NULL};
+    token1.next = &token2;
+
+    t_command cmd = {NULL, NULL, NULL, 0, NULL};
+    t_token *token_lst = &token1;
+
+    // Execute parse_trunc
+    parse_trunc(&cmd, &token_lst);
+
+    // Assertions
+    cr_assert_str_eq(cmd.io_fds->outfile, "output.txt", "Output file was not set correctly.");
+    cr_assert_eq(cmd.io_fds->fd_out, -1, "Output file descriptor was not set correctly.");
+}
+
+Test(parse_heredoc, basic_parse_heredoc_test) {
+    // Setup heredoc token
+    t_token token1 = {"<<", NULL, false, HEREDOC, 0, false, NULL, NULL};
+    t_token token2 = {"EOF", NULL, false, WORD, 0, false, &token1, NULL};
+    token1.next = &token2;
+
+    t_global global = {&token1, NULL};
+    t_command cmd = {NULL, NULL, NULL, 0, NULL};
+    global.cmd = &cmd;
+
+    // Execute parse_heredoc
+    parse_heredoc(&global, &global.cmd, &global.token);
+
+    // Assertions
+    cr_assert_str_eq(cmd.io_fds->heredoc_delimiter, "EOF", "Heredoc delimiter was not set correctly.");
+}
+
+Test(create_commands, basic_create_commands_test) {
+    // Setup tokens for multiple commands
+    t_token token1 = {"word1", NULL, false, WORD, 0, false, NULL, NULL};
+    t_token token2 = {">", NULL, false, TRUNC, 0, false, &token1, NULL};
+    t_token token3 = {"output.txt", NULL, false, WORD, 0, false, &token2, NULL};
+    t_token token4 = {END, NULL, false, END, 0, false, &token3, NULL};
+    token1.next = &token2;
+    token2.next = &token3;
+    token3.next = &token4;
+
+    t_global global = {&token1, NULL};
+    global.cmd = NULL;
+
+    // Execute create_commands
+    create_commands(&global);
+
+    // Assertions
+    cr_assert_not_null(global.cmd, "Command list is empty.");
+    cr_assert_str_eq(global.cmd->command, "word1", "First command was not parsed correctly.");
+    cr_assert_str_eq(global.cmd->io_fds->outfile, "output.txt", "Output redirection was not set correctly.");
+}
