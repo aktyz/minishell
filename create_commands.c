@@ -887,13 +887,13 @@ void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst)
 	io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
 	if (get_heredoc(global, io))
 		io->fd_in = open(io->infile, O_RDONLY);
-	else
-		io->fd_in = -1;
-	if (temp->next->next)
-		temp = temp->next->next;
-	else
-		temp = temp->next;
-	*token_lst = temp;
+	// else
+	// 	io->fd_in = -1;
+	// if (temp->next->next)
+	// 	temp = temp->next->next;
+	// else
+	// 	temp = temp->next;
+	// *token_lst = temp;
 }
 
 
@@ -960,11 +960,11 @@ void	parse_pipe(t_command **cmd, t_token **token_lst)
 	*token_lst = (*token_lst)->next;
 }
 
-void	create_commands(t_global *global)
+void	create_commands(t_global *global, t_token *token)
 {
 	t_token	*temp;
 
-	temp = global->token;
+	temp = token;
 	if (temp->type == END)
 		return ;
 	while (temp->next != NULL)
