@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/05 20:42:57 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/09 16:24:16 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,25 +20,26 @@ LIB = -L $(LIBFT_F) -lft -lcriterion
 RM = rm -f
 
 SRC = main.c \
+	create_commands.c \
 	execve_args_allocation.c \
 	execve_data_allocation.c \
 	extract_env_var.c \
-	find_valid_exec_path.c \
 	utils_for_tokens.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
-	create_commands.c \
-	signals.c \
+	resolve_command_path.c \
 	ft_process.c \
 	initialization.c \
 	cleanup.c \
 	debug.c \
+	tests/test_exe_functions.c \
 	tests/test_ft_echo.c \
+	tests/test_master.c \
 	tests/test_single_cmd.c \
 	builtins/echo.c \
+	signals.c \
 	tests.c
-
 
 OBJ = $(SRC:.c=.o)
 

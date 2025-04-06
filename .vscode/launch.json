@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/minishell",
-            "args": [" infile0 ", "\"grep a1\"" , "\"wc -l\"", "outfile"],
+            "args": ["testing"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:18:25 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/05 20:32:22 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/06 16:21:54 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	test_single_cmd(t_global *global)
 	i = 0;
 	while (i < nb_test_cases)
 	{
-		cmd->path = ft_get_valid_exe_path(extract_env_var("PATH", global->env), cmd->args[0]);
+		cmd->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd->args[0]);
 		cmd = cmd->next;
 		i++;
 	}

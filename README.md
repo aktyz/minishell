@@ -53,7 +53,24 @@ typedef struct s_data
 ```
 
 ## Code organization
-[TODO]
+
+I would prefer we create a clear separation as per functionality of our code. Our folders would include:
+- builtin
+- cleanup
+- debug
+- examples
+- execution
+- includes
+- libft as git submodule
+- parsing
+- test_files [with potentially different name to match one word convention of other file folders]
+- test
+
+That would leave in the main folder only crucial files:
+- .git[xyz] files
+- main.c file
+- Makefile
+- README.md
 
 
 ## TODO for minishell (aka. our Backlog)

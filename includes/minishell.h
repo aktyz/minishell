@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/05 20:16:05 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/06 16:31:03 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@
 
 # define TRIM_SET " \t\n"
 
-// TODO: wouldn't it be better if this is an array?
-# define PATH_1 "/bin/"
-# define PATH_2 "/usr/bin/"
-# define PATH_3 "/usr/.local/bin"
+# define ENV_PATH "PATH"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -141,7 +138,7 @@ void	ft_get_path_and_args(t_command **exe, char *cmd,
 void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
 char	*extract_env_var(char *var_name, char **env);
-char	*ft_get_valid_exe_path(char *path, char *cmd);
+char	*resolve_command_path(char *path, char *cmd);
 
 //initialization
 
@@ -207,7 +204,9 @@ void	print_cmd_list(t_global *global);
 void	ft_echo(char **args);
 
 // Test functions
+void	run_tests(char **env);
 void	test_ft_echo();
-
+void	test_extract_env_var(char **env);
+void	test_resolve_command_path(char **env);
 
 #endif

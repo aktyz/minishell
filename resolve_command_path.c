@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_valid_exec_path.c                             :+:      :+:    :+:   */
+/*   resolve_command_path.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/05 20:04:28 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/06 16:22:32 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static size_t	ft_count_words(char const *s, char c);
 
-char	*ft_get_valid_exe_path(char *path, char *cmd)
+char	*resolve_command_path(char *path, char *cmd)
 {
 	char	*res;
 	char	**candidates;
