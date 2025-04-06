@@ -349,14 +349,14 @@ Test(parse_trunc, parses_output_trunc_redirection) {
 
 Test(parse_append, parses_output_append_redirection) {
     t_token *redir = new_token(APPEND, ">>");
-    t_token *filename = new_token(WORD, "log.txt");
+    t_token *filename = new_token(WORD, "/tmp/log.txt");
     link_tokens(redir, filename);
 
     t_command *cmd = init_cmd_list();
     t_token *tok = redir;
 
     parse_append(&cmd, &tok);
-    cr_assert_str_eq(cmd->io_fds->outfile, "log.txt");
+    cr_assert_str_eq(cmd->io_fds->outfile, "/tmp/log.txt");
 }
 
 Test(parse_pipe, creates_next_command) {
@@ -392,7 +392,7 @@ Test(create_commands, creates_basic_command_structure) {
     t_token *tok4 = new_token(WORD, "grep");
     t_token *tok5 = new_token(WORD, "test");
     t_token *tok6 = new_token(TRUNC, ">");
-    t_token *tok7 = new_token(WORD, "out.txt");
+    t_token *tok7 = new_token(WORD, "/tmp/out.txt");
 
     link_tokens(tok1, tok2); link_tokens(tok2, tok3);
     link_tokens(tok3, tok4); link_tokens(tok4, tok5);
@@ -406,5 +406,5 @@ Test(create_commands, creates_basic_command_structure) {
 
     cr_assert_str_eq(g->cmd->command, "echo");
     cr_assert_str_eq(g->cmd->next->command, "grep");
-    cr_assert_str_eq(g->cmd->next->io_fds->outfile, "out.txt");
+    cr_assert_str_eq(g->cmd->next->io_fds->outfile, "/tmp/out.txt");
 }
