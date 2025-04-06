@@ -94,7 +94,7 @@ void	print_token_list(t_token **tokens)
 	{
 		printf("--- Token [%d] [%p]\n", i, lst);
 		printf("\tString = [%s]\n", lst->str);
-		// printf("\tStr backup = [%s]\n", lst->str_backup);
+		printf("\tStr backup = [%s]\n", lst->str_backup);
 		print_token_type(lst, "\tType = ");
 		printf("\tStatus = %d\n", lst->status);
 		if (lst->prev)

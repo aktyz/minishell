@@ -190,9 +190,9 @@ data -> global
         [x] TESTS
     [x] var_expander
         [x] TESTS
-        [ ] understand tests
-    [ ] handle quotes
-        [ ] TESTS
+        [x] understand tests
+    [x] handle quotes
+        [x] TESTS
     [ ] create_commands (skeleton)
 
 

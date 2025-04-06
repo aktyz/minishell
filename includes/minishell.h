@@ -36,6 +36,8 @@
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
+# define HEREDOC_NAME "/tmp/.__heredoc__"
+
 extern int	g_last_exit_code;
 typedef struct s_io_fds t_io_fds;
 
@@ -65,6 +67,7 @@ typedef struct s_process
 typedef struct s_node_for_token
 {
 	char					*str;
+	char *str_backup;
 	bool var_exists;
 	int						type;
 	int status;
@@ -141,8 +144,7 @@ void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
 
 bool	init_global(t_global *global, char **env);
-
-
+void	init_io(t_command *cmd);
 
 //cleanup
 
@@ -169,11 +171,21 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
 // env variables
 
 int	var_expander(t_global *global, t_token **token_lst);
-
+char	*var_expander_heredoc(t_global *global, char *str);
 
 // quotes
 
 int handle_quotes(t_global *global);
+
+// parse commands
+void		create_commands(t_global *global);
+
+
+// signals
+
+void		ignore_sigquit(void);
+void		set_signals_interactive(void);
+void		set_signals_noninteractive(void);
 
 // debug
 

@@ -96,9 +96,32 @@ bool	init_global(t_global *global, char **env)
 	global->token = NULL;
 	global->user_input = NULL;
 
-    // TODO uncomment when commands ready
-	// global->cmd = NULL;
+	global->cmd = NULL;
 	// global->pid = -1;
 	g_last_exit_code = 0;
 	return (true);
+}
+
+
+
+/* init_io:
+*	Initializes a structure with default values to contain
+*	infile and outfile information for a command.
+*/
+void	init_io(t_command *cmd)
+{
+	if (!cmd->io_fds)
+	{
+		cmd->io_fds = malloc(sizeof * cmd->io_fds);
+		if (!cmd->io_fds)
+			return ;
+		cmd->io_fds->infile = NULL;
+		cmd->io_fds->outfile = NULL;
+		cmd->io_fds->heredoc_delimiter = NULL;
+		cmd->io_fds->heredoc_quotes = false;
+		cmd->io_fds->fd_in = -1;
+		cmd->io_fds->fd_out = -1;
+		cmd->io_fds->stdin_backup = -1;
+		cmd->io_fds->stdout_backup = -1;
+	}
 }

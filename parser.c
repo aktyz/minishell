@@ -194,7 +194,7 @@ bool	parse_user_input(t_global *global)
 		return (false);
 	var_expander(global, &global->token);
 	handle_quotes(global);
-	// create_commands(global, global->token);
+	create_commands(global);
 	return (true);
 }
 

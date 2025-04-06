@@ -26,6 +26,8 @@ SRC = main.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
+	create_commands.c \
+	signals.c \
 	ft_process.c \
 	initialization.c \
 	cleanup.c \
