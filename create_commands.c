@@ -13,30 +13,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-/* free_str_tab:
-*	Frees an array of strings.
-*/
-void	free_str_tab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	if (tab)
-	{
-		while (tab[i])
-		{
-			if (tab[i])
-			{
-				free_ptr(tab[i]);
-				tab[i] = NULL;
-			}
-			i++;
-		}
-		free(tab);
-		tab = NULL;
-	}
-}
-
 static void	initialize_cmd(t_command **cmd)
 {
     // TODO use memset with 0 here?

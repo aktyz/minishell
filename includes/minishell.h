@@ -150,6 +150,7 @@ void	init_io(t_command *cmd);
 
 void	free_ptr(void *ptr);
 void	free_global(t_global *global, bool clear_history);
+void	free_str_tab(char **tab);
 
 void	exit_shell(t_global *global, int exno);
 
@@ -197,6 +198,7 @@ void		set_signals_noninteractive(void);
 // debug
 
 void	print_token_list(t_token **tokens);
+void	print_cmd_list(t_global *global);
 
 // builtins
 void	ft_echo(char **args);

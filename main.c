@@ -23,7 +23,7 @@ void		minishell_interactive(t_global *global);
 // NOTE: comment this function to run test cases from tests.c
 // criterion test runner adds its own main function
 
-/**
+/**/
 int	main(int ac, char **av, char **env)
 {
 
@@ -57,8 +57,8 @@ void	minishell_interactive(t_global *global)
 		global->user_input = readline(PROMPT);
 		// set_signals_noninteractive();
 		if (parse_user_input(global)) {
-			printf("parsed user input\n");
 			print_token_list(&global->token);
+			print_cmd_list(global);
 		}
 			//g_last_exit_code = execute(global);
 		//else
