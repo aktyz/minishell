@@ -285,3 +285,119 @@ Test(handle_quotes, multiple_tokens_mixed) {
 
 	free_tokens(t1);
 }
+
+
+
+// MOCK HELPERS (should match your actual structures)
+
+void link_tokens(t_token *a, t_token *b) {
+    a->next = b;
+    b->prev = a;
+}
+
+
+
+// ===================== TESTS ===================== //
+
+Test(parse_word, handles_single_word) {
+    t_token *tok = create_token("echo", WORD);
+    t_token *end = create_token("", END);
+    link_tokens(tok, end);
+    t_command *cmd = lst_new_cmd(false);
+
+    parse_word(&cmd, &tok);
+    // cr_assert_str_eq(cmd->command, "echo");
+}
+
+Test(parse_input, parses_input_redirection) {
+    t_token *redir = create_token("<", INPUT);
+    t_token *filename = create_token("input.txt", WORD);
+    link_tokens(redir, filename);
+
+    t_command *cmd = lst_new_cmd(false);
+    t_token *tok = redir;
+
+    parse_input(&cmd, &tok);
+    cr_assert_str_eq(cmd->io_fds->infile, "input.txt");
+}
+
+Test(parse_trunc, parses_output_trunc_redirection) {
+    t_token *redir = create_token(">", TRUNC);
+    t_token *filename = create_token("/tmp/out.txt", WORD);
+    link_tokens(redir, filename);
+
+    t_command *cmd = lst_new_cmd(false);
+    t_token *tok = redir;
+
+    parse_trunc(&cmd, &tok);
+    cr_assert_str_eq(cmd->io_fds->outfile, "/tmp/out.txt");
+}
+
+Test(parse_append, parses_output_append_redirection) {
+    t_token *redir = create_token(">>", APPEND);
+    t_token *filename = create_token("/tmp/log.txt", WORD);
+    link_tokens(redir, filename);
+
+    t_command *cmd = lst_new_cmd(false);
+    t_token *tok = redir;
+
+    parse_append(&cmd, &tok);
+    cr_assert_str_eq(cmd->io_fds->outfile, "/tmp/log.txt");
+}
+
+Test(parse_pipe, creates_next_command) {
+    t_token *tok = create_token("|", PIPE);
+    t_command *cmd = lst_new_cmd(false);
+
+    parse_pipe(&cmd, &tok);
+
+    cr_assert_not_null(cmd->next);
+    cr_assert(cmd->pipe_output);
+}
+
+// TODO fix this test case with correct tokens for heredoc
+// Test(parse_heredoc, sets_heredoc_delimiter_and_infile) {
+//     t_token *redir = create_token("<<", HEREDOC);
+//     t_token *delim = create_token("EOF", WORD);
+//     t_token *delim_end = create_token("EOF", WORD);
+//     t_token *end = create_token("", END);
+//     link_tokens(redir, delim);
+//     link_tokens(delim, delim_end);
+//     link_tokens(delim_end, end);
+
+//     t_command *cmd = lst_new_cmd(false);
+//     t_token *tok = redir;
+//     t_global g;
+//     char *env[] = {NULL};
+//     init_global(&g, env);
+
+//     parse_heredoc(&g, &cmd, &tok);
+//     cr_assert_not_null(cmd->io_fds->infile);
+//     cr_assert_str_eq(cmd->io_fds->heredoc_delimiter, "EOF");
+// }
+
+Test(create_commands, creates_basic_command_structure) {
+    // Simulate: echo hello | grep test > out.txt
+    t_token *tok1 = create_token("echo", WORD);
+    t_token *tok2 = create_token("hello", WORD);
+    t_token *tok3 = create_token("|", PIPE);
+    t_token *tok4 = create_token("grep", WORD);
+    t_token *tok5 = create_token("test", WORD);
+    t_token *tok6 = create_token(">", TRUNC);
+    t_token *tok7 = create_token("/tmp/out.txt", WORD);
+
+    link_tokens(tok1, tok2); link_tokens(tok2, tok3);
+    link_tokens(tok3, tok4); link_tokens(tok4, tok5);
+    link_tokens(tok5, tok6); link_tokens(tok6, tok7);
+
+    t_global g;
+    char *env[] = {NULL};
+    init_global(&g, env);
+    g.token = tok1;
+
+    create_commands(&g, g.token);
+
+    cr_assert_str_eq(g.cmd->command, "echo");
+    cr_assert_str_eq(g.cmd->next->command, "grep");
+    cr_assert_str_eq(g.cmd->next->io_fds->outfile, "/tmp/out.txt");
+}

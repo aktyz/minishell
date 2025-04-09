@@ -33,31 +33,31 @@ static void	print_cmd_io(t_command *cmd)
 	}
 }
 
-// void	print_cmd_list(t_global *global)
-// {
-// 	t_command	*cmd;
+void	print_cmd_list(t_global *global)
+{
+	t_command	*cmd;
 
-// 	cmd = global->cmd;
-// 	printf("\n---- COMMAND LIST\n");
-// 	while (cmd)
-// 	{
-// 		printf("--- Command = %s\n", cmd->command);
-// 		print_cmd_args(cmd);
-// 		printf("\tPipe_output = %d\n", cmd->pipe_output);
-// 		print_cmd_io(cmd);
-// 		if (cmd->prev == NULL)
-// 			printf("\tprev = NULL\n");
-// 		else
-// 			printf("\tprev = %s\n", cmd->prev->command);
-// 		if (cmd->next == NULL)
-// 			printf("\tnext = NULL\n");
-// 		else
-// 			printf("\tnext = %s\n", cmd->next->command);
-// 		printf("\n");
-// 		cmd = cmd->next;
-// 	}
-// 	printf("\n");
-// }
+	cmd = global->cmd;
+	printf("\n---- COMMAND LIST\n");
+	while (cmd)
+	{
+		printf("--- Command = %s\n", cmd->command);
+		print_cmd_args(cmd);
+		printf("\tPipe_output = %d\n", cmd->pipe_output);
+		print_cmd_io(cmd);
+		if (cmd->prev == NULL)
+			printf("\tprev = NULL\n");
+		else
+			printf("\tprev = %s\n", cmd->prev->command);
+		if (cmd->next == NULL)
+			printf("\tnext = NULL\n");
+		else
+			printf("\tnext = %s\n", cmd->next->command);
+		printf("\n");
+		cmd = cmd->next;
+	}
+	printf("\n");
+}
 
 void	print_token_type(t_token *token, char *prefix)
 {
@@ -94,7 +94,7 @@ void	print_token_list(t_token **tokens)
 	{
 		printf("--- Token [%d] [%p]\n", i, lst);
 		printf("\tString = [%s]\n", lst->str);
-		// printf("\tStr backup = [%s]\n", lst->str_backup);
+		printf("\tStr backup = [%s]\n", lst->str_backup);
 		print_token_type(lst, "\tType = ");
 		printf("\tStatus = %d\n", lst->status);
 		if (lst->prev)

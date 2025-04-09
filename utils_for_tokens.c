@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+// NOTE was lst_new_token
 t_token	*new_node(char *str, int type, int status)
 {
 	t_token	*new_node;
@@ -16,6 +17,8 @@ t_token	*new_node(char *str, int type, int status)
 	return (new_node);
 }
 
+
+// NOTE was lst_add_back_token
 void	add_node(t_token **list, t_token *new_node)
 {
 	t_token	*start;
@@ -51,6 +54,7 @@ void	delete_node(t_token *node, void (*del)(void *))
 	//free_node(node);
 }
 
+// NOTE was save_sepatator
 int	add_separator(t_token **token, char *str, int index, int type)
 {
 	int		i;
@@ -80,6 +84,7 @@ int	add_separator(t_token **token, char *str, int index, int type)
 	return (0);
 }
 
+// NOTE was save_word
 int	add_word(t_token **token, char *str, int index, int start)
 {
 	int		i;
@@ -96,7 +101,7 @@ int	add_word(t_token **token, char *str, int index, int start)
 	return (0);
 }
 
-
+// NOTE was is_separatetor
 int	which_separator(char *str, int i)
 {
 	if ((str[i] > 8 && str[i] < 14) || str[i] == 32)
@@ -117,6 +122,7 @@ int	which_separator(char *str, int i)
 		return (0);
 }
 
+// NOTE was save_word_or_sep
 int	add_word_or_sep(int *i, char *str, int start, t_global *global)
 {
 	int	type;

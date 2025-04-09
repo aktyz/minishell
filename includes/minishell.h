@@ -36,6 +36,8 @@
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
+# define HEREDOC_NAME "/tmp/.__heredoc__"
+
 extern int	g_last_exit_code;
 typedef struct s_io_fds t_io_fds;
 
@@ -65,6 +67,7 @@ typedef struct s_process
 typedef struct s_node_for_token
 {
 	char					*str;
+	char *str_backup;
 	bool var_exists;
 	int						type;
 	int status;
@@ -141,13 +144,13 @@ void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
 
 bool	init_global(t_global *global, char **env);
-
-
+void	init_io(t_command *cmd);
 
 //cleanup
 
 void	free_ptr(void *ptr);
 void	free_global(t_global *global, bool clear_history);
+void	free_str_tab(char **tab);
 
 void	exit_shell(t_global *global, int exno);
 
@@ -169,15 +172,33 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
 // env variables
 
 int	var_expander(t_global *global, t_token **token_lst);
-
+char	*var_expander_heredoc(t_global *global, char *str);
 
 // quotes
 
 int handle_quotes(t_global *global);
 
+// parse commands
+void		create_commands(t_global *global, t_token *token);
+void	parse_word(t_command **cmd, t_token **token_lst);
+void	parse_input(t_command **last_cmd, t_token **token_lst);
+void	parse_trunc(t_command **last_cmd, t_token **token_lst);
+void	parse_append(t_command **last_cmd, t_token **token_lst);
+void	parse_pipe(t_command **last_cmd, t_token **token_lst);
+void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst);
+t_command	*lst_last_cmd(t_command *cmd);
+t_command	*lst_new_cmd(bool value);
+
+// signals
+
+void		ignore_sigquit(void);
+void		set_signals_interactive(void);
+void		set_signals_noninteractive(void);
+
 // debug
 
 void	print_token_list(t_token **tokens);
+void	print_cmd_list(t_global *global);
 
 // builtins
 void	ft_echo(char **args);
