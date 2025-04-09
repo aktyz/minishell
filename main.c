@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/01 16:14:58 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/06 16:44:14 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,16 @@ void		minishell_interactive(t_global *global);
 /**/
 int	main(int ac, char **av, char **env)
 {
+	t_global	global;
 
-	t_global	global; // NOTE originally data
-
-	test_ft_echo();
-	if (!init_global(&global, env))
-		exit_shell(NULL, EXIT_FAILURE);
-	minishell_interactive(&global);
+	if (ac == 2 && ft_strncmp(av[1], "testing", 7) == 0)
+		run_tests(env);
+	else
+	{
+		if (!init_global(&global, env))
+			exit_shell(NULL, EXIT_FAILURE);
+		minishell_interactive(&global);
+	}
 	return (0);
 }
 /**/

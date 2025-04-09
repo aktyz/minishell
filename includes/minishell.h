@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/01 16:22:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/06 16:31:03 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@
 
 # define TRIM_SET " \t\n"
 
-// TODO: wouldn't it be better if this is an array?
-# define PATH_1 "/bin/"
-# define PATH_2 "/usr/bin/"
-# define PATH_3 "/usr/.local/bin"
+# define ENV_PATH "PATH"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -131,7 +128,7 @@ struct s_io_fds
 };
 
 void	ft_process(t_global *global);
-void	test_single_cmd(t_command **command);
+void	test_single_cmd(t_global *global);
 
 void	ft_error(t_global ***proc, char **string);
 void	ft_clean_up(t_global **proc);
@@ -139,6 +136,9 @@ void	ft_clean_up(t_global **proc);
 void	ft_get_path_and_args(t_command **exe, char *cmd,
 			char *file_name);
 void	ft_allocate_execve_argv(t_command **cmd, char *str);
+
+char	*extract_env_var(char *var_name, char **env);
+char	*resolve_command_path(char *path, char *cmd);
 
 //initialization
 
@@ -204,7 +204,9 @@ void	print_cmd_list(t_global *global);
 void	ft_echo(char **args);
 
 // Test functions
+void	run_tests(char **env);
 void	test_ft_echo();
-
+void	test_extract_env_var(char **env);
+void	test_resolve_command_path(char **env);
 
 #endif

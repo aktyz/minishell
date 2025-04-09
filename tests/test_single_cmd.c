@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:18:25 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/19 17:18:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/06 16:21:54 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ static char *single_command_test_cases(int i);
  * mocking an execution of "grep -la" bash command
  *
  */
-void	test_single_cmd(t_command **command)
+void	test_single_cmd(t_global *global)
 {
 	t_command	*cmd;
 	int			i;
 	int			nb_test_cases;
 
-	cmd = *command;
+	cmd = global->cmd;
 	nb_test_cases = 2;
 	i = 0;
 	while (i < nb_test_cases)
@@ -37,6 +37,14 @@ void	test_single_cmd(t_command **command)
 			cmd->next->prev = cmd;
 			cmd = cmd->next;
 		}
+		i++;
+	}
+	cmd = global->cmd;
+	i = 0;
+	while (i < nb_test_cases)
+	{
+		cmd->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd->args[0]);
+		cmd = cmd->next;
 		i++;
 	}
 }
