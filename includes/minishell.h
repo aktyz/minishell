@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:31:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:06:15 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ struct s_io_fds
 };
 
 void	ft_process(t_global *global);
-void	test_single_cmd(t_global *global);
+bool	ft_is_our_builtin(char *cmd);
 
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
@@ -171,7 +171,7 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
 
 // env variables
 
-int	var_expander(t_global *global, t_token **token_lst);
+int		var_expander(t_global *global, t_token **token_lst);
 char	*var_expander_heredoc(t_global *global, char *str);
 
 // quotes
@@ -179,7 +179,7 @@ char	*var_expander_heredoc(t_global *global, char *str);
 int handle_quotes(t_global *global);
 
 // parse commands
-void		create_commands(t_global *global, t_token *token);
+void	create_commands(t_global *global, t_token *token);
 void	parse_word(t_command **cmd, t_token **token_lst);
 void	parse_input(t_command **last_cmd, t_token **token_lst);
 void	parse_trunc(t_command **last_cmd, t_token **token_lst);
@@ -201,6 +201,7 @@ void	print_token_list(t_token **tokens);
 void	print_cmd_list(t_global *global);
 
 // builtins
+void	ft_run_builtin(t_command *command);
 void	ft_echo(char **args);
 
 // Test functions
@@ -208,6 +209,7 @@ void	run_tests(char **env);
 void	test_ft_echo();
 void	test_extract_env_var(char **env);
 void	test_resolve_command_path(char **env);
+void	test_single_cmd(t_global *global);
 
 
 #endif
