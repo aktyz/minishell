@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:44:14 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:00:11 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,20 +59,17 @@ void	minishell_interactive(t_global *global)
 		// set_signals_interactive();
 		global->user_input = readline(PROMPT);
 		// set_signals_noninteractive();
-		if (parse_user_input(global)) {
-			print_token_list(&global->token);
+		if (parse_user_input(global))
+		{
+			//print_token_list(&global->token);
 			print_cmd_list(global);
 		}
-			//g_last_exit_code = execute(global);
+		//g_last_exit_code = execute(global);
 		//else
 		//	g_last_exit_code = 1;
-
+		ft_process(global);
 		free_global(global, false);
 		global->token = NULL;
-		/*
-		print_tokens(global->token);
-		*/
-		// ft_process(global);
 	}
 }
 
