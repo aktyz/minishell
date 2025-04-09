@@ -6,13 +6,12 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:38:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:09:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_clean_command(t_command *cmd);
 void		ft_process(t_global *global);
 
 /**
@@ -26,10 +25,7 @@ void		ft_process(t_global *global);
 void	ft_process(t_global *global)
 {
 	pid_t	child_proc;
-
-	global->cmd = ft_calloc(1, sizeof(t_command)); // TODO: remove when merging with Marlena's work
-	test_single_cmd(global); // populates cmd list with single command test cases
-
+	//****************** To be moved one by one to the while loop below********************/
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
 	{
@@ -68,31 +64,22 @@ void	ft_process(t_global *global)
 		ft_error(&proc, NULL);*/
 	while (global->cmd)
 	{
-		child_proc = fork();
-		if (child_proc == -1)
-			ft_printf("Forking failed\n");
-		if(!child_proc)
-			execve(global->cmd->path, global->cmd->args, NULL);
-		if(global->cmd->next)
+		if(ft_is_our_builtin(global->cmd->command))
 		{
-			global->cmd = global->cmd->next;
-			if (global->cmd->prev)
-				ft_clean_command(global->cmd->prev);
-			waitpid(child_proc, NULL, 0);
+			global->cmd->path = NULL;
+			ft_run_builtin(global->cmd);
 		}
 		else
 		{
-			ft_clean_command(global->cmd);
+			global->cmd->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), global->cmd->command);
+			// Last part - execution bit
+			child_proc = fork();
+			if (child_proc == -1)
+				ft_printf("Forking failed\n");
+			if(!child_proc)
+				execve(global->cmd->path, global->cmd->args, NULL);
 			waitpid(child_proc, NULL, 0);
-			break;
 		}
+		global->cmd = global->cmd->next;
 	}
-}
-
-static void	ft_clean_command(t_command *cmd)
-{
-	ft_clear_char_array(&cmd->args, cmd->args_size);
-	if (cmd)
-		free(cmd);
-	cmd = NULL;
 }

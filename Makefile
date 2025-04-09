@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/09 16:24:16 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/09 18:03:54 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,15 +21,16 @@ RM = rm -f
 
 SRC = main.c \
 	create_commands.c \
-	execve_args_allocation.c \
-	execve_data_allocation.c \
-	extract_env_var.c \
+	execution/execve_args_allocation.c \
+	execution/execve_data_allocation.c \
+	execution/extract_env_var.c \
 	utils_for_tokens.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
-	resolve_command_path.c \
-	ft_process.c \
+	execution/resolve_command_path.c \
+	execution/ft_process.c \
+	execution/ft_run_builtin.c \
 	initialization.c \
 	cleanup.c \
 	debug.c \
