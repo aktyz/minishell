@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/09 18:09:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/10 22:15:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	ft_process(t_global *global)
 			if (child_proc == -1)
 				ft_printf("Forking failed\n");
 			if(!child_proc)
-				execve(global->cmd->path, global->cmd->args, NULL);
+				execve(global->cmd->path, global->cmd->args, global->env);
 			waitpid(child_proc, NULL, 0);
 		}
 		global->cmd = global->cmd->next;

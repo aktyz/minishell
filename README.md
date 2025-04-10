@@ -72,6 +72,15 @@ That would leave in the main folder only crucial files:
 - Makefile
 - README.md
 
+## For Zyta where to start next time
+I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project.
+Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards.
+Candidates so far:
+- cat myfile.txt | grep "error"
+- ps aux | grep wsl
+- du -h | sort -hr
+- [ ] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
+
 
 ## TODO for minishell (aka. our Backlog)
 - [x] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part
