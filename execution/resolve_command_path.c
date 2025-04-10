@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/09 18:08:16 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/10 22:03:23 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char	*resolve_command_path(char *path, char *cmd)
 			if (access(res, X_OK) == -1)
 			{
 				free(res);
+				res = NULL;
 				i++;
 			}
 			else
