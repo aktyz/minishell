@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/11 09:29:00 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/11 09:59:40 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC = main.c \
 	execution/execve_args_allocation.c \
 	execution/execve_data_allocation.c \
 	execution/extract_env_var.c \
+	execution/ft_create_pipe.c \
 	utils_for_tokens.c \
 	parser.c \
 	var_expander.c \
