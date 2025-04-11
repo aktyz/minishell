@@ -78,7 +78,7 @@ That would leave in the main folder only crucial files:
 
 ## For Zyta where to start next time
 I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project.
-Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards.
+Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards; `cd ./test_files` needs to be implemented first as a built-in to work
 Candidates so far:
 - cat myfile.txt | grep "error"
 - ps aux | grep wsl

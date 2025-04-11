@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/09 18:03:54 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/11 09:29:00 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,38 +36,38 @@ SRC = main.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
 	tests/test_single_cmd.c \
-	builtins/echo.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
+	builtins/echo.c \
+	builtins/cd.c \
 	debug.c
 
-SRC_TEST = execve_args_allocation.c \
-	create_commands.c \
-	execve_data_allocation.c \
+SRC_TEST = create_commands.c \
+	execution/execve_args_allocation.c \
+	execution/execve_data_allocation.c \
+	execution/extract_env_var.c \
+	execution/resolve_command_path.c \
+	execution/ft_process.c \
+	execution/ft_run_builtin.c \
 	utils_for_tokens.c \
-	extract_env_var.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
-	resolve_command_path.c \
-	ft_process.c \
-	initialization.c \
-	signals.c \
-	cleanup.c \
-	debug.c \
 	tests/test_exe_functions.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
 	tests/test_single_cmd.c \
+	initialization.c \
+	signals.c \
+	cleanup.c \
 	builtins/echo.c \
+	builtins/cd.c \
+	debug.c \
 	tests.c
-
-
 
 # libft_functions.c \
 # tests/test_ft_echo.c \
-
 
 OBJ = $(SRC:.c=.o)
 OBJ_TEST = $(SRC_TEST:.c=.o)
