@@ -20,7 +20,10 @@ static void	initialize_cmd(t_command **cmd)
 	(*cmd)->path = NULL;
 	(*cmd)->args = NULL;
 	(*cmd)->pipe_output = false;
-	(*cmd)->pipe_fd = 0;
+	(*cmd)->pipe_fd[0] = -1;
+	(*cmd)->pipe_fd[1] = -1;
+	(*cmd)->cmd_pid = -1;
+	(*cmd)->is_builtin = false;
 	(*cmd)->prev = NULL;
 	(*cmd)->next = NULL;
 }
@@ -58,6 +61,10 @@ void	lst_add_back_cmd(t_command **alst, t_command *new_node)
 	}
 }
 
+/**
+ * Returns the last command of the user input
+ *
+ */
 t_command	*lst_last_cmd(t_command *cmd)
 {
 	while (cmd->next != NULL)
@@ -128,12 +135,12 @@ void	lst_add_back_token(t_token **alst, t_token *new_node)
 void	lstdelone_token(t_token *lst, void (*del)(void *))
 {
 	if (del && lst && lst->str)
-	{	
+	{
 		(*del)(lst->str);
 		lst->str = NULL;
 	}
 	if (del && lst && lst->str_backup)
-	{	
+	{
 		(*del)(lst->str_backup);
 		lst->str_backup = NULL;
 	}
@@ -189,7 +196,7 @@ int	count_arguments(t_token *temp)
 **  This function fills the array of arguments of the last_cmd by default mode:
 **    - It allocates the array of arguments thanks to the count_args function
 **    - It loops through the tokens list while the nodes are of type
-**        VAR or WORD, and fills last_cmd->args[i] with the current token 
+**        VAR or WORD, and fills last_cmd->args[i] with the current token
 */
 
 int	create_args_default_mode(t_token **token_node, t_command *last_cmd)
@@ -249,7 +256,7 @@ static char	**copy_default_in_new_tab(
 **  To join them, the tokens have to be of type VAR and the join
 **  setting must be set to true (the quotes are implied)
 **  The function is only used when the command is "echo".
-**  
+**
 **  ex: The strings -> "Hello" "  " "world"
 **      become "Hello  world"
 */
@@ -276,7 +283,7 @@ char	*join_vars(t_token **token_node)
 **  To consider a token or multiple tokens as an argument they must be either
 **  a WORD or a VAR and if they	temp = *token_node;
  are a VAR that has to be joined, we have
-**  to loop through all the tokens that check these conditions 
+**  to loop through all the tokens that check these conditions
 **  (type == VAR and join == true) before counting them as one argument
 */
 
@@ -388,10 +395,10 @@ int	add_args_default_mode(t_token **token_node, t_command *last_cmd)
 **  This function deals with the specific case when the command is "echo"
 **    - It allocates the array of arguments thanks to the count_args function
 **    - It loops through the tokens list while the nodes are of type
-**        VAR or WORD: 
+**        VAR or WORD:
 **         * If "bool join = true" in the token structure is true : we join all
 **           the tokens of type VAR that have the setting "join = true"
-**         * if "join = false" we just fill the last_cmd_>args[i] 
+**         * if "join = false" we just fill the last_cmd_>args[i]
 **            with the current token.
 */
 int	create_args_echo_mode(t_token **token_node, t_command *last_cmd)
@@ -450,7 +457,7 @@ int	add_args_echo_mode(t_token **token_node, t_command *last_cmd)
 
 /*
 **  This function fills the arguments in the command structure (command->args)
-**  It has two modes: 
+**  It has two modes:
 **    - The "echo mode" if the command is the builtin "echo"
 **    - The default mode for all the other cases
 */
@@ -515,7 +522,10 @@ void	parse_word(t_command **cmd, t_token **token_lst)
 			if (temp->type == VAR && contains_space(temp->str))
 				split_var_cmd_token(last_cmd, temp->str);
 			else
+			{
 				last_cmd->command = ft_strdup(temp->str);
+				last_cmd->is_builtin = ft_is_our_builtin(last_cmd->command);
+			}
 			temp = temp->next;
 		}
 		else
@@ -526,7 +536,7 @@ void	parse_word(t_command **cmd, t_token **token_lst)
 
 
 /*	INPUT -> REDIR_IN (<)
-	Redirection of input causes the file whose name results from the expansion 
+	Redirection of input causes the file whose name results from the expansion
 	of word to be opened for reading on file descriptor n, or the standard input
 	(file descriptor 0) if n is not specified.
 
@@ -602,7 +612,7 @@ void	parse_input(t_command **last_cmd, t_token **token_lst)
 
 /*
 	TRUNC -> Redirection of output.
-	The file whose name results from the expansion of word has to be opened 
+	The file whose name results from the expansion of word has to be opened
     in writing mode on fd n or the standard output (fd 1) if n is not specified.
     If the file does not exist it is created;
     if it does exist it is truncated to 0 size.
@@ -876,9 +886,9 @@ void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst)
 
 /*
 	***APPEND***
-	Redirection of output in append mode causes the file whose name results 
-	from the expansion of word to be opened for appending on file descriptor n, 
-	or the standard output (fd 1) if n is not specified. 
+	Redirection of output in append mode causes the file whose name results
+	from the expansion of word to be opened for appending on file descriptor n,
+	or the standard output (fd 1) if n is not specified.
 	If the file does not exist it is created.
 
 	The general format for appending output is: [n]>>word.

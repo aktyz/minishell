@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/11 09:29:00 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/11 09:59:40 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRC = main.c \
 	execution/resolve_command_path.c \
 	execution/ft_process.c \
 	execution/ft_run_builtin.c \
+	execution/ft_create_pipe.c \
 	utils_for_tokens.c \
 	parser.c \
 	var_expander.c \
@@ -49,6 +50,7 @@ SRC_TEST = create_commands.c \
 	execution/extract_env_var.c \
 	execution/resolve_command_path.c \
 	execution/ft_process.c \
+	execution/ft_create_pipe.c \
 	execution/ft_run_builtin.c \
 	utils_for_tokens.c \
 	parser.c \
