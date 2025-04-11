@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/09 18:06:15 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/11 09:25:36 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ void	print_cmd_list(t_global *global);
 // builtins
 void	ft_run_builtin(t_command *command);
 void	ft_echo(char **args);
+void	ft_cd(t_command *cmd);
 
 // Test functions
 void	run_tests(char **env);
