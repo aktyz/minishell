@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/11 09:37:31 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/11 22:55:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_process(t_global *global);
+void	ft_process(t_global *global);
 
 /**
  * Function that will eventually call our executable.
@@ -24,9 +24,9 @@ void		ft_process(t_global *global);
  */
 void	ft_process(t_global *global)
 {
-	pid_t	child_proc;
-	bool	is_sth;
-	//****************** To be moved one by one to the while loop below********************/
+	t_command	*cmd_i;
+	bool		is_builtin;
+//****************** To be moved one by one to the while loop below********************/
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
 	{
@@ -63,25 +63,80 @@ void	ft_process(t_global *global)
 	}
 	else
 		ft_error(&proc, NULL);*/
-	while (global->cmd)
+	cmd_i = global->cmd;
+
+	// if there are any pipes(possibly also any redirections) we need to spawn all the processes
+	// before the next loop so that all the fds are open for all and the child processes
+	// can close/write/read accordingly to their function
+	// On the command I would need a pid of the proces spawn, so that the next command
+	// can wait for this process to terminate
+	//first loop - create pipes/redirections + fork for new processes
+	while (cmd_i)
 	{
-		(void)is_sth;
-		if (ft_is_our_builtin(global->cmd->command))
+		if (cmd_i->pipe_output)
+			pipe(cmd_i->pipe_fd); // Create a pipe for the current command
+
+		if (!cmd_i->is_builtin)
 		{
-			global->cmd->path = NULL;
-			ft_run_builtin(global->cmd);
+			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
+			cmd_i->cmd_pid = fork();
+			if (cmd_i->cmd_pid == -1)
+			{
+				perror("Forking failed");
+				return;
+			}
+			if (cmd_i->cmd_pid == 0)
+				break ;
 		}
-		else
-		{
-			global->cmd->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), global->cmd->command);
-			// Last part - execution bit
-			child_proc = fork();
-			if (child_proc == -1)
-				ft_printf("Forking failed\n");
-			if(!child_proc)
-				execve(global->cmd->path, global->cmd->args, global->env);
-			waitpid(child_proc, NULL, 0);
-		}
-		global->cmd = global->cmd->next;
+		cmd_i = cmd_i->next;
 	}
+
+	// Second loop: Handle redirections and execute commands
+	cmd_i = global->cmd;
+	pid_t last_waited_pid = -1; // Track the last waited PID to avoid duplicate waits
+
+	while (cmd_i)
+	{
+		if (cmd_i->cmd_pid == 0) // Child process
+		{
+			if (cmd_i->prev && cmd_i->prev->cmd_pid)
+			{
+				// Wait for the previous process to finish writing to the pipe
+				waitpid(cmd_i->prev->cmd_pid, NULL, 0);
+			}
+
+			// Handle redirections for the current command
+			ft_handle_redirections(cmd_i);
+
+			// Execute the command
+			execve(cmd_i->path, cmd_i->args, global->env);
+			perror("execve failed");
+			exit(EXIT_FAILURE);
+		}
+		else if (cmd_i->cmd_pid > 0) // Parent process
+		{
+			if (cmd_i->pipe_output)
+			{
+				close(cmd_i->pipe_fd[0]);
+				close(cmd_i->pipe_fd[1]);
+			}
+			if (!cmd_i->pipe_output)
+			{
+				// Wait for the current process if it does not output to a pipe
+				waitpid(cmd_i->cmd_pid, NULL, 0);
+				last_waited_pid = cmd_i->cmd_pid; // Mark this PID as already waited
+			}
+			else if (cmd_i == global->cmd)
+			{
+				// Special case: Wait for the first process to finish setting up redirections
+				waitpid(cmd_i->cmd_pid, NULL, WNOHANG);
+			}
+		}
+		cmd_i = cmd_i->next;
+	}
+
+	// Wait for the last command to finish, but only if it hasn't been waited on
+	cmd_i = lst_last_cmd(global->cmd);
+	if (cmd_i->cmd_pid > 0 && cmd_i->cmd_pid != last_waited_pid)
+		waitpid(cmd_i->cmd_pid, NULL, 0);
 }
