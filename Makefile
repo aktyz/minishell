@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/09 18:03:54 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/11 09:29:00 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRC = main.c \
 	tests/test_master.c \
 	tests/test_single_cmd.c \
 	builtins/echo.c \
+	builtins/cd.c \
 	signals.c \
 	tests.c
 

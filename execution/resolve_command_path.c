@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/10 22:03:23 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/11 09:31:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ static size_t	ft_count_words(char const *s, char c);
 
 bool	ft_is_our_builtin(char *cmd)
 {
-	if (ft_strncmp("echo", cmd, 4) == 0)
+	if (ft_strncmp("echo", cmd, 5) == 0)
+		return (true);
+	if (ft_strncmp("cd", cmd, 3) == 0)
 		return (true);
 	return (false);
 }

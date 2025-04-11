@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/10 22:15:43 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/11 09:37:31 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void		ft_process(t_global *global);
 void	ft_process(t_global *global)
 {
 	pid_t	child_proc;
+	bool	is_sth;
 	//****************** To be moved one by one to the while loop below********************/
 	// I don't need to close anything because I don't serve pipes yet
 	/**if (command->pipe_send)
@@ -64,7 +65,8 @@ void	ft_process(t_global *global)
 		ft_error(&proc, NULL);*/
 	while (global->cmd)
 	{
-		if(ft_is_our_builtin(global->cmd->command))
+		(void)is_sth;
+		if (ft_is_our_builtin(global->cmd->command))
 		{
 			global->cmd->path = NULL;
 			ft_run_builtin(global->cmd);
