@@ -6,13 +6,22 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:22:32 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/11 09:31:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static size_t	ft_count_words(char const *s, char c);
+
+bool	ft_is_our_builtin(char *cmd)
+{
+	if (ft_strncmp("echo", cmd, 5) == 0)
+		return (true);
+	if (ft_strncmp("cd", cmd, 3) == 0)
+		return (true);
+	return (false);
+}
 
 char	*resolve_command_path(char *path, char *cmd)
 {
@@ -33,6 +42,7 @@ char	*resolve_command_path(char *path, char *cmd)
 			if (access(res, X_OK) == -1)
 			{
 				free(res);
+				res = NULL;
 				i++;
 			}
 			else

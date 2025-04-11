@@ -39,6 +39,7 @@ static bool	init_env(t_global *global, char **env)
 			return (false);
 		i++;
 	}
+	global->env[i] = NULL;
 	return (true);
 }
 

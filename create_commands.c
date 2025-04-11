@@ -33,7 +33,8 @@ t_command	*lst_new_cmd(bool value)
 	if (!(new_node))
 		return (NULL);
 	ft_memset(new_node, 0, sizeof(t_command));
-	new_node->pipe_output = value;
+	new_node->pipe_output = value; //@marlenasn this line is overwritten by the line 22 in every case
+	// please check if we need to save "value" to leverage it later
 	initialize_cmd(&new_node);
 	return (new_node);
 }
