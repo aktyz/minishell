@@ -81,7 +81,7 @@ Candidates so far:
 - ps aux | grep wsl
 - du -h | sort -hr
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
-- [ ] make sure the parent process closes the pipes in the right place so that it doesn't interefere in the pipes between child processes
+- [x] make sure the parent process closes the pipes in the right place so that it doesn't interfere in the pipes between child processes
 
 
 ## TODO for minishell (aka. our Backlog)

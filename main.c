@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/09 17:00:11 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/13 12:15:17 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int ac, char **av, char **env)
 {
 	t_global	global;
 
-	if (ac == 2 && ft_strncmp(av[1], "testing", 7) == 0)
+	if (ac == 2 && ft_strncmp(av[1], "testing", 8) == 0)
 		run_tests(env);
 	else
 	{
