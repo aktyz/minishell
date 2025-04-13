@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/13 12:15:17 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/13 19:17:11 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ void	minishell_interactive(t_global *global)
 		{
 			//print_token_list(&global->token);
 			print_cmd_list(global);
+			ft_process(global);
 		}
 		//g_last_exit_code = execute(global);
 		//else
 		//	g_last_exit_code = 1;
-		ft_process(global);
 		free_global(global, false);
 		global->token = NULL;
 	}
