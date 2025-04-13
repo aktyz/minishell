@@ -130,8 +130,8 @@ struct s_io_fds
 void	ft_process(t_global *global);
 void	test_single_cmd(t_global *global);
 
-void	ft_error(t_global ***proc, char **string);
-void	ft_clean_up(t_global **proc);
+void	ft_error(t_process ***proc, char **string);
+void	ft_clean_up(t_process **proc);
 
 void	ft_get_path_and_args(t_command **exe, char *cmd,
 			char *file_name);

@@ -31,7 +31,9 @@ SRC = main.c \
 	quotes.c \
 	resolve_command_path.c \
 	ft_process.c \
+	tests/test_single_cmd.c \
 	initialization.c \
+	signals.c \
 	cleanup.c \
 	debug.c 
 
@@ -44,6 +46,7 @@ SRC_TEST = execve_args_allocation.c \
 	ft_process.c \
 	libft_functions.c \
 	initialization.c \
+	signals.c \
 	cleanup.c \
 	debug.c \
 	tests/test_exe_functions.c \
