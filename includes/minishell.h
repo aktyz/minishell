@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/11 22:59:51 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/13 19:07:05 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,11 @@ enum	e_token_types
 	WORD,
 	VAR,
 	PIPE,
-	INPUT,
-	TRUNC,
-	HEREDOC,
-	APPEND,
-	END
+	INPUT, // 5
+	TRUNC, // 6
+	HEREDOC, // 7
+	APPEND, // 8
+	END // 9
 };
 
 enum	e_quotes_status

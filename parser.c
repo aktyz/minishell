@@ -94,11 +94,20 @@ static bool	forbidden_consecutives(t_token *token_node)
 	if (token_node->prev)
 	{
 		if (token_node->type == PIPE && token_node->prev->type == PIPE)
+		{
+			ft_printf("Two pipes\n");
 			return (true);
+		}
 		if (token_node->type > PIPE && token_node->prev->type > PIPE)
+		{
+			ft_printf("Two extras bigger than pipe, ie \"<<\"\n");
 			return (true);
+		}
 		if (token_node->type == END && token_node->prev->type >= PIPE)
+		{
+			ft_printf("Unended pipe\n");
 			return (true);
+		}
 	}
 	return (false);
 }
@@ -113,11 +122,11 @@ int	verify_double_separators(t_token **token_lst)
 		if (forbidden_consecutives(temp))
 		{
 			if (temp->type == END && temp->prev && temp->prev->type > PIPE)
-				write(2, "syntax error\n", 13);
+				write(2, "syntax error: Unended pipe again\n", 34);
 			else if (temp->type == END && temp->prev)
 				write(2, "syntax error\n", 13);
 			else
-				write(2, "syntax error\n", 13);
+				write(2, "syntax error fallback\n", 23);
 			return (1);
 		}
 		temp = temp->next;
@@ -128,7 +137,7 @@ int	verify_double_separators(t_token **token_lst)
 int	check_var(t_token **token_lst)
 {
 	t_token	*tmp;
-	
+
 	tmp = *token_lst;
 	if (tmp->type == PIPE) //the first node cannot be PIPE
 	{
@@ -140,7 +149,7 @@ int	check_var(t_token **token_lst)
 		set_variable(&tmp);
 		if (verify_double_separators(&tmp))
 		{
-			write(2, "syntax error\n", 13);
+			write(2, "syntax error: double separators detected\n", 42);
 			return (1);
 		}
 		tmp = tmp->next;
@@ -159,7 +168,7 @@ int	char_isspace(int c)
 bool	input_is_space(char *input) //for checking if the input is only space
 {
 	int	i;
-	
+
 	i = 0;
 	while (input[i])
 	{
