@@ -76,7 +76,8 @@ That would leave in the main folder only crucial files:
 I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project.
 Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards; `cd ./test_files` needs to be implemented first as a built-in to work
 Candidates so far:
-- cat ./test_files/myfile.txt | grep "error"
+- ls | wc -w
+- cat ./test_files/myfile.txt | grep "error" | wc -w
 - ps aux | grep wsl
 - du -h | sort -hr
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
