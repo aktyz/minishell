@@ -35,15 +35,17 @@ SRC = main.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
-	tests/test_single_cmd.c \
 	debug.c 
 
 SRC_TEST = execve_args_allocation.c \
+	create_commands.c \
 	execve_data_allocation.c \
 	utils_for_tokens.c \
+	extract_env_var.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
+	resolve_command_path.c \
 	ft_process.c \
 	initialization.c \
 	signals.c \
@@ -54,7 +56,6 @@ SRC_TEST = execve_args_allocation.c \
 	tests/test_master.c \
 	tests/test_single_cmd.c \
 	builtins/echo.c \
-	signals.c \
 	tests.c
 
 
@@ -62,10 +63,7 @@ SRC_TEST = execve_args_allocation.c \
 # libft_functions.c \
 # tests/test_ft_echo.c \
 
-	
 
-
->>>>>>> 27b625a (make works)
 OBJ = $(SRC:.c=.o)
 OBJ_TEST = $(SRC_TEST:.c=.o)
 
