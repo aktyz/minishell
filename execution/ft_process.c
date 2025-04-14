@@ -62,13 +62,16 @@ void	ft_process(t_global *global)
 	{
 		if (cmd_i->pipe_output)
 			pipe(cmd_i->pipe_fd);
-		if (!cmd_i->is_builtin)
-			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
-		cmd_i->cmd_pid = fork();
-		if (cmd_i->cmd_pid == -1)
+		if (!cmd_i->is_builtin) // DEBUG: BUILT-IN processed by parent
 		{
-			perror("Forking failed");
-			return ;
+			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
+			cmd_i->cmd_pid = fork();
+		//}
+			if (cmd_i->cmd_pid == -1)
+			{
+				perror("Forking failed");
+				return ;
+			}
 		}
 		if (cmd_i->cmd_pid == 0)// child: system cmd or built-in setting up redirections
 		{
@@ -76,6 +79,9 @@ void	ft_process(t_global *global)
 				ft_handle_redirections(cmd_i);
 			break ;
 		}
+		if (cmd_i->cmd_pid == -1) // DEBUG: BUILT-IN redirections in parent process
+			if((cmd_i->prev && cmd_i->prev->pipe_output) || cmd_i->pipe_output)
+				ft_handle_redirections(cmd_i);
 		else if (cmd_i->cmd_pid > 0 && cmd_i->prev && cmd_i->prev->pipe_output) // parent closing pipe because two childs have been already created
 		{
 			close(cmd_i->prev->pipe_fd[0]);
@@ -91,14 +97,20 @@ void	ft_process(t_global *global)
 		{
 			if (cmd_i->prev && cmd_i->prev->cmd_pid)
 				waitpid(cmd_i->prev->cmd_pid, NULL, 0); // Wait for the previous process to finish
-			if (cmd_i->is_builtin)
-				ft_run_builtin(cmd_i, global);
-			else
-			{
+			//if (cmd_i->is_builtin)
+			//	ft_run_builtin(cmd_i, global);
+			//else
+			//{
 				execve(cmd_i->path, cmd_i->args, global->env); // Execute the command
 				perror("execve failed");
 				exit(EXIT_FAILURE);
-			}
+			//}
+		}
+		else if (cmd_i->cmd_pid == -1) // DEBUG: BUILT-IN processed by parent
+		{
+			if (cmd_i->prev && cmd_i->prev->cmd_pid)
+				waitpid(cmd_i->prev->cmd_pid, NULL, 0); // Wait for the previous process to finish
+			ft_run_builtin(cmd_i, global);
 		}
 		else if (cmd_i->cmd_pid > 0)// Parent process - we still need to check not to wait in child on not currently served nodes cmds
 		{
