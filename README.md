@@ -9,7 +9,7 @@ sudo apt-get install libcriterion-dev
 
 * Compile and run tests
 ```
-make 
+make
 ./tester
 ```
 
@@ -77,15 +77,22 @@ That would leave in the main folder only crucial files:
 - README.md
 
 ## For Zyta where to start next time
-I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project.
-Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards; `cd ./test_files` needs to be implemented first as a built-in to work
-Candidates so far:
+### Commands to test piping in our minishell:
 - ls | wc -w
 - cat ./test_files/myfile.txt | grep "error" | wc -w
 - ps aux | grep wsl
 - du -h | sort -hr
+- echo "orange banana apple" | wc -w
+- echo "orange banana apple" | tr ' ' '\n' | sort
+
+### Commands to test outfile redirections in our minishell:
+- echo "something, something" > ./test_files/test0
+- cat ./test_files/myfile.txt > ./test_files/test1
+
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
+> I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project. Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards (those are in bonus); `cd ./test_files` needs to be implemented first as a built-in to work because bash has it also built-in and not a stand-alone script.
 - [x] make sure the parent process closes the pipes in the right place so that it doesn't interfere in the pipes between child processes
+- [ ] enrich `ft_handle_redirections` to work with outfile for our example
 
 
 ## TODO for minishell (aka. our Backlog)
@@ -218,23 +225,23 @@ data -> global
 
 
 * implement and understand missing functions used in parse_user_input
-    [x] check_if_var -> check_var
-        [x] TESTS
-    [x] var_expander
-        [x] TESTS
-        [x] understand tests
-    [x] handle quotes
-        [x] TESTS
-    [ ] create_commands (skeleton)
+- [x] check_if_var -> check_var
+	- [x] TESTS
+- [x] var_expander
+	- [x] TESTS
+	- [x] understand tests
+- [x] handle quotes
+	- [x] TESTS
+- [ ] create_commands (skeleton)
 
 
 * implement functions used by create_commands
-    [ ] lst_add_back_cmd
-    [ ] parse_word
-    [ ] parse_input
-    [ ] parse_trunc
-    [ ] parse_heredoc
-    [ ] parse_append
-    [ ] parse_pipe
-
-    [ ] prep_no_arg_commands
+- [ ] lst_add_back_cmd
+- [ ] parse_word
+- [ ] parse_input
+- [ ] parse_trunc
+- [ ] parse_heredoc
+- [ ] parse_append
+- [ ] parse_pipe
+<br>
+- [ ] prep_no_arg_commands

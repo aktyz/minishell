@@ -6,9 +6,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/minishell",
-      "args": [
-        "testing"
-      ],
+      "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
@@ -27,7 +25,7 @@
         },
         {
           "description": "Follow forked processes",
-          "text": "set follow-fork-mode parent"
+          "text": "set follow-fork-mode child"
         }
       ]
     },
