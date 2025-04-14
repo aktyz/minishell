@@ -31,7 +31,11 @@ SRC = main.c \
 	quotes.c \
 	resolve_command_path.c \
 	ft_process.c \
+	tests/test_exe_functions.c \
+	tests/test_ft_echo.c \
+	tests/test_master.c \
 	tests/test_single_cmd.c \
+	builtins/echo.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
