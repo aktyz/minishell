@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:18:25 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:21:54 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:01:21 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	test_single_cmd(t_global *global)
 		cmd = cmd->next;
 		i++;
 	}
+	// TODO: execute ft_process here on those commands to complete the tests
 }
 
 static char *single_command_test_cases(int i)

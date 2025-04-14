@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:31:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/11 22:59:51 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define TRIM_SET " \t\n"
 
 # define ENV_PATH "PATH"
+# define ENV_HOME "HOME"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -79,8 +80,10 @@ typedef struct s_command
 	char				*path;
 	int					args_size;
 	char				**args;
-	bool				pipe_output;
-	int					*pipe_fd;
+	bool				pipe_output; // pipes
+	int					pipe_fd[2]; // pipes
+	bool				is_builtin;
+	pid_t				cmd_pid;
 	t_io_fds			*io_fds;
 	struct s_command	*next;
 	struct s_command	*prev;
@@ -128,7 +131,8 @@ struct s_io_fds
 };
 
 void	ft_process(t_global *global);
-void	test_single_cmd(t_global *global);
+bool	ft_is_our_builtin(char *cmd);
+void	ft_handle_redirections(t_command *cmd);
 
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
@@ -137,7 +141,7 @@ void	ft_get_path_and_args(t_command **exe, char *cmd,
 			char *file_name);
 void	ft_allocate_execve_argv(t_command **cmd, char *str);
 
-char	*extract_env_var(char *var_name, char **env);
+char	*extract_env_var(char *var_name, char **env); //TODO: replace with getenv everywhere
 char	*resolve_command_path(char *path, char *cmd);
 
 //initialization
@@ -157,7 +161,7 @@ void	exit_shell(t_global *global, int exno);
 //lexer
 
 int		tokenization(t_global *global);
-bool input_is_space(char * input);
+bool	input_is_space(char * input);
 bool	parse_user_input(t_global *global);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
@@ -171,7 +175,7 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
 
 // env variables
 
-int	var_expander(t_global *global, t_token **token_lst);
+int		var_expander(t_global *global, t_token **token_lst);
 char	*var_expander_heredoc(t_global *global, char *str);
 
 // quotes
@@ -179,7 +183,7 @@ char	*var_expander_heredoc(t_global *global, char *str);
 int handle_quotes(t_global *global);
 
 // parse commands
-void		create_commands(t_global *global, t_token *token);
+void	create_commands(t_global *global, t_token *token);
 void	parse_word(t_command **cmd, t_token **token_lst);
 void	parse_input(t_command **last_cmd, t_token **token_lst);
 void	parse_trunc(t_command **last_cmd, t_token **token_lst);
@@ -201,13 +205,16 @@ void	print_token_list(t_token **tokens);
 void	print_cmd_list(t_global *global);
 
 // builtins
+void	ft_run_builtin(t_command *command);
 void	ft_echo(char **args);
+void	ft_cd(t_command *cmd);
 
 // Test functions
 void	run_tests(char **env);
 void	test_ft_echo();
 void	test_extract_env_var(char **env);
 void	test_resolve_command_path(char **env);
+void	test_single_cmd(t_global *global);
 
 
 #endif

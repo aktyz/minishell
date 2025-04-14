@@ -39,6 +39,7 @@ static bool	init_env(t_global *global, char **env)
 			return (false);
 		i++;
 	}
+	global->env[i] = NULL;
 	return (true);
 }
 
@@ -190,4 +191,3 @@ char	**ft_trim_user_input(char **argv, int argc)
 	}
 	return (result);
 }
-
