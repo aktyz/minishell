@@ -20,6 +20,8 @@ bool	ft_is_our_builtin(char *cmd)
 		return (true);
 	if (ft_strncmp("cd", cmd, 3) == 0)
 		return (true);
+	if (ft_strncmp("exit", cmd, 5) == 0)
+		return (true);
 	return (false);
 }
 

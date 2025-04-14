@@ -205,9 +205,10 @@ void	print_token_list(t_token **tokens);
 void	print_cmd_list(t_global *global);
 
 // builtins
-void	ft_run_builtin(t_command *command);
+void	ft_run_builtin(t_command *cmd, t_global *data);
 void	ft_echo(char **args);
 void	ft_cd(t_command *cmd);
+void	ft_exit(t_global *data);
 
 // Test functions
 void	run_tests(char **env);
