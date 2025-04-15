@@ -88,6 +88,9 @@ That would leave in the main folder only crucial files:
 ### Commands to test outfile redirections in our minishell:
 - echo "something, something" > ./test_files/test0
 - cat ./test_files/myfile.txt > ./test_files/test1
+- cat < ./test_files/loremIpsum.txt
+- wc -l < ./test_files/myfile.txt
+- echo "orange banana apple" | tr ' ' '\n' | sort > ./test_files/test2
 
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
 > I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project. Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards (those are in bonus); `cd ./test_files` needs to be implemented first as a built-in to work because bash has it also built-in and not a stand-alone script.
@@ -96,8 +99,13 @@ That would leave in the main folder only crucial files:
 - [x] debug `echo "orange banana apple" | wc -w` on child
 - [x] switch back to forking for built-in as well
 - [x] debug `exit` builtin
-- [ ] debug `echo "something, something" > ./test_files/test0` to set up io redirections
-- [ ] enrich `ft_handle_redirections` to work with outfile for our example
+- [x] debug `echo "something, something" > ./test_files/test0` to set up io redirections
+- [x] enrich `ft_handle_redirections` to work with outfile for our example
+- [x] debug `wc -l < ./test_files/myfile.txt`
+- [x] debug `cat < ./test_files/loremIpsum.txt`
+- [ ] debug heredoc redirections
+- [ ] enrich `ft_handle_redirections` to work with heredoc
+- [ ] test & debug redirections in longer pipe with heredoc
 
 
 ## TODO for minishell (aka. our Backlog)

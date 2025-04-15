@@ -10,7 +10,7 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": true,
+      "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
         {
@@ -25,7 +25,7 @@
         },
         {
           "description": "Follow forked processes",
-          "text": "set follow-fork-mode child"
+          "text": "set follow-fork-mode parent"
         },
         {
           "description": "Do not detach from parent after fork",

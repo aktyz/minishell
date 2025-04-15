@@ -90,7 +90,6 @@ void	ft_process(t_global *global)
 			if (cmd_i->is_builtin)
 			{
 				ft_run_builtin(cmd_i, global);
-				//ft_clean_up_child_redirections(cmd_i); Do we need it -> no for pipes
 				ft_exit(global);
 			}
 			else

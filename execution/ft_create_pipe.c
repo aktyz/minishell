@@ -14,27 +14,45 @@
 
 void	ft_handle_redirections(t_command *cmd)
 {
-	// PIPING
 	if(cmd->cmd_pid == 0) // currently serving a child
 	{
-		if (cmd->pipe_output) // it will be sending
+		// PIPING
+		if (cmd->pipe_output)
 		{
-			close(cmd->pipe_fd[0]); // close the reading end
-			dup2(cmd->pipe_fd[1], STDOUT_FILENO); // dup stdout to the writing end of the pipe
+			close(cmd->pipe_fd[0]);
+			dup2(cmd->pipe_fd[1], STDOUT_FILENO);
 			close(cmd->pipe_fd[1]);
 		}
-		if (cmd->prev && cmd->prev->pipe_output) // it will be receiving
+		if (cmd->prev && cmd->prev->pipe_output)
 		{
-			close(cmd->prev->pipe_fd[1]); // close the writing end
-			dup2(cmd->prev->pipe_fd[0], STDIN_FILENO); // dup stdin to the reading end of the pipe
+			close(cmd->prev->pipe_fd[1]);
+			dup2(cmd->prev->pipe_fd[0], STDIN_FILENO);
 			close(cmd->prev->pipe_fd[0]);
 		}
+		// IO FILES
+		if (cmd->io_fds && cmd->io_fds->outfile)
+		{
+			dup2(cmd->io_fds->fd_out, STDOUT_FILENO);
+			close(cmd->io_fds->fd_out);
+		}
+		if (cmd->io_fds && cmd->io_fds->infile) // follow up- will we handle heredoc here
+		{
+			dup2(cmd->io_fds->fd_in, STDIN_FILENO);
+			close(cmd->io_fds->fd_in);
+		}
 	}
-	else if (cmd->cmd_pid > 0 && cmd->prev && cmd->prev->pipe_output) // currently serving parent
-	// parent should never use pipes therefore should always close them after two childs
-	// using them are created
+	else if (cmd->cmd_pid > 0) // currently serving parent
 	{
-		close(cmd->prev->pipe_fd[0]); // close the reading end
-		close(cmd->prev->pipe_fd[1]); // close the writing end
+		// PIPING
+		if (cmd->prev && cmd->prev->pipe_output)
+		{
+			close(cmd->prev->pipe_fd[0]);
+			close(cmd->prev->pipe_fd[1]);
+		}
+		// IO FILES
+		if (cmd->io_fds && cmd->io_fds->outfile)
+			close(cmd->io_fds->fd_out);
+		if (cmd->io_fds && cmd->io_fds->infile) // follow up- will we handle heredoc here
+			close(cmd->io_fds->fd_in);
 	}
 }
