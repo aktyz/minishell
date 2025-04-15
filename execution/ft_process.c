@@ -75,18 +75,15 @@ void	ft_process(t_global *global)
 		}
 		if (cmd_i->cmd_pid == 0)// child: system cmd or built-in setting up redirections
 		{
-			if((cmd_i->prev && cmd_i->prev->pipe_output) || cmd_i->pipe_output)
-				ft_handle_redirections(cmd_i);
+			if((cmd_i->prev && cmd_i->prev->pipe_output || cmd_i->pipe_output))
+				ft_handle_redirections(cmd_i->prev);
 			break ;
 		}
-		if (cmd_i->cmd_pid == -1) // DEBUG: BUILT-IN redirections in parent process
+		if (cmd_i->prev && cmd_i->prev->cmd_pid == -1) // DEBUG: BUILT-IN redirections in parent process
 			if((cmd_i->prev && cmd_i->prev->pipe_output) || cmd_i->pipe_output)
 				ft_handle_redirections(cmd_i);
-		else if (cmd_i->cmd_pid > 0 && cmd_i->prev && cmd_i->prev->pipe_output) // parent closing pipe because two childs have been already created
-		{
-			close(cmd_i->prev->pipe_fd[0]);
-			close(cmd_i->prev->pipe_fd[1]);
-		}
+		else // parent process (?)
+			ft_handle_redirections(cmd_i);
 		cmd_i = cmd_i->next;
 	}
 	cmd_i = global->cmd;

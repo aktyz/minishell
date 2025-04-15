@@ -14,16 +14,46 @@
 
 void	ft_handle_redirections(t_command *cmd)
 {
-	if (cmd->pipe_output) // it will be sending
+	if (cmd->cmd_pid == 0) // child processes
 	{
-		close(cmd->pipe_fd[0]); // close the reading end
-		dup2(cmd->pipe_fd[1], STDOUT_FILENO); // dup stdout to the writing end of the pipe
-		close(cmd->pipe_fd[1]);
+		if (cmd->pipe_output) // it will be sending
+		{
+			close(cmd->pipe_fd[0]); // close the reading end
+			dup2(cmd->pipe_fd[1], STDOUT_FILENO); // dup stdout to the writing end of the pipe
+			close(cmd->pipe_fd[1]);
+		}
+		if (cmd->prev && cmd->prev->pipe_output) // it will be receiving
+		{
+			close(cmd->prev->pipe_fd[1]); // close the writing end
+			dup2(cmd->prev->pipe_fd[0], STDIN_FILENO); // dup stdin to the reading end of the pipe
+			close(cmd->prev->pipe_fd[0]);
+		}
 	}
-	if (cmd->prev && cmd->prev->pipe_output) // it will be receiving
+	else // parent and built-ins
 	{
-		close(cmd->prev->pipe_fd[1]); // close the writing end
-		dup2(cmd->prev->pipe_fd[0], STDIN_FILENO); // dup stdin to the reading end of the pipe
-		close(cmd->prev->pipe_fd[0]);
+		if (cmd->cmd_pid == -1 || (cmd->prev && cmd->prev->cmd_pid == -1)) // built-in given two built-ins cannot follow one another as cmds
+		{
+			if (cmd->prev->cmd_pid == -1 && cmd->prev->pipe_output) // it will be sending
+			{
+				close(cmd->prev->pipe_fd[0]); // close the reading end
+				dup2(cmd->prev->pipe_fd[1], STDOUT_FILENO); // dup stdout to the writing end of the pipe
+				close(cmd->prev->pipe_fd[1]);
+			}
+			if (cmd->prev && cmd->prev->pipe_output) // it will be receiving
+			{
+				close(cmd->prev->pipe_fd[1]); // close the writing end
+				dup2(cmd->prev->pipe_fd[0], STDIN_FILENO); // dup stdin to the reading end of the pipe
+				close(cmd->prev->pipe_fd[0]);
+			}
+		}
+		else // parent
+		{
+			if (cmd->prev->pipe_output)
+			{
+				close(cmd->prev->pipe_fd[0]);
+				close(cmd->prev->pipe_fd[1]);
+			}
+		}
 	}
+
 }
