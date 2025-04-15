@@ -25,7 +25,6 @@ void	ft_process(t_global *global);
 void	ft_process(t_global *global)
 {
 	t_command	*cmd_i;
-	bool		is_builtin;
 	pid_t		last_waited_pid;
 //****************** To be moved one by one to the while loop below********************/
 	// I don't need to close anything because I don't serve pipes yet
@@ -70,16 +69,11 @@ void	ft_process(t_global *global)
 			perror("Forking failed");
 			return ;
 		}
+		ft_handle_redirections(cmd_i); // no matter parent/chilld I need to handle redirections
 		if (cmd_i->cmd_pid == 0)// child: system cmd or built-in setting up redirections
 		{
-			if((cmd_i->prev && cmd_i->prev->pipe_output) || cmd_i->pipe_output)
-				ft_handle_redirections(cmd_i);
-			break ;
-		}
-		else if (cmd_i->cmd_pid > 0 && cmd_i->prev && cmd_i->prev->pipe_output) // parent closing pipe because two childs have been already created
-		{
-			close(cmd_i->prev->pipe_fd[0]);
-			close(cmd_i->prev->pipe_fd[1]);
+			global->is_global = false;
+			break;
 		}
 		cmd_i = cmd_i->next;
 	}
@@ -92,7 +86,11 @@ void	ft_process(t_global *global)
 			if (cmd_i->prev && cmd_i->prev->cmd_pid)
 				waitpid(cmd_i->prev->cmd_pid, NULL, 0); // Wait for the previous process to finish
 			if (cmd_i->is_builtin)
+			{
 				ft_run_builtin(cmd_i, global);
+				//ft_clean_up_child_redirections(cmd_i); Do we need it?
+				ft_exit(global);
+			}
 			else
 			{
 				execve(cmd_i->path, cmd_i->args, global->env); // Execute the command
@@ -100,7 +98,7 @@ void	ft_process(t_global *global)
 				exit(EXIT_FAILURE);
 			}
 		}
-		else if (cmd_i->cmd_pid > 0)// Parent process - we still need to check not to wait in child on not currently served nodes cmds
+		else if (cmd_i->cmd_pid > 0 && global->is_global)// Parent process
 		{
 			if (!cmd_i->pipe_output && cmd_i->cmd_pid > 0)
 			{

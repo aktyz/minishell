@@ -14,16 +14,27 @@
 
 void	ft_handle_redirections(t_command *cmd)
 {
-	if (cmd->pipe_output) // it will be sending
+	// PIPING
+	if(cmd->cmd_pid == 0) // currently serving a child
 	{
-		close(cmd->pipe_fd[0]); // close the reading end
-		dup2(cmd->pipe_fd[1], STDOUT_FILENO); // dup stdout to the writing end of the pipe
-		close(cmd->pipe_fd[1]);
+		if (cmd->pipe_output) // it will be sending
+		{
+			close(cmd->pipe_fd[0]); // close the reading end
+			dup2(cmd->pipe_fd[1], STDOUT_FILENO); // dup stdout to the writing end of the pipe
+			close(cmd->pipe_fd[1]);
+		}
+		if (cmd->prev && cmd->prev->pipe_output) // it will be receiving
+		{
+			close(cmd->prev->pipe_fd[1]); // close the writing end
+			dup2(cmd->prev->pipe_fd[0], STDIN_FILENO); // dup stdin to the reading end of the pipe
+			close(cmd->prev->pipe_fd[0]);
+		}
 	}
-	if (cmd->prev && cmd->prev->pipe_output) // it will be receiving
+	else if (cmd->cmd_pid > 0 && cmd->prev && cmd->prev->pipe_output) // currently serving parent
+	// parent should never use pipes therefore should always close them after two childs
+	// using them are created
 	{
+		close(cmd->prev->pipe_fd[0]); // close the reading end
 		close(cmd->prev->pipe_fd[1]); // close the writing end
-		dup2(cmd->prev->pipe_fd[0], STDIN_FILENO); // dup stdin to the reading end of the pipe
-		close(cmd->prev->pipe_fd[0]);
 	}
 }

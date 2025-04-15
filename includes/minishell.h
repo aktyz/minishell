@@ -96,6 +96,7 @@ typedef struct s_global
 	char		*user_input;
 	char		**env;
 	t_command	*cmd;
+	bool		is_global;
 }	t_global;
 
 enum	e_token_types
