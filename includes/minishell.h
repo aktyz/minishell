@@ -32,6 +32,10 @@
 # define ENV_PATH "PATH"
 # define ENV_HOME "HOME"
 
+# define EXIT "exit"
+# define CD "cd"
+# define ECHO "echo"
+
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"

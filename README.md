@@ -92,9 +92,11 @@ That would leave in the main folder only crucial files:
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
 > I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project. Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards (those are in bonus); `cd ./test_files` needs to be implemented first as a built-in to work because bash has it also built-in and not a stand-alone script.
 - [x] make sure the parent process closes the pipes in the right place so that it doesn't interfere in the pipes between child processes
-- [ ] debug `echo "orange banana apple" | wc -w` on parent
-- [ ] debug `echo "orange banana apple" | wc -w` on child
-- [ ] switch back to forking for built-in as well
+- [x] debug `echo "orange banana apple" | wc -w` on parent
+- [x] debug `echo "orange banana apple" | wc -w` on child
+- [x] switch back to forking for built-in as well
+- [x] debug `exit` builtin
+- [ ] debug `echo "something, something" > ./test_files/test0` to set up io redirections
 - [ ] enrich `ft_handle_redirections` to work with outfile for our example
 
 

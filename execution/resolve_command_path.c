@@ -16,11 +16,11 @@ static size_t	ft_count_words(char const *s, char c);
 
 bool	ft_is_our_builtin(char *cmd)
 {
-	if (ft_strncmp("echo", cmd, 5) == 0)
+	if (ft_strncmp(ECHO, cmd, 5) == 0)
 		return (true);
-	if (ft_strncmp("cd", cmd, 3) == 0)
+	if (ft_strncmp(CD, cmd, 3) == 0)
 		return (true);
-	if (ft_strncmp("exit", cmd, 5) == 0)
+	if (ft_strncmp(EXIT, cmd, 5) == 0)
 		return (true);
 	return (false);
 }

@@ -464,7 +464,7 @@ int	add_args_echo_mode(t_token **token_node, t_command *last_cmd)
 
 int	fill_args(t_token **token_node, t_command *last_cmd)
 {
-	if (!ft_strcmp(last_cmd->command, "echo"))
+	if (!ft_strcmp(last_cmd->command, ECHO))
 	{
 		if (!(last_cmd->args))
 			return (create_args_echo_mode(token_node, last_cmd));

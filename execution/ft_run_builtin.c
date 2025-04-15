@@ -14,10 +14,8 @@
 
 void	ft_run_builtin(t_command *cmd, t_global *data)
 {
-	if (ft_strncmp(cmd->command, "echo", 5) == 0)
+	if (ft_strncmp(cmd->command, ECHO, 5) == 0)
 		ft_echo(cmd->args);
-	if (ft_strncmp(cmd->command, "cd", 3) == 0)
+	if (ft_strncmp(cmd->command, CD, 3) == 0)
 		ft_cd(cmd);
-	if (ft_strncmp(cmd->command, "exit", 5) == 0)
-		ft_exit(data);
 }

@@ -63,6 +63,8 @@ void	ft_process(t_global *global)
 			pipe(cmd_i->pipe_fd);
 		if (!cmd_i->is_builtin)
 			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
+		if (ft_strncmp(cmd_i->command, EXIT, 5) == 0)
+			ft_exit(global);
 		cmd_i->cmd_pid = fork();
 		if (cmd_i->cmd_pid == -1)
 		{
@@ -88,7 +90,7 @@ void	ft_process(t_global *global)
 			if (cmd_i->is_builtin)
 			{
 				ft_run_builtin(cmd_i, global);
-				//ft_clean_up_child_redirections(cmd_i); Do we need it?
+				//ft_clean_up_child_redirections(cmd_i); Do we need it -> no for pipes
 				ft_exit(global);
 			}
 			else
