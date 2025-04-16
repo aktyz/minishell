@@ -791,8 +791,9 @@ bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 		set_signals_interactive();
 		line = readline(">");
 		set_signals_noninteractive();
-		if (!evaluate_heredoc_line(global, &line, io, &ret))
+		if (!evaluate_heredoc_line(global, &line, io, &ret)) {
 			break ;
+		}
 		ft_putendl_fd(line, fd);
 		free_ptr(line);
 	}
@@ -874,13 +875,13 @@ void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst)
 	io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
 	if (get_heredoc(global, io))
 		io->fd_in = open(io->infile, O_RDONLY);
-	// else
-	// 	io->fd_in = -1;
-	// if (temp->next->next)
-	// 	temp = temp->next->next;
-	// else
-	// 	temp = temp->next;
-	// *token_lst = temp;
+	else
+		io->fd_in = -1;
+	if (temp->next->next)
+		temp = temp->next->next;
+	else
+		temp = temp->next;
+	*token_lst = temp;
 }
 
 
