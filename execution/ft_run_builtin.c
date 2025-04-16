@@ -18,4 +18,6 @@ void	ft_run_builtin(t_command *cmd, t_global *data)
 		ft_echo(cmd->args);
 	if (ft_strncmp(cmd->command, PWD, 4) == 0)
 		ft_pwd();
+	if (ft_strncmp(cmd->command, CD, 3) == 0)
+		ft_cd(cmd);
 }
