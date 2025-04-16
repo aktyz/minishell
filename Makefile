@@ -43,6 +43,7 @@ SRC = main.c \
 	builtins/echo.c \
 	builtins/exit.c \
 	builtins/cd.c \
+	builtins/pwd.c \
 	debug.c
 
 SRC_TEST = create_commands.c \
@@ -67,6 +68,7 @@ SRC_TEST = create_commands.c \
 	builtins/exit.c \
 	builtins/echo.c \
 	builtins/cd.c \
+	builtins/pwd.c \
 	debug.c \
 	tests.c
 
