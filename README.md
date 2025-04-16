@@ -103,9 +103,9 @@ That would leave in the main folder only crucial files:
 - [x] enrich `ft_handle_redirections` to work with outfile for our example
 - [x] debug `wc -l < ./test_files/myfile.txt`
 - [x] debug `cat < ./test_files/loremIpsum.txt`
-- [ ] debug heredoc redirections
-- [ ] enrich `ft_handle_redirections` to work with heredoc
-- [ ] test & debug redirections in longer pipe with heredoc
+- [x] debug heredoc redirections
+- [x] enrich `ft_handle_redirections` to work with heredoc
+- [x] test & debug redirections in longer pipe with heredoc
 
 - [ ] Check signal handling in both modes - interactive and non-interactive
 - [ ] test for handling single and double quotes as per subject requirements
