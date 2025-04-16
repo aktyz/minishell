@@ -12,6 +12,7 @@ void	ft_pwd(void)
 	{
 		free(buff);
 		buff_size *= 2;
+		buff = ft_calloc(sizeof(char), buff_size);
 	}
 	ft_printf("%s\n", buff);
 	free(buff);
