@@ -71,7 +71,7 @@ void	ft_process(t_global *global)
 			perror("Forking failed");
 			return ;
 		}
-		ft_handle_redirections(cmd_i); // no matter parent/chilld I need to handle redirections
+		ft_handle_redirections(cmd_i); // no matter parent/child I need to handle redirections
 		if (cmd_i->cmd_pid == 0)// child: system cmd or built-in setting up redirections
 		{
 			global->is_global = false;

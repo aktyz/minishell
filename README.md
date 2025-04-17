@@ -256,5 +256,4 @@ data -> global
 - [ ] parse_heredoc
 - [ ] parse_append
 - [ ] parse_pipe
-<br>
 - [ ] prep_no_arg_commands
