@@ -178,9 +178,11 @@ bool	input_is_space(char *input) //for checking if the input is only space
 */
 bool	parse_user_input(t_global *global)
 {
-	if (global->user_input == NULL) // readline function OR malloc inside ft_strdup function did not work
+	if (global->user_input == NULL) { // readline function OR malloc inside ft_strdup function did not work
+		exit(0); // make Ctrl-D work to exit shell
 		return false;
 		//exit_builtin(global, NULL); // NOTE: builtin not implemented
+	}
 	else if (ft_strncmp(global->user_input, "\0", 1) == 0) // empty string in user_input
 		return (false);
 	else if (input_is_space(global->user_input)) // only whitespace characters in user_input

@@ -54,9 +54,9 @@ void	minishell_interactive(t_global *global)
 {
 	while (1)
 	{
-		// set_signals_interactive();
+		set_signals_interactive();
 		global->user_input = readline(PROMPT);
-		// set_signals_noninteractive();
+		set_signals_noninteractive();
 		if (parse_user_input(global))
 		{
 			//print_token_list(&global->token);
