@@ -107,6 +107,10 @@ That would leave in the main folder only crucial files:
 - [x] enrich `ft_handle_redirections` to work with heredoc
 - [x] test & debug redirections in longer pipe with heredoc
 
+
+- [ ] Export built-in
+- [ ] Unset built-in
+- [ ] Env built-in
 - [ ] Check signal handling in both modes - interactive and non-interactive
 - [ ] test for handling single and double quotes as per subject requirements
 

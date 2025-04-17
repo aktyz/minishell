@@ -45,7 +45,7 @@ static char	**multiple_ens(void)
 
 	ft_printf("Testing: [echo -n -n -n Hello World!]\n");
 	args = (char **)malloc(sizeof(char *) * 7);
-	args[0] = ft_strdup("echo");
+	args[0] = ft_strdup(ECHO);
 	args[1] = ft_strdup("-n");
 	args[2] = ft_strdup("-n");
 	args[3] = ft_strdup("-n");
@@ -61,7 +61,7 @@ static char	**no_ens(void)
 
 	ft_printf("Testing: [echo Hello World! -n]\n");
 	args = (char **)malloc(sizeof(char *) * 5);
-	args[0] = ft_strdup("echo");
+	args[0] = ft_strdup(ECHO);
 	args[1] = ft_strdup("Hello");
 	args[2] = ft_strdup("World!");
 	args[3] = ft_strdup("-n");
@@ -75,7 +75,7 @@ static char	**no_arg(void)
 
 	ft_printf("Testing: [echo -n]\n");
 	args = (char **)malloc(sizeof(char *) * 3);
-	args[0] = ft_strdup("echo");
+	args[0] = ft_strdup(ECHO);
 	args[1] = ft_strdup("-n");
 	args[2] = NULL;
 	return (args);
@@ -87,7 +87,7 @@ static char	**no_str(void)
 
 	ft_printf("Testing: [echo]\n");
 	args = (char **)malloc(sizeof(char *) * 2);
-	args[0] = ft_strdup("echo");
+	args[0] = ft_strdup(ECHO);
 	args[2] = NULL;
 	return (args);
 }
@@ -97,7 +97,7 @@ static char **different_opt(void)
 	char	**args;
 	ft_printf("Testing: [echo --help]\n");
 	args = (char **)malloc(sizeof(char *) * 3);
-	args[0] = ft_strdup("echo");
+	args[0] = ft_strdup(ECHO);
 	args[1] = ft_strdup("--help");
 	args[2] = NULL;
 	return (args);
