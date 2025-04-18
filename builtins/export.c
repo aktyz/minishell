@@ -8,15 +8,25 @@ void	ft_export(t_command *cmd, t_global *global)
 {
 	t_list			*env;
 	t_minishell_env	*content;
+	char			*var_name;
 
+	env = global->env;
 	if (cmd->args[1])
 	{
-		//TODO: ft_export_env_var(global);
+		var_name = cmd->args[1];
+		while (env && env->content)
+		{
+			content = (t_minishell_env*) env->content;
+			if (ft_strncmp(var_name, content->name_value[0], ft_strlen(var_name)) == 0)
+				break ;
+			env = env->next;
+		}
+		if (ft_strncmp(var_name, content->name_value[0], ft_strlen(var_name)) == 0)
+			content->export = true;
 		return ;
 	}
 	else
 	{
-		env = global->env;
 		ft_sort_export_list(&env); //TODO
 		while (env && env->content)
 		{

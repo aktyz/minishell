@@ -33,6 +33,11 @@ void	ft_process(t_global *global)
 			ft_cd(cmd_i);
 			break ;
 		}
+		if (ft_strncmp(cmd_i->command, EXPORT, 7) == 0)
+		{
+			ft_export(cmd_i, global);
+			break ;
+		}
 		cmd_i->cmd_pid = fork();
 		if (cmd_i->cmd_pid == -1)
 		{
