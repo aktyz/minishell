@@ -22,7 +22,7 @@ bool	ft_is_our_builtin(char *cmd)
 		return (true);
 	if (ft_strncmp(EXIT, cmd, 5) == 0)
 		return (true);
-	if (ft_strncmp("pwd", cmd, 4) == 0)
+	if (ft_strncmp(PWD, cmd, 4) == 0)
 		return (true);
 	return (false);
 }

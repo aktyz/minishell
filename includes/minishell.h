@@ -35,6 +35,7 @@
 # define EXIT "exit"
 # define CD "cd"
 # define ECHO "echo"
+# define PWD "pwd"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
