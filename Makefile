@@ -41,6 +41,7 @@ SRC = main.c \
 	signals.c \
 	cleanup.c \
 	builtins/echo.c \
+	builtins/exit.c \
 	builtins/cd.c \
 	debug.c
 
@@ -63,6 +64,7 @@ SRC_TEST = create_commands.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
+	builtins/exit.c \
 	builtins/echo.c \
 	builtins/cd.c \
 	debug.c \

@@ -60,7 +60,7 @@ void	minishell_interactive(t_global *global)
 		if (parse_user_input(global))
 		{
 			//print_token_list(&global->token);
-			print_cmd_list(global);
+			//print_cmd_list(global);
 			ft_process(global);
 		}
 		//g_last_exit_code = execute(global);

@@ -25,7 +25,6 @@ void	ft_process(t_global *global);
 void	ft_process(t_global *global)
 {
 	t_command	*cmd_i;
-	bool		is_builtin;
 	pid_t		last_waited_pid;
 //****************** To be moved one by one to the while loop below********************/
 	// I don't need to close anything because I don't serve pipes yet
@@ -61,28 +60,22 @@ void	ft_process(t_global *global)
 	while (cmd_i)
 	{
 		if (cmd_i->pipe_output)
-			pipe(cmd_i->pipe_fd); // Create a pipe for the current command
-
+			pipe(cmd_i->pipe_fd);
 		if (!cmd_i->is_builtin)
-		{
 			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
-			cmd_i->cmd_pid = fork();
-			if (cmd_i->cmd_pid == -1)
-			{
-				perror("Forking failed");
-				return;
-			}
-			if (cmd_i->cmd_pid > 0 && cmd_i->prev && cmd_i->prev->pipe_output) // parent process and pipe receiver forked
-			{
-				close(cmd_i->prev->pipe_fd[0]);
-				close(cmd_i->prev->pipe_fd[1]);
-			}
-			if (cmd_i->cmd_pid == 0) // child
-			{
-				if((cmd_i->prev && cmd_i->prev->pipe_output) || cmd_i->pipe_output)
-					ft_handle_redirections(cmd_i);
-				break ;
-			}
+		if (ft_strncmp(cmd_i->command, EXIT, 5) == 0)
+			ft_exit(global);
+		cmd_i->cmd_pid = fork();
+		if (cmd_i->cmd_pid == -1)
+		{
+			perror("Forking failed");
+			return ;
+		}
+		ft_handle_redirections(cmd_i); // no matter parent/child I need to handle redirections
+		if (cmd_i->cmd_pid == 0)// child: system cmd or built-in setting up redirections
+		{
+			global->is_global = false;
+			break;
 		}
 		cmd_i = cmd_i->next;
 	}
@@ -94,18 +87,20 @@ void	ft_process(t_global *global)
 		{
 			if (cmd_i->prev && cmd_i->prev->cmd_pid)
 				waitpid(cmd_i->prev->cmd_pid, NULL, 0); // Wait for the previous process to finish
-			execve(cmd_i->path, cmd_i->args, global->env); // Execute the command
-			perror("execve failed");
-			exit(EXIT_FAILURE);
-		}
-		else if (cmd_i->cmd_pid > 0 || cmd_i->cmd_pid == -1) // Parent process or built-in cmd
-		{
 			if (cmd_i->is_builtin)
 			{
-				if (cmd_i->prev && cmd_i->prev->pipe_output)
-					waitpid(cmd_i->cmd_pid, NULL, 0);
-				ft_run_builtin(cmd_i);
+				ft_run_builtin(cmd_i, global);
+				ft_exit(global);
 			}
+			else
+			{
+				execve(cmd_i->path, cmd_i->args, global->env); // Execute the command
+				perror("execve failed");
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if (cmd_i->cmd_pid > 0 && global->is_global)// Parent process
+		{
 			if (!cmd_i->pipe_output && cmd_i->cmd_pid > 0)
 			{
 				waitpid(cmd_i->cmd_pid, NULL, 0); // Wait for the current process if it does not output to a pipe
@@ -114,7 +109,6 @@ void	ft_process(t_global *global)
 			else if (cmd_i == global->cmd && cmd_i->cmd_pid > 0)
 				waitpid(cmd_i->cmd_pid, NULL, WNOHANG);// Special case: Wait for the first process to finish setting up redirections
 		}
-
 		cmd_i = cmd_i->next;
 	}
 	// Wait for the last command to finish, but only if it hasn't been waited on

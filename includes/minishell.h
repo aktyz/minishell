@@ -32,6 +32,10 @@
 # define ENV_PATH "PATH"
 # define ENV_HOME "HOME"
 
+# define EXIT "exit"
+# define CD "cd"
+# define ECHO "echo"
+
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"
@@ -96,6 +100,7 @@ typedef struct s_global
 	char		*user_input;
 	char		**env;
 	t_command	*cmd;
+	bool		is_global;
 }	t_global;
 
 enum	e_token_types
@@ -205,9 +210,10 @@ void	print_token_list(t_token **tokens);
 void	print_cmd_list(t_global *global);
 
 // builtins
-void	ft_run_builtin(t_command *command);
+void	ft_run_builtin(t_command *cmd, t_global *data);
 void	ft_echo(char **args);
 void	ft_cd(t_command *cmd);
+void	ft_exit(t_global *data);
 
 // Test functions
 void	run_tests(char **env);

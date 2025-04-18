@@ -96,7 +96,7 @@ bool	init_global(t_global *global, char **env)
 	// }
 	global->token = NULL;
 	global->user_input = NULL;
-
+	global->is_global = true;
 	global->cmd = NULL;
 	// global->pid = -1;
 	g_last_exit_code = 0;
