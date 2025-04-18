@@ -14,48 +14,11 @@
 
 void	ft_process(t_global *global);
 
-/**
- * Function that will eventually call our executable.
- * It contains three parts:
- * - setting up the STDOUT for the executable
- * - setting up the STDIN for the executable
- * - executing using execve() function
- *
- */
 void	ft_process(t_global *global)
 {
 	t_command	*cmd_i;
 	pid_t		last_waited_pid;
-//****************** To be moved one by one to the while loop below********************/
-	// I don't need to close anything because I don't serve pipes yet
-/**
-		command->out_file_fd = open(command->executable->file_name, O_RDWR | O_CREAT, 0644);
-		if (command->out_file_fd == -1)
-			ft_error(&proc, NULL);
-		if (!access(command->executable->file_name, F_OK))
-		{
-			dup2(command->out_file_fd, STDOUT_FILENO);
-			close(command->out_file_fd);
-		}
-		else
-			ft_error(&proc, NULL);
-	}
-	if (!access(command->executable->file_name, F_OK & R_OK))
-	{
-		command->in_file_fd = open(command->executable->file_name, O_RDONLY);
-		if (command->in_file_fd == -1)
-			ft_error(&proc, NULL);
-		dup2(command->in_file_fd, STDIN_FILENO);
-		close(command->in_file_fd);
-	}
-	else
-		ft_error(&proc, NULL);*/
-	// if there are any pipes(possibly also any redirections) we need to spawn all the processes
-	// before the next loop so that all the fds are open for all and the child processes
-	// can close/write/read accordingly to their function
-	// On the command I would need a pid of the proces spawn, so that the next command
-	// can wait for this process to terminate
-	//first loop - create pipes/redirections + fork for new processes + handle redirections
+
 	cmd_i = global->cmd;
 	while (cmd_i)
 	{
@@ -76,8 +39,8 @@ void	ft_process(t_global *global)
 			perror("Forking failed");
 			return ;
 		}
-		ft_handle_redirections(cmd_i); // no matter parent/child I need to handle redirections
-		if (cmd_i->cmd_pid == 0)// child: system cmd or built-in setting up redirections
+		ft_handle_redirections(cmd_i);
+		if (cmd_i->cmd_pid == 0)
 		{
 			global->is_global = false;
 			break;
@@ -85,13 +48,13 @@ void	ft_process(t_global *global)
 		cmd_i = cmd_i->next;
 	}
 	cmd_i = global->cmd;
-	last_waited_pid = -1; // Track the last waited PID to avoid duplicate waits
-	while (cmd_i) // execution loop
+	last_waited_pid = -1;
+	while (cmd_i)
 	{
-		if (cmd_i->cmd_pid == 0) // Child process
+		if (cmd_i->cmd_pid == 0)
 		{
 			if (cmd_i->prev && cmd_i->prev->cmd_pid)
-				waitpid(cmd_i->prev->cmd_pid, NULL, 0); // Wait for the previous process to finish
+				waitpid(cmd_i->prev->cmd_pid, NULL, 0);
 			if (cmd_i->is_builtin)
 			{
 				ft_run_builtin(cmd_i, global);
@@ -99,24 +62,23 @@ void	ft_process(t_global *global)
 			}
 			else
 			{
-				execve(cmd_i->path, cmd_i->args, ft_execve_env(global->env)); // Execute the command
+				execve(cmd_i->path, cmd_i->args, ft_execve_env(global->env));
 				perror("execve failed");
 				exit(EXIT_FAILURE);
 			}
 		}
-		else if (cmd_i->cmd_pid > 0 && global->is_global)// Parent process
+		else if (cmd_i->cmd_pid > 0 && global->is_global)
 		{
 			if (!cmd_i->pipe_output && cmd_i->cmd_pid > 0)
 			{
-				waitpid(cmd_i->cmd_pid, NULL, 0); // Wait for the current process if it does not output to a pipe
-				last_waited_pid = cmd_i->cmd_pid; // Mark this PID as already waited
+				waitpid(cmd_i->cmd_pid, NULL, 0);
+				last_waited_pid = cmd_i->cmd_pid;
 			}
 			else if (cmd_i == global->cmd && cmd_i->cmd_pid > 0)
-				waitpid(cmd_i->cmd_pid, NULL, WNOHANG);// Special case: Wait for the first process to finish setting up redirections
+				waitpid(cmd_i->cmd_pid, NULL, WNOHANG);
 		}
 		cmd_i = cmd_i->next;
 	}
-	// Wait for the last command to finish, but only if it hasn't been waited on
 	cmd_i = lst_last_cmd(global->cmd);
 	if (cmd_i->cmd_pid > 0 && cmd_i->cmd_pid != last_waited_pid)
 		waitpid(cmd_i->cmd_pid, NULL, 0);

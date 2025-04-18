@@ -11,7 +11,7 @@ void	ft_export(t_command *cmd, t_global *global)
 
 	if (cmd->args[1])
 	{
-		//ft_export_env_var(global);
+		//TODO: ft_export_env_var(global);
 		return ;
 	}
 	else
@@ -58,7 +58,8 @@ char	**ft_execve_env(t_list *env)
 			ft_strlcpy(env_var + i + 1, content->name_value[1], ft_strlen(content->name_value[1]));
 			execve_env[j] = env_var;
 		}
-		j++;
+		if (execve_env[j])
+			j++;
 		env = env->next;
 	}
 	return (execve_env);

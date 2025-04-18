@@ -28,9 +28,6 @@ bool	init_env(t_global *global, char **env)
 	t_minishell_env	*content;
 	int				i;
 
-	global->env = ft_calloc(sizeof(global->env), 1);
-	if (!global->env)
-		return (false);
 	list = NULL;
 	i = 0;
 	while (env[i])
@@ -38,14 +35,14 @@ bool	init_env(t_global *global, char **env)
 		content = ft_calloc(sizeof(t_minishell_env), 1);
 		if (!content)
 		{
-			ft_lstclear(&list, free); // Free the list in case of failure
+			ft_lstclear(&list, free); // TODO: create a function to free function for t_minishell_env
 			return (false);
 		}
 		content->name_value = ft_split(env[i], '=');
 		if (!content->name_value)
 		{
 			free(content);
-			ft_lstclear(&list, free);
+			ft_lstclear(&list, free); // TODO: create a function to free function for t_minishell_env
 			return (false);
 		}
 		content->export = true;
