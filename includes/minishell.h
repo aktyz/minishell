@@ -153,11 +153,6 @@ char	**ft_execve_env(t_list *env);
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
 
-void	ft_get_path_and_args(t_command **exe, char *cmd,
-			char *file_name);
-void	ft_allocate_execve_argv(t_command **cmd, char *str);
-
-char	*extract_env_var(char *var_name, char **env); //TODO: replace with getenv everywhere
 char	*resolve_command_path(char *path, char *cmd);
 
 //initialization
@@ -232,7 +227,6 @@ void	ft_export(t_command *cmd, t_global *global);
 // Test functions
 void	run_tests(char **env);
 void	test_ft_echo();
-void	test_extract_env_var(char **env);
 void	test_resolve_command_path(char **env);
 void	test_single_cmd(t_global *global);
 
