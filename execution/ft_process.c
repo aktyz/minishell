@@ -65,6 +65,11 @@ void	ft_process(t_global *global)
 			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
 		if (ft_strncmp(cmd_i->command, EXIT, 5) == 0)
 			ft_exit(global);
+		if (ft_strncmp(cmd_i->command, CD, 3) == 0)
+		{
+			ft_cd(cmd_i);
+			break ;
+		}
 		cmd_i->cmd_pid = fork();
 		if (cmd_i->cmd_pid == -1)
 		{

@@ -107,6 +107,8 @@ That would leave in the main folder only crucial files:
 - [ ] enrich `ft_handle_redirections` to work with heredoc
 - [ ] test & debug redirections in longer pipe with heredoc
 
+- [ ] Check signal handling in both modes - interactive and non-interactive
+- [ ] test for handling single and double quotes as per subject requirements
 
 ## TODO for minishell (aka. our Backlog)
 - [x] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part

@@ -25,11 +25,7 @@
         },
         {
           "description": "Follow forked processes",
-          "text": "set follow-fork-mode parent"
-        },
-        {
-          "description": "Do not detach from parent after fork",
-          "text": "set detach-on-fork off"
+          "text": "set follow-fork-mode child"
         }
       ]
     },

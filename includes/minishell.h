@@ -35,6 +35,7 @@
 # define EXIT "exit"
 # define CD "cd"
 # define ECHO "echo"
+# define PWD "pwd"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -214,6 +215,7 @@ void	ft_run_builtin(t_command *cmd, t_global *data);
 void	ft_echo(char **args);
 void	ft_cd(t_command *cmd);
 void	ft_exit(t_global *data);
+void	ft_pwd(void);
 
 // Test functions
 void	run_tests(char **env);
