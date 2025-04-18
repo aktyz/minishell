@@ -116,7 +116,7 @@ Test(check_var, mixed_valid_tokens) {
 // Helper function to create a mock global env
 t_global *create_mock_global(char **env) {
     t_global *global = malloc(sizeof(t_global));
-    global->env = env;
+    init_env(global, env);
     return global;
 }
 

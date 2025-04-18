@@ -6,7 +6,7 @@ bool	is_variable_character(char c)
 	return ft_isalnum(c) || c == '_';
 }
 
-/* returns number of characters in the first encountered variable that starts with $ 
+/* returns number of characters in the first encountered variable that starts with $
 
 */
 int	var_length(char *str)
@@ -168,7 +168,7 @@ char	*identify_var(char *str)
 }
 
 /*
-*  After splitting the user's input into tokens, we have to expand 
+*  After splitting the user's input into tokens, we have to expand
 *  the variables. After the expansion is done, quote characters are
 *  removed from the original word unless they are between quotes.
 */
@@ -176,35 +176,42 @@ char	*identify_var(char *str)
 
 static int	var_exists(t_global *global, char *var)
 {
-	int		i;
-	int		len;
+	int				i;
+	int				len;
+	t_list			*env;
+	t_minishell_env	*content;
 
 	i = 0;
 	len = ft_strlen(var);
-	while (global->env[i])
+	env = global->env;
+	while (env && env->content)
 	{
-		if (ft_strncmp(global->env[i], var, len) == 0)
+		content = (t_minishell_env*) env->content;
+		if (ft_strncmp(content->name_value[0], var, len) == 0)
 			return (0);
-		i++;
+		env = env->next;
 	}
 	return (1);
 }
 
 static char	*search_env_var(t_global *global, char *var)
 {
-	char	*str;
-	int		i;
-	int		len;
+	char			*str;
+	int				i;
+	int				len;
+	t_list			*env;
+	t_minishell_env	*content;
 
 	i = 0;
 	len = ft_strlen(var);
-	while (global->env[i])
+	env = global->env;
+	while (env && env->content)
 	{
-		if (ft_strncmp(global->env[i], var, len) == 0)
+		if (ft_strncmp(content->name_value[0], var, len) == 0)
 			break ;
-		i++;
+		env = env->next;
 	}
-	str = ft_strdup(global->env[i] + len);
+	str = ft_strdup(content->name_value[0] + len);
 	return (str);
 }
 

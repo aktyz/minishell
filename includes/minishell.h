@@ -97,12 +97,18 @@ typedef struct s_command
 	struct s_command	*prev;
 }	t_command;
 
+typedef struct s_minishell_env
+{
+	char	**name_value;
+	bool	export;
+}	t_minishell_env;
+
 typedef struct s_global
 {
 	bool		interactive;
 	t_token		*token;
 	char		*user_input;
-	char		**env;
+	t_list		*env;
 	t_command	*cmd;
 	bool		is_global;
 }	t_global;
@@ -142,6 +148,7 @@ struct s_io_fds
 void	ft_process(t_global *global);
 bool	ft_is_our_builtin(char *cmd);
 void	ft_handle_redirections(t_command *cmd);
+char	**ft_execve_env(t_list *env);
 
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
@@ -157,6 +164,7 @@ char	*resolve_command_path(char *path, char *cmd);
 
 
 bool	init_global(t_global *global, char **env);
+bool	init_env(t_global *global, char **env);
 void	init_io(t_command *cmd);
 
 //cleanup
@@ -219,7 +227,7 @@ void	ft_echo(char **args);
 void	ft_cd(t_command *cmd);
 void	ft_exit(t_global *data);
 void	ft_pwd(void);
-void	ft_export(t_global *global);
+void	ft_export(t_command *cmd, t_global *global);
 
 // Test functions
 void	run_tests(char **env);

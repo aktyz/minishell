@@ -62,7 +62,7 @@ void	ft_process(t_global *global)
 		if (cmd_i->pipe_output)
 			pipe(cmd_i->pipe_fd);
 		if (!cmd_i->is_builtin)
-			cmd_i->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd_i->command);
+			cmd_i->path = resolve_command_path(getenv(ENV_PATH), cmd_i->command);
 		if (ft_strncmp(cmd_i->command, EXIT, 5) == 0)
 			ft_exit(global);
 		if (ft_strncmp(cmd_i->command, CD, 3) == 0)
@@ -99,7 +99,7 @@ void	ft_process(t_global *global)
 			}
 			else
 			{
-				execve(cmd_i->path, cmd_i->args, global->env); // Execute the command
+				execve(cmd_i->path, cmd_i->args, ft_execve_env(global->env)); // Execute the command
 				perror("execve failed");
 				exit(EXIT_FAILURE);
 			}

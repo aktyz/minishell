@@ -1,8 +1,6 @@
 #include "minishell.h"
 
-
 int	g_last_exit_code;
-
 
 /* env_var_count:
 *	Counts how many original environment variables there are.
@@ -24,22 +22,37 @@ int	env_var_count(char **env)
 *	variables inherited from the original shell.
 *	Returns 0 on failure, 1 on success.
 */
-static bool	init_env(t_global *global, char **env)
+bool	init_env(t_global *global, char **env)
 {
-	int		i;
+	t_list			*list;
+	t_minishell_env	*content;
+	int				i;
 
-	global->env = ft_calloc(env_var_count(env) + 1, sizeof * global->env);
+	global->env = ft_calloc(sizeof(global->env), 1);
 	if (!global->env)
 		return (false);
+	list = NULL;
 	i = 0;
 	while (env[i])
 	{
-		global->env[i] = ft_strdup(env[i]);
-		if (!global->env[i])
+		content = ft_calloc(sizeof(t_minishell_env), 1);
+		if (!content)
+		{
+			ft_lstclear(&list, free); // Free the list in case of failure
 			return (false);
+		}
+		content->name_value = ft_split(env[i], '=');
+		if (!content->name_value)
+		{
+			free(content);
+			ft_lstclear(&list, free);
+			return (false);
+		}
+		content->export = true;
+		ft_lstadd_back(&list, ft_lstnew(content));
 		i++;
 	}
-	global->env[i] = NULL;
+	global->env = list;
 	return (true);
 }
 
@@ -87,7 +100,7 @@ bool	init_global(t_global *global, char **env)
 		errmsg_cmd("Fatal", NULL, "Could not initialize environment", 1);
 		return (false);
 	}
-    // TODO ucomment when relevant parts are ready
+	// TODO ucomment when relevant parts are ready
 	// if (!init_wds(data))
 	// {
 	// 	errmsg_cmd("Fatal", NULL, "Could not initialize working directories",

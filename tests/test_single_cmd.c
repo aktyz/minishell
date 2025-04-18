@@ -43,7 +43,7 @@ void	test_single_cmd(t_global *global)
 	i = 0;
 	while (i < nb_test_cases)
 	{
-		cmd->path = resolve_command_path(extract_env_var(ENV_PATH, global->env), cmd->args[0]);
+		cmd->path = resolve_command_path(getenv(ENV_PATH), cmd->args[0]);
 		cmd = cmd->next;
 		i++;
 	}
