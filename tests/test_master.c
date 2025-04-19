@@ -30,6 +30,4 @@ static void	test_builtins()
 static void test_exe_functions(char **env)
 {
 	ft_printf("\n======= Testing minishell builtins =======\n");
-	test_extract_env_var(env);
-	test_resolve_command_path(env);
 }

@@ -103,12 +103,15 @@ That would leave in the main folder only crucial files:
 - [x] enrich `ft_handle_redirections` to work with outfile for our example
 - [x] debug `wc -l < ./test_files/myfile.txt`
 - [x] debug `cat < ./test_files/loremIpsum.txt`
-- [ ] debug heredoc redirections
-- [ ] enrich `ft_handle_redirections` to work with heredoc
-- [ ] test & debug redirections in longer pipe with heredoc
-
+- [x] debug heredoc redirections
+- [x] enrich `ft_handle_redirections` to work with heredoc
+- [x] test & debug redirections in longer pipe with heredoc
+- [x] Export built-in with no options (two functions missing)
+- [ ] Unset built-in with no options
+- [ ] Env built-in with no options or arguments - print out env where `export=true` variables one by one
 - [ ] Check signal handling in both modes - interactive and non-interactive
 - [ ] test for handling single and double quotes as per subject requirements
+- [ ] remove unused `t_process` structure and depending functions
 
 ## TODO for minishell (aka. our Backlog)
 - [x] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part
