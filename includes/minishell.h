@@ -73,11 +73,11 @@ typedef struct s_process
 typedef struct s_node_for_token
 {
 	char					*str;
-	char *str_backup;
-	bool var_exists;
+	char					*str_backup;
+	bool					var_exists;
 	int						type;
-	int status;
-	bool			join;
+	int						status;
+	bool					join;
 	struct s_node_for_token	*prev;
 	struct s_node_for_token	*next;
 }	t_token;
@@ -167,6 +167,7 @@ void	init_io(t_command *cmd);
 void	free_ptr(void *ptr);
 void	free_global(t_global *global, bool clear_history);
 void	free_str_tab(char **tab);
+void	ft_clean_minishell_env(void *env_content_node);
 
 void	exit_shell(t_global *global, int exno);
 

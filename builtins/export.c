@@ -23,6 +23,19 @@ void	ft_export(t_command *cmd, t_global *global)
 		}
 		if (ft_strncmp(var_name, content->name_value[0], ft_strlen(var_name)) == 0)
 			content->export = true;
+		else
+		{
+			content = ft_calloc(sizeof(t_minishell_env), 1);
+			if (!content)
+				return ;
+			content->name_value = ft_calloc(sizeof(char*), 2);
+			content->name_value[0] = ft_calloc(sizeof(char), ft_strlen(var_name) - 1);
+			ft_strlcpy(content->name_value[0], var_name, ft_strlen(var_name) - 1);
+			// how can I get the second part of env variable creation?
+			// from cmd: `export TEST="$TERM_PROGRAM"
+			content->export = true;
+			ft_lstadd_back(&global->env, ft_lstnew(content));
+		}
 		return ;
 	}
 	else
