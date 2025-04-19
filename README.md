@@ -106,9 +106,9 @@ That would leave in the main folder only crucial files:
 - [x] debug heredoc redirections
 - [x] enrich `ft_handle_redirections` to work with heredoc
 - [x] test & debug redirections in longer pipe with heredoc
-- [ ] Export built-in
-- [ ] Unset built-in
-- [ ] Env built-in
+- [x] Export built-in with no options (two functions missing)
+- [ ] Unset built-in with no options
+- [ ] Env built-in with no options or arguments - print out env where `export=true` variables one by one
 - [ ] Check signal handling in both modes - interactive and non-interactive
 - [ ] test for handling single and double quotes as per subject requirements
 - [ ] remove unused `t_process` structure and depending functions
