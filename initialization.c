@@ -39,6 +39,7 @@ bool	init_env(t_global *global, char **env)
 			return (false);
 		}
 		content->name_value = ft_split(env[i], '=');
+		content->name_value[0] = ft_strjoin(content->name_value[0], "=");
 		if (!content->name_value)
 		{
 			free(content);

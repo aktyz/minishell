@@ -187,8 +187,9 @@ static int	var_exists(t_global *global, char *var)
 	while (env && env->content)
 	{
 		content = (t_minishell_env*) env->content;
-		if (ft_strncmp(content->name_value[0], var, len) == 0)
+		if (ft_strncmp(content->name_value[0], var, len) == 0) {
 			return (0);
+		}
 		env = env->next;
 	}
 	return (1);
@@ -212,7 +213,7 @@ static char	*search_env_var(t_global *global, char *var)
 			break ;
 		env = env->next;
 	}
-	str = ft_strdup(content->name_value[0] + len);
+	str = ft_strdup(content->name_value[1]);
 	return (str);
 }
 
