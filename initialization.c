@@ -46,7 +46,8 @@ bool	init_env(t_global *global, char **env)
 			ft_lstclear(&list, ft_clean_minishell_env);
 			return (false);
 		}
-		content->export = true;
+		if (ft_strcmp(content->name_value[0], "_"))
+			content->export = true;
 		ft_lstadd_back(&list, ft_lstnew(content));
 		i++;
 	}

@@ -226,12 +226,10 @@ void	ft_cd(t_command *cmd, t_global *global);
 void	ft_exit(t_global *data);
 void	ft_pwd(void);
 void	ft_export(t_command *cmd, t_global *global);
+void	ft_unset(t_command *cmd, t_global *global);
 
 // Test functions
 void	run_tests(char **env);
 void	test_ft_echo();
-void	test_resolve_command_path(char **env);
-void	test_single_cmd(t_global *global);
-
 
 #endif

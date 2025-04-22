@@ -26,6 +26,8 @@ bool	ft_is_our_builtin(char *cmd)
 		return (true);
 	if (ft_strncmp(EXPORT, cmd, ft_strlen(EXPORT)) == 0)
 		return (true);
+	if (ft_strncmp(UNSET, cmd, ft_strlen(UNSET)) == 0)
+		return (true);
 	return (false);
 }
 

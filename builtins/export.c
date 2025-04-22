@@ -135,10 +135,15 @@ void	ft_split_env_variable(char *name_value, char **var_name, char **var_value)
 	int		split_index;
 	int		total_length;
 
+	split_char = NULL;
 	split_char = ft_strchr(name_value, '=');
-	split_index = split_char - name_value;
-
-	total_length = ft_strlen(name_value);
-	*var_name = ft_substr(name_value, 0, split_index);
-	*var_value = ft_substr(name_value, split_index + 1, total_length - split_index - 1);
+	if (split_char)
+	{
+		split_index = split_char - name_value;
+		total_length = ft_strlen(name_value);
+		*var_name = ft_substr(name_value, 0, split_index);
+		*var_value = ft_substr(name_value, split_index + 1, total_length - split_index - 1);
+	}
+	else
+		*var_name = ft_strdup(name_value);
 }

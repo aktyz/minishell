@@ -27,16 +27,21 @@ void	ft_process(t_global *global)
 			pipe(cmd_i->pipe_fd);
 		if (!cmd_i->is_builtin)
 			cmd_i->path = resolve_command_path(ft_get_env_var_value(ENV_PATH, global->env), cmd_i->command);
-		if (ft_strncmp(cmd_i->command, EXIT, 5) == 0)
+		if (ft_strncmp(cmd_i->command, EXIT, ft_strlen(EXIT)) == 0)
 			ft_exit(global);
-		if (ft_strncmp(cmd_i->command, CD, 3) == 0)
+		if (ft_strncmp(cmd_i->command, CD, ft_strlen(CD)) == 0)
 		{
 			ft_cd(cmd_i, global);
 			break ;
 		}
-		if (ft_strncmp(cmd_i->command, EXPORT, 7) == 0)
+		if (ft_strncmp(cmd_i->command, EXPORT, ft_strlen(EXPORT)) == 0)
 		{
 			ft_export(cmd_i, global);
+			break ;
+		}
+		if (ft_strncmp(cmd_i->command, UNSET, ft_strlen(UNSET)) == 0)
+		{
+			ft_unset(cmd_i, global);
 			break ;
 		}
 		cmd_i->cmd_pid = fork();
