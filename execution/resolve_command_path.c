@@ -16,15 +16,15 @@ static size_t	ft_count_words(char const *s, char c);
 
 bool	ft_is_our_builtin(char *cmd)
 {
-	if (ft_strncmp(ECHO, cmd, 5) == 0)
+	if (ft_strncmp(ECHO, cmd, ft_strlen(ECHO)) == 0)
 		return (true);
-	if (ft_strncmp(CD, cmd, 3) == 0)
+	if (ft_strncmp(CD, cmd, ft_strlen(CD)) == 0)
 		return (true);
-	if (ft_strncmp(EXIT, cmd, 5) == 0)
+	if (ft_strncmp(EXIT, cmd, ft_strlen(EXIT)) == 0)
 		return (true);
-	if (ft_strncmp(PWD, cmd, 4) == 0)
+	if (ft_strncmp(PWD, cmd, ft_strlen(PWD)) == 0)
 		return (true);
-	if (ft_strncmp(EXPORT, cmd, 7) == 0)
+	if (ft_strncmp(EXPORT, cmd, ft_strlen(EXPORT)) == 0)
 		return (true);
 	return (false);
 }

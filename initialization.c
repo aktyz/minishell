@@ -40,7 +40,7 @@ bool	init_env(t_global *global, char **env)
 		}
 		content->name_value = ft_calloc(sizeof(char*), 2);
 		ft_split_env_variable(env[i], &content->name_value[0], &content->name_value[1]);
-		if (!content->name_value)
+		if (!content->name_value[0] || !content->name_value[1])
 		{
 			free(content);
 			ft_lstclear(&list, ft_clean_minishell_env);

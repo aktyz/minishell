@@ -153,6 +153,7 @@ char	**ft_execve_env(t_list *env);
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
 void	ft_split_env_variable(char *name_value, char **var_name, char **var_value);
+char	*ft_get_env_var_value(char *env_var_name, t_list *env);
 char	*resolve_command_path(char *path, char *cmd);
 
 //initialization
@@ -221,7 +222,7 @@ void	print_cmd_list(t_global *global);
 // builtins
 void	ft_run_builtin(t_command *cmd, t_global *global);
 void	ft_echo(char **args);
-void	ft_cd(t_command *cmd);
+void	ft_cd(t_command *cmd, t_global *global);
 void	ft_exit(t_global *data);
 void	ft_pwd(void);
 void	ft_export(t_command *cmd, t_global *global);

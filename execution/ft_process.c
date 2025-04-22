@@ -13,6 +13,7 @@
 #include "minishell.h"
 
 void	ft_process(t_global *global);
+char	*ft_get_env_var_value(char *env_var_name, t_list *env);
 
 void	ft_process(t_global *global)
 {
@@ -25,12 +26,12 @@ void	ft_process(t_global *global)
 		if (cmd_i->pipe_output)
 			pipe(cmd_i->pipe_fd);
 		if (!cmd_i->is_builtin)
-			cmd_i->path = resolve_command_path(getenv(ENV_PATH), cmd_i->command);
+			cmd_i->path = resolve_command_path(ft_get_env_var_value(ENV_PATH, global->env), cmd_i->command);
 		if (ft_strncmp(cmd_i->command, EXIT, 5) == 0)
 			ft_exit(global);
 		if (ft_strncmp(cmd_i->command, CD, 3) == 0)
 		{
-			ft_cd(cmd_i);
+			ft_cd(cmd_i, global);
 			break ;
 		}
 		if (ft_strncmp(cmd_i->command, EXPORT, 7) == 0)
@@ -87,4 +88,20 @@ void	ft_process(t_global *global)
 	cmd_i = lst_last_cmd(global->cmd);
 	if (cmd_i->cmd_pid > 0 && cmd_i->cmd_pid != last_waited_pid)
 		waitpid(cmd_i->cmd_pid, NULL, 0);
+}
+
+char	*ft_get_env_var_value(char *env_var_name, t_list *env)
+{
+	t_minishell_env *content;
+
+	content = (t_minishell_env*) env->content;
+	while (ft_strcmp(env_var_name, content->name_value[0]) != 0)
+	{
+		env = env->next;
+		content = (t_minishell_env*) env->content;
+	}
+	if (content && ft_strcmp(env_var_name, content->name_value[0]) == 0)
+		return (content->name_value[1]);
+	else
+		return (NULL); // variable not found
 }
