@@ -37,7 +37,7 @@ void	ft_export(t_command *cmd, t_global *global)
 	}
 	else // export with no args or parameters
 	{
-		ft_sort_export_list(&env); //TODO
+		ft_sort_export_list(&env);
 		while (env && env->content)
 		{
 			content = (t_minishell_env*) env->content;
@@ -142,4 +142,3 @@ void	ft_split_env_variable(char *name_value, char **var_name, char **var_value)
 	*var_name = ft_substr(name_value, 0, split_index);
 	*var_value = ft_substr(name_value, split_index + 1, total_length - split_index - 1);
 }
-
