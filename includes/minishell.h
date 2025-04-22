@@ -176,6 +176,7 @@ void	exit_shell(t_global *global, int exno);
 int		tokenization(t_global *global);
 bool	input_is_space(char * input);
 bool	parse_user_input(t_global *global);
+int		ft_strcmp(const char *s1, const char *s2);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
 
