@@ -3,6 +3,7 @@
 
 char		**ft_execve_env(t_list *env);
 static void	ft_sort_export_list(t_list **list);
+static void	ft_handle_existing_var(t_command *cmd, t_minishell_env	*content);
 
 void	ft_export(t_command *cmd, t_global *global)
 {
@@ -17,13 +18,11 @@ void	ft_export(t_command *cmd, t_global *global)
 		while (env && env->content)
 		{
 			content = (t_minishell_env*) env->content;
-			if (ft_strncmp(var_name, content->name_value[0], ft_strlen(var_name)) == 0)
-				break ;
+			if (ft_strncmp(var_name, content->name_value[0], ft_strlen(content->name_value[0])) == 0) //var already exists
+				return (ft_handle_existing_var(cmd, content));
 			env = env->next;
 		}
-		if (ft_strncmp(var_name, content->name_value[0], ft_strlen(var_name)) == 0)
-			content->export = true;
-		else
+		if (env->content == NULL) // var doesn't exxist -> add it
 		{
 			content = ft_calloc(sizeof(t_minishell_env), 1);
 			if (!content)
@@ -35,7 +34,7 @@ void	ft_export(t_command *cmd, t_global *global)
 		}
 		return ;
 	}
-	else
+	else // export with no args or parameters
 	{
 		ft_sort_export_list(&env); //TODO
 		while (env && env->content)
@@ -87,3 +86,11 @@ char	**ft_execve_env(t_list *env)
 
 static void	ft_sort_export_list(t_list **list)
 {}
+
+static void	ft_handle_existing_var(t_command *cmd, t_minishell_env *content)
+{
+	free_ptr(content->name_value[0]);
+	free_ptr(content->name_value[1]);
+	content->name_value = ft_split(cmd->args[1], '='); //TODO: replace with function spliting on the first occurance of '='
+	content->export = true;
+}
