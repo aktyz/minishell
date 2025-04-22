@@ -29,10 +29,7 @@ void	ft_export(t_command *cmd, t_global *global)
 			if (!content)
 				return ;
 			content->name_value = ft_calloc(sizeof(char*), 2);
-			content->name_value[0] = ft_calloc(sizeof(char), ft_strlen(var_name) - 1);
-			ft_strlcpy(content->name_value[0], var_name, ft_strlen(var_name) - 1);
-			// how can I get the second part of env variable creation?
-			// from cmd: `export TEST="$TERM_PROGRAM"
+			content->name_value = ft_split(var_name, '='); //TODO: replace with function spliting on the first occurance of '='
 			content->export = true;
 			ft_lstadd_back(&global->env, ft_lstnew(content));
 		}

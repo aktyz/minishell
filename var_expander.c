@@ -90,6 +90,7 @@ static char	*erase_and_replace(t_token **token_node, char *str,
 	if (token_node && *token_node)
 	{
 		free_ptr((*token_node)->str);
+		(*token_node)->str = NULL;
 		(*token_node)->str = newstr;
 	}
 	return (newstr);
@@ -106,10 +107,10 @@ int	replace_var(t_token **token_node, char *var_value, int index)
 	var_value, index) == NULL)
 	{
 		free_ptr(var_value);
-		return (1);
+		return (var_value = NULL, 1);
 	}
 	free_ptr(var_value);
-	return (0);
+	return (var_value = NULL, 0);
 }
 
 /* replace_str_heredoc:
@@ -132,7 +133,7 @@ char	*replace_str_heredoc(char *str, char *var_value, int index)
 		free_ptr(tmp);
 	}
 	free_ptr(var_value);
-	return (str);
+	return (var_value = NULL, str);
 }
 
 
@@ -173,23 +174,22 @@ char	*identify_var(char *str)
 *  removed from the original word unless they are between quotes.
 */
 
-
+/**
+ * This function will look up our env list for a environment variable:
+ * var, being passed as "<env var name>".
+ *
+ */
 static int	var_exists(t_global *global, char *var)
 {
-	int				i;
-	int				len;
 	t_list			*env;
 	t_minishell_env	*content;
 
-	i = 0;
-	len = ft_strlen(var);
 	env = global->env;
 	while (env && env->content)
 	{
 		content = (t_minishell_env*) env->content;
-		if (ft_strncmp(content->name_value[0], var, len) == 0) {
+		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
 			return (0);
-		}
 		env = env->next;
 	}
 	return (1);
@@ -198,18 +198,14 @@ static int	var_exists(t_global *global, char *var)
 static char	*search_env_var(t_global *global, char *var)
 {
 	char			*str;
-	int				i;
-	int				len;
 	t_list			*env;
 	t_minishell_env	*content;
 
-	i = 0;
-	len = ft_strlen(var);
 	env = global->env;
 	while (env && env->content)
 	{
 		content = (t_minishell_env*) env->content;
-		if (ft_strncmp(content->name_value[0], var, len) == 0)
+		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
 			break ;
 		env = env->next;
 	}
@@ -220,21 +216,25 @@ static char	*search_env_var(t_global *global, char *var)
 char	*recover_val(t_token *token, char *str, t_global *global)
 {
 	char	*value;
+	char	*var_name;
 	char	*var;
 
 	var = identify_var(str);
-	if (var && var_exists(global, var) == 0)
+	var_name = ft_strtrim(var, "=");
+	free_ptr(var);
+	var = NULL;
+	if (var_name && var_exists(global, var_name) == 0)
 	{
 		if (token != NULL)
 			token->var_exists = true;
-		value = search_env_var(global, var);
+		value = search_env_var(global, var_name);
 	}
-	else if (var && var[0] == '?' && var[1] == '=')
-		value = ft_itoa(g_last_exit_code);
+	else if (var_name && var_name[0] == '?' && var_name[1] == '\0')
+		value = ft_itoa(g_last_exit_code); // TODO: figure out how to mark TOKEN/CMD to only print last exit code
 	else
 		value = NULL;
-	free_ptr(var);
-	return (value);
+	free_ptr(var_name);
+	return (var_name = NULL, value);
 }
 
 static void	update_status(t_token **token_node, char c)

@@ -2,17 +2,15 @@
 
 void	ft_clean_minishell_env(void *env_content_node);
 
-/* free_ptr:
-*	Frees a pointer of any type if it is not NULL and sets it to NULL.
-*	This avoids accidental double-frees.
+/**
+ * Save free the pointer. The NULL exuation need to be up in the function
+ * otherwise it won't work.
+ *
 */
 void	free_ptr(void *ptr)
 {
 	if (ptr != NULL)
-	{
 		free(ptr);
-		ptr = NULL;
-	}
 }
 
 /* restore_io:

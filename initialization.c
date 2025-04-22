@@ -38,8 +38,7 @@ bool	init_env(t_global *global, char **env)
 			ft_lstclear(&list, ft_clean_minishell_env);
 			return (false);
 		}
-		content->name_value = ft_split(env[i], '=');
-		content->name_value[0] = ft_strjoin(content->name_value[0], "=");
+		content->name_value = ft_split(env[i], '='); //TODO: replace with function spliting on the first occurance of '='
 		if (!content->name_value)
 		{
 			free(content);
