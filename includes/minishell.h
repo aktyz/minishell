@@ -152,7 +152,7 @@ char	**ft_execve_env(t_list *env);
 
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
-
+void	ft_split_env_variable(char *name_value, char **var_name, char **var_value);
 char	*resolve_command_path(char *path, char *cmd);
 
 //initialization

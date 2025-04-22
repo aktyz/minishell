@@ -12,15 +12,17 @@
 
 #include "minishell.h"
 
-void	ft_exit(t_global *data)
+void	ft_exit(t_global *global)
 {
-	if(data)
+	if(global)
 	{
 		// TODO uncomment below once the commands are ready
-		// if (data->cmd && data->cmd->io_fds)
-			// close_fds(data->cmd, true);
+		// if (global->cmd && global->cmd->io_fds)
+			// close_fds(global->cmd, true);
 		// TODO make sure everything is cleaned up and no memory leaks
-		free_global(data, true);
+		free_global(global, true);
 	}
+	if (global->env)
+		ft_lstclear(&global->env, ft_clean_minishell_env);
 	exit(EXIT_SUCCESS);
 }
