@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 17:36:57 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:21:16 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -10,12 +21,12 @@ void	ft_unset(t_command *cmd, t_global *global)
 	int				len;
 
 	ptr = global->env;
-	content = (t_minishell_env *) ptr->content;
+	content = (t_minishell_env *)ptr->content;
 	len = ft_strlen(content->name_value[0]);
 	while (content && ft_strcmp(cmd->args[1], content->name_value[0]))
 	{
 		ptr = ptr->next;
-		content = (t_minishell_env *) ptr->content;
+		content = (t_minishell_env *)ptr->content;
 	}
 	if (content)
 		ft_delete_env_node(ptr, global);
@@ -29,7 +40,7 @@ static void	ft_delete_env_node(t_list *node, t_global *global)
 
 	is_removed = false;
 	if (!node || !global || !global->env)
-		return;
+		return ;
 	if (global->env == node)
 	{
 		global->env = node->next;
@@ -38,7 +49,7 @@ static void	ft_delete_env_node(t_list *node, t_global *global)
 		free(node->content);
 		free(node);
 		is_removed = true;
-		return;
+		return ;
 	}
 	if (!is_removed)
 	{
@@ -68,4 +79,4 @@ static void	ft_delete_env_node(t_list *node, t_global *global)
 			current = current->next;
 		}
 	}
-}
+} // Norm: Function too long

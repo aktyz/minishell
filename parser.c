@@ -1,25 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:09:52 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
+// Norm: Too many functions in the file
+
 /* add_detail_quotes:
-*	Checks whether to add quotes around the error detail:
-*	i.e. "unset: `@': not a valid identifier"
-*	Returns true if the command is export or unset,
-*	false if not.
-*/
+ *	Checks whether to add quotes around the error detail:
+ *	i.e. "unset: `@': not a valid identifier"
+ *	Returns true if the command is export or unset,
+ *	false if not.
+ */
 static bool	add_detail_quotes(char *command)
 {
-	if (ft_strncmp(command, "export", 7) == 0
-		|| ft_strncmp(command, "unset", 6) == 0)
+	if (ft_strncmp(command, "export", 7) == 0 || ft_strncmp(command, "unset",
+			6) == 0)
 		return (true);
 	return (false);
 }
 
-
 /* errmsg_cmd:
-*	Prints an error message to the standard error, prefixed with the
-*	program name.
-*	Returns with the specified error number.
-*/
+ *	Prints an error message to the standard error, prefixed with the
+ *	program name.
+ *	Returns with the specified error number.
+ */
 int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 {
 	char	*msg;
@@ -47,11 +60,10 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 	return (error_nb);
 }
 
-
 /* errmsg:
-*	Prints an error message that is unrelated to a specific command.
-*	Used in parsing phase for syntax errors.
-*/
+ *	Prints an error message that is unrelated to a specific command.
+ *	Used in parsing phase for syntax errors.
+ */
 void	errmsg(char *errmsg, char *detail, int quotes)
 {
 	char	*msg;
@@ -69,25 +81,25 @@ void	errmsg(char *errmsg, char *detail, int quotes)
 	free_ptr(msg);
 }
 
-
 static void	set_variable(t_token **node)
 {
 	int	i;
 
 	i = 0;
-	while ((*node)->str[i]) //checks string in one node
+	while ((*node)->str[i]) // checks string in one node
 	{
 		if ((*node)->str[i] == '$')
 		{
-			if ((*node)->prev && (*node)->prev->type == HEREDOC) //if '<' in the previous nod
-				break;
-			(*node)->type = VAR; //if not '<' in the previous node, than change the type for '$' for VAR
-			return;
+			if ((*node)->prev && (*node)->prev->type == HEREDOC)
+				// if '<' in the previous nod
+				break ;
+			(*node)->type = VAR; // if not '<' in the previous node,
+			//than change the type for '$' for VAR
+			return ;
 		}
 		i++;
 	}
 }
-
 
 static bool	forbidden_consecutives(t_token *token_node)
 {
@@ -128,14 +140,14 @@ int	verify_double_separators(t_token **token_lst)
 int	check_var(t_token **token_lst)
 {
 	t_token	*tmp;
-	
+
 	tmp = *token_lst;
-	if (tmp->type == PIPE) //the first node cannot be PIPE
+	if (tmp->type == PIPE) // the first node cannot be PIPE
 	{
 		write(2, "syntax error\n", 13);
 		return (1);
 	}
-	while (tmp) //now we check the list of tokens
+	while (tmp) // now we check the list of tokens
 	{
 		set_variable(&tmp);
 		if (verify_double_separators(&tmp))
@@ -156,10 +168,10 @@ int	char_isspace(int c)
 		return (0);
 }
 
-bool	input_is_space(char *input) //for checking if the input is only space
+bool	input_is_space(char *input) // for checking if the input is only space
 {
 	int	i;
-	
+
 	i = 0;
 	while (input[i])
 	{
@@ -170,7 +182,6 @@ bool	input_is_space(char *input) //for checking if the input is only space
 	return (true);
 }
 
-
 /*
  parse_user_input:
 *	Tokenizes and parses user input into a structure for execution.
@@ -178,19 +189,24 @@ bool	input_is_space(char *input) //for checking if the input is only space
 */
 bool	parse_user_input(t_global *global)
 {
-	if (global->user_input == NULL) { // readline function OR malloc inside ft_strdup function did not work
+	if (global->user_input == NULL)
+	{
+		// readline function OR malloc inside ft_strdup function did not work
 		exit(0); // make Ctrl-D work to exit shell
-		return false;
-		//exit_builtin(global, NULL); // NOTE: builtin not implemented
-	}
-	else if (ft_strncmp(global->user_input, "\0", 1) == 0) // empty string in user_input
 		return (false);
-	else if (input_is_space(global->user_input)) // only whitespace characters in user_input
+		// exit_builtin(global, NULL); // NOTE: builtin not implemented
+	}
+	else if (ft_strncmp(global->user_input, "\0", 1) == 0)
+		// empty string in user_input
+		return (false);
+	else if (input_is_space(global->user_input))
+		// only whitespace characters in user_input
 		return (true);
 	add_history(global->user_input);
 	if (tokenization(global) != 0) // lexer returned an error
 		return (false);
-	if (global->token->type == END) // first token has type END, meaning no token was created by lexer
+	if (global->token->type == END) // first token has type END,
+		// meaning no token was created by lexer
 		return (false);
 	if (check_var(&global->token) != 0)
 		return (false);
@@ -199,4 +215,3 @@ bool	parse_user_input(t_global *global)
 	create_commands(global, global->token);
 	return (true);
 }
-

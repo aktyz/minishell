@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 17:58:03 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+// Norm: Too many functions in the file
 
 void	ft_clean_minishell_env(void *env_content_node);
 
@@ -139,8 +153,6 @@ void	free_global(t_global *global, bool clear_history)
 	// }
 }
 
-
-
 /* exit_shell:
 *	Cleanly exits the minishell program by closing all opened
 *	fds and freeing all allocated memory.
@@ -167,15 +179,15 @@ void	ft_clean_minishell_env(void *env_content_node)
 {
 	t_minishell_env	*content;
 
-	content = (t_minishell_env*) env_content_node;
-	if(!content)
+	content = (t_minishell_env *) env_content_node;
+	if (!content)
 		return ;
-	if(content->name_value[0])
+	if (content->name_value[0])
 	{
 		free(content->name_value[0]);
 		content->name_value[0] = NULL;
 	}
-	if(content->name_value[1])
+	if (content->name_value[1])
 	{
 		free(content->name_value[1]);
 		content->name_value[1] = NULL;
@@ -185,7 +197,7 @@ void	ft_clean_minishell_env(void *env_content_node)
 		free(content->name_value);
 		content->name_value = NULL;
 	}
-	if(content)
+	if (content)
 		free(content);
 	env_content_node = NULL;
 }

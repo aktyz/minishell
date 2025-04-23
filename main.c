@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/13 19:17:11 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:07:06 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 void		print_tokens(t_token *list);
 void		minishell_interactive(t_global *global);
-
-
-
 
 // NOTE: comment this function to run test cases from tests.c
 // criterion test runner adds its own main function

@@ -1,5 +1,18 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:10:06 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:10:34 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+// Norm: Too many functions in the file
+
+#include "minishell.h"
 
 static void	change_status_to_quote(t_token **token_node, int *i)
 {
@@ -31,7 +44,6 @@ static bool	change_back_to_default(t_token **token_node, int *i)
 	else
 		return (false);
 }
-
 
 int	count_len(char *str, int count, int i)
 {
@@ -90,7 +102,6 @@ int	remove_quotes(t_token **token_node)
 	(*token_node)->join = true;
 	return (0);
 }
-
 
 bool	quotes_in_string(char *str)
 {

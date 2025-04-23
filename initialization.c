@@ -1,6 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initialization.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:21:37 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	g_last_exit_code;
+int	g_last_exit_code; // TODO @marlenasn - why do we need to have it in two places:
+// header and this file
+
+// Norm: Too many functions in the file
 
 /* env_var_count:
 *	Counts how many original environment variables there are.
@@ -15,7 +30,6 @@ int	env_var_count(char **env)
 		i++;
 	return (i);
 }
-
 
 /* init_env:
 *	Initializes a global variable with the contents of the environment
@@ -38,8 +52,9 @@ bool	init_env(t_global *global, char **env)
 			ft_lstclear(&list, ft_clean_minishell_env);
 			return (false);
 		}
-		content->name_value = ft_calloc(sizeof(char*), 2);
-		ft_split_env_variable(env[i], &content->name_value[0], &content->name_value[1]);
+		content->name_value = ft_calloc(sizeof(char *), 2);
+		ft_split_env_variable(env[i], &content->name_value[0],
+			&content->name_value[1]);
 		if (!content->name_value[0] || !content->name_value[1])
 		{
 			free(content);
@@ -53,7 +68,7 @@ bool	init_env(t_global *global, char **env)
 	}
 	global->env = list;
 	return (true);
-}
+} // Norm: Function too long
 
 /* init_wds:
 *	Initializes working directory variables as a safeguard against
@@ -114,9 +129,6 @@ bool	init_global(t_global *global, char **env)
 	g_last_exit_code = 0;
 	return (true);
 }
-
-
-
 
 /* init_io:
 *	Initializes a structure with default values to contain
