@@ -183,6 +183,9 @@ int		check_var(t_token **token_lst);
 int		errmsg_cmd(char *command, char *detail,
 			char *error_message, int error_nb);
 
+// characters
+bool	input_is_space(char *input);
+
 // env variables
 int		var_expander(t_global *global, t_token **token_lst);
 char	*var_expander_heredoc(t_global *global, char *str);
