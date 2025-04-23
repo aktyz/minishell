@@ -166,7 +166,7 @@ void	init_io(t_command *cmd);
 void	ft_clean_minishell_env(void *env_content_node);
 void	exit_shell(t_global *global, int exno);
 bool	restore_io(t_io_fds *io);
-
+void	lst_clear_cmd(t_command **lst, void (*del)(void *));
 //free
 
 void	free_ptr(void *ptr);
