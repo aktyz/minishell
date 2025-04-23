@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-// Norm: Too many functions in the file
-
 static void	set_variable(t_token **node)
 {
 	int	i;
