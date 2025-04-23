@@ -12,7 +12,7 @@ void	ft_unset(t_command *cmd, t_global *global)
 	ptr = global->env;
 	content = (t_minishell_env *) ptr->content;
 	len = ft_strlen(content->name_value[0]);
-	while (content && ft_strncmp(cmd->args[1], content->name_value[0], len))
+	while (content && ft_strcmp(cmd->args[1], content->name_value[0]))
 	{
 		ptr = ptr->next;
 		content = (t_minishell_env *) ptr->content;

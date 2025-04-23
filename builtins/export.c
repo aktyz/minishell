@@ -19,7 +19,7 @@ void	ft_export(t_command *cmd, t_global *global)
 		while (env && env->content)
 		{
 			content = (t_minishell_env*) env->content;
-			if (ft_strncmp(var_name, content->name_value[0], ft_strlen(content->name_value[0])) == 0) //var already exists
+			if (ft_strcmp(var_name, content->name_value[0]) == 0) //var already exists
 				return (ft_handle_existing_var(cmd, content));
 			env = env->next;
 		}
@@ -53,7 +53,11 @@ void	ft_export(t_command *cmd, t_global *global)
 		}
 	}
 }
-
+/**
+ * Function translates our minishell t_list *env into an array required
+ * by execve()
+ *
+ */
 char	**ft_execve_env(t_list *env)
 {
 	char			**execve_env;
@@ -73,7 +77,7 @@ char	**ft_execve_env(t_list *env)
 		{
 			env_var = ft_calloc(sizeof(char), ft_strlen(content->name_value[0])
 				+ ft_strlen(content->name_value[1]) + 2);
-			i = ft_strlcpy(env_var, content->name_value[0], ft_strlen(content->name_value[0]) + 1);
+			i = ft_strlcpy(env_var, content->name_value[0], ft_strlen(content->name_value[0]));
 			env_var[i] = '=';
 			ft_strlcpy(env_var + i + 1, content->name_value[1], ft_strlen(content->name_value[1]));
 			execve_env[j] = env_var;

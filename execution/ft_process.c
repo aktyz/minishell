@@ -99,14 +99,12 @@ char	*ft_get_env_var_value(char *env_var_name, t_list *env)
 {
 	t_minishell_env *content;
 
-	content = (t_minishell_env*) env->content;
-	while (ft_strcmp(env_var_name, content->name_value[0]) != 0)
+	while (env)
 	{
-		env = env->next;
 		content = (t_minishell_env*) env->content;
+		if (ft_strcmp(env_var_name, content->name_value[0]) == 0)
+			return (content->name_value[1]);
+		env = env->next;
 	}
-	if (content && ft_strcmp(env_var_name, content->name_value[0]) == 0)
-		return (content->name_value[1]);
-	else
-		return (NULL); // variable not found
+	return (NULL);
 }
