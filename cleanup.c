@@ -180,6 +180,11 @@ void	ft_clean_minishell_env(void *env_content_node)
 		free(content->name_value[1]);
 		content->name_value[1] = NULL;
 	}
+	if (content->name_value)
+	{
+		free(content->name_value);
+		content->name_value = NULL;
+	}
 	if(content)
 		free(content);
 	env_content_node = NULL;
