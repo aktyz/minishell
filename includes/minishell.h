@@ -185,6 +185,13 @@ int		errmsg_cmd(char *command, char *detail,
 
 // characters
 bool	input_is_space(char *input);
+int	which_separator(char *str, int i);
+
+// nodes
+
+t_token	*new_node(char *str, int type, int status);
+void	add_node(t_token **list, t_token *new_node);
+void	delete_node(t_token *node, void (*del)(void *));
 
 // env variables
 int		var_expander(t_global *global, t_token **token_lst);

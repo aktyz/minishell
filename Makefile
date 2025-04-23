@@ -27,6 +27,7 @@ SRC = main.c \
 	execution/ft_run_builtin.c \
 	execution/ft_create_pipe.c \
 	utils_for_tokens.c \
+	nodes.c \
 	parser.c \
 	characters.c \
 	errors.c \
@@ -52,6 +53,7 @@ SRC_TEST = create_commands.c \
 	execution/ft_create_pipe.c \
 	execution/ft_run_builtin.c \
 	utils_for_tokens.c \
+	nodes.c \
 	parser.c \
 	errors.c \
 	characters.c \

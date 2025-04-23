@@ -33,3 +33,23 @@ bool	input_is_space(char *input) // for checking if the input is only space
 	}
 	return (true);
 }
+
+int	which_separator(char *str, int i)
+{
+	if ((str[i] > 8 && str[i] < 14) || str[i] == 32)
+		return (SPACES);
+	else if (str[i] == '|')
+		return (PIPE);
+	else if (str[i] == '<' && str[i + 1] == '<')
+		return (HEREDOC);
+	else if (str[i] == '>' && str[i + 1] == '>')
+		return (APPEND);
+	else if (str[i] == '<')
+		return (INPUT);
+	else if (str[i] == '>')
+		return (TRUNC);
+	else if (str[i] == '\0')
+		return (END);
+	else
+		return (0);
+}
