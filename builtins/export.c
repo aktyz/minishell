@@ -73,7 +73,7 @@ char	**ft_execve_env(t_list *env)
 		{
 			env_var = ft_calloc(sizeof(char), ft_strlen(content->name_value[0])
 				+ ft_strlen(content->name_value[1]) + 2);
-			i = ft_strlcpy(env_var, content->name_value[0], ft_strlen(content->name_value[0]));
+			i = ft_strlcpy(env_var, content->name_value[0], ft_strlen(content->name_value[0]) + 1);
 			env_var[i] = '=';
 			ft_strlcpy(env_var + i + 1, content->name_value[1], ft_strlen(content->name_value[1]));
 			execve_env[j] = env_var;
