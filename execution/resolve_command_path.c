@@ -28,6 +28,8 @@ bool	ft_is_our_builtin(char *cmd)
 		return (true);
 	if (ft_strncmp(UNSET, cmd, ft_strlen(UNSET)) == 0)
 		return (true);
+	if (ft_strncmp(ENV, cmd, ft_strlen(ENV)) == 0)
+		return (true);
 	return (false);
 }
 

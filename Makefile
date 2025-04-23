@@ -41,6 +41,7 @@ SRC = main.c \
 	builtins/pwd.c \
 	builtins/export.c \
 	builtins/unset.c \
+	builtins/env.c \
 	debug.c
 
 SRC_TEST = create_commands.c \
@@ -63,6 +64,7 @@ SRC_TEST = create_commands.c \
 	builtins/pwd.c \
 	builtins/export.c \
 	builtins/unset.c \
+	builtins/env.c \
 	debug.c \
 	tests.c
 

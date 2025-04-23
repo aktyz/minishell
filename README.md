@@ -107,11 +107,12 @@ That would leave in the main folder only crucial files:
 - [x] enrich `ft_handle_redirections` to work with heredoc
 - [x] test & debug redirections in longer pipe with heredoc
 - [x] Export built-in with no options
-- [ ] Unset built-in with no options
-- [ ] Env built-in with no options or arguments - print out env where `export=true` variables one by one
+- [x] Unset built-in with no options
+- [x] Env built-in with no options or arguments - print out all env
 - [ ] Check signal handling in both modes - interactive and non-interactive
 - [ ] test for handling single and double quotes as per subject requirements
 - [ ] remove unused `t_process` structure and depending functions
+- [ ] make sure we need to be able to call `./minishell` from our `./minishell` and if yes, implement it
 
 ## TODO for minishell (aka. our Backlog)
 - [x] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part

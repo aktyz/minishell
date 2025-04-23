@@ -227,6 +227,7 @@ void	ft_exit(t_global *data);
 void	ft_pwd(void);
 void	ft_export(t_command *cmd, t_global *global);
 void	ft_unset(t_command *cmd, t_global *global);
+void	ft_env(t_list *env);
 
 // Test functions
 void	run_tests(char **env);
