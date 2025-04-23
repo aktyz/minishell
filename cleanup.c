@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-// Norm: Too many functions in the file
-
 /* restore_io:
 *	Restores the original standard input and standard output
 *	to their original fds of 0 and 1. Used to clear the input/output

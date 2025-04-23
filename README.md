@@ -1,18 +1,3 @@
-# Installing & using criterion library
-
-* Run the following command
-
-```
-sudo apt-get install libcriterion-dev
-```
-
-
-* Compile and run tests
-```
-make
-./tester
-```
-
 # Running minishell
 ```
 make
