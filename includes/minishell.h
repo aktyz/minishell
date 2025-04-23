@@ -163,11 +163,17 @@ bool	init_env(t_global *global, char **env);
 void	init_io(t_command *cmd);
 
 //cleanup
-void	free_ptr(void *ptr);
-void	free_global(t_global *global, bool clear_history);
-void	free_str_tab(char **tab);
 void	ft_clean_minishell_env(void *env_content_node);
 void	exit_shell(t_global *global, int exno);
+bool	restore_io(t_io_fds *io);
+
+//free
+
+void	free_ptr(void *ptr);
+void	free_io(t_io_fds *io);
+void	free_str_tab(char **tab);
+void	free_global(t_global *global, bool clear_history);
+
 
 //lexer
 int		tokenization(t_global *global);
