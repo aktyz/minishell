@@ -9,6 +9,7 @@ t_token	*new_node(char *str, int type, int status)
 	if (!new_node)
 		return (NULL);
 	new_node->str = str;
+	new_node->str_backup = ft_strdup(str);
 	new_node->var_exists = false;
 	new_node->type = type;
 	new_node->status = status;

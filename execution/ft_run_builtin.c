@@ -12,10 +12,12 @@
 
 #include "minishell.h"
 
-void	ft_run_builtin(t_command *cmd, t_global *data)
+void	ft_run_builtin(t_command *cmd, t_global *global)
 {
-	if (ft_strncmp(cmd->command, ECHO, 5) == 0)
+	if (ft_strncmp(cmd->command, ECHO, ft_strlen(ECHO)) == 0)
 		ft_echo(cmd->args);
-	if (ft_strncmp(cmd->command, PWD, 4) == 0)
+	if (ft_strncmp(cmd->command, PWD, ft_strlen(PWD)) == 0)
 		ft_pwd();
+	if (ft_strncmp(cmd->command, ENV, ft_strlen(ENV)) == 0)
+		ft_env(global->env);
 }

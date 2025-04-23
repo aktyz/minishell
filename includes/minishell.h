@@ -32,10 +32,13 @@
 # define ENV_PATH "PATH"
 # define ENV_HOME "HOME"
 
-# define EXIT "exit"
-# define CD "cd"
 # define ECHO "echo"
+# define CD "cd"
 # define PWD "pwd"
+# define EXPORT "export"
+# define UNSET "unset"
+# define ENV "env"
+# define EXIT "exit"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -70,11 +73,11 @@ typedef struct s_process
 typedef struct s_node_for_token
 {
 	char					*str;
-	char *str_backup;
-	bool var_exists;
+	char					*str_backup;
+	bool					var_exists;
 	int						type;
-	int status;
-	bool			join;
+	int						status;
+	bool					join;
 	struct s_node_for_token	*prev;
 	struct s_node_for_token	*next;
 }	t_token;
@@ -94,12 +97,18 @@ typedef struct s_command
 	struct s_command	*prev;
 }	t_command;
 
+typedef struct s_minishell_env
+{
+	char	**name_value;
+	bool	export;
+}	t_minishell_env;
+
 typedef struct s_global
 {
 	bool		interactive;
 	t_token		*token;
 	char		*user_input;
-	char		**env;
+	t_list		*env;
 	t_command	*cmd;
 	bool		is_global;
 }	t_global;
@@ -139,21 +148,19 @@ struct s_io_fds
 void	ft_process(t_global *global);
 bool	ft_is_our_builtin(char *cmd);
 void	ft_handle_redirections(t_command *cmd);
+char	**ft_execve_env(t_list *env);
 
 void	ft_error(t_process ***proc, char **string);
 void	ft_clean_up(t_process **proc);
-
-void	ft_get_path_and_args(t_command **exe, char *cmd,
-			char *file_name);
-void	ft_allocate_execve_argv(t_command **cmd, char *str);
-
-char	*extract_env_var(char *var_name, char **env); //TODO: replace with getenv everywhere
+void	ft_split_env_variable(char *name_value, char **var_name, char **var_value);
+char	*ft_get_env_var_value(char *env_var_name, t_list *env);
 char	*resolve_command_path(char *path, char *cmd);
 
 //initialization
 
 
 bool	init_global(t_global *global, char **env);
+bool	init_env(t_global *global, char **env);
 void	init_io(t_command *cmd);
 
 //cleanup
@@ -161,6 +168,7 @@ void	init_io(t_command *cmd);
 void	free_ptr(void *ptr);
 void	free_global(t_global *global, bool clear_history);
 void	free_str_tab(char **tab);
+void	ft_clean_minishell_env(void *env_content_node);
 
 void	exit_shell(t_global *global, int exno);
 
@@ -169,6 +177,7 @@ void	exit_shell(t_global *global, int exno);
 int		tokenization(t_global *global);
 bool	input_is_space(char * input);
 bool	parse_user_input(t_global *global);
+int		ft_strcmp(const char *s1, const char *s2);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
 
@@ -211,18 +220,17 @@ void	print_token_list(t_token **tokens);
 void	print_cmd_list(t_global *global);
 
 // builtins
-void	ft_run_builtin(t_command *cmd, t_global *data);
+void	ft_run_builtin(t_command *cmd, t_global *global);
 void	ft_echo(char **args);
-void	ft_cd(t_command *cmd);
+void	ft_cd(t_command *cmd, t_global *global);
 void	ft_exit(t_global *data);
 void	ft_pwd(void);
+void	ft_export(t_command *cmd, t_global *global);
+void	ft_unset(t_command *cmd, t_global *global);
+void	ft_env(t_list *env);
 
 // Test functions
 void	run_tests(char **env);
 void	test_ft_echo();
-void	test_extract_env_var(char **env);
-void	test_resolve_command_path(char **env);
-void	test_single_cmd(t_global *global);
-
 
 #endif

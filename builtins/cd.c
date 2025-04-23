@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-void	ft_cd(t_command *cmd)
+void	ft_cd(t_command *cmd, t_global *global)
 {
 	char	*path;
 
 	if (!cmd->args[1])
 	{
-		path = getenv(ENV_HOME);
+		path = ft_get_env_var_value(ENV_HOME, global->env);
 		if (!path)
 		{
 			ft_printf("cd: HOME not set\n");

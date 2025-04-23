@@ -1,18 +1,16 @@
 #include "minishell.h"
 
+void	ft_clean_minishell_env(void *env_content_node);
 
-
-/* free_ptr:
-*	Frees a pointer of any type if it is not NULL and sets it to NULL.
-*	This avoids accidental double-frees.
+/**
+ * Save free the pointer. The NULL exuation need to be up in the function
+ * otherwise it won't work.
+ *
 */
 void	free_ptr(void *ptr)
 {
 	if (ptr != NULL)
-	{
 		free(ptr);
-		ptr = NULL;
-	}
 }
 
 /* restore_io:
@@ -155,6 +153,39 @@ void	exit_shell(t_global *global, int exno)
 		// if (global->cmd && global->cmd->io_fds)
 			// close_fds(global->cmd, true);
 		free_global(global, true);
+		if (global && global->env)
+			ft_lstclear(&global->env, ft_clean_minishell_env);
 	}
 	exit(exno);
+}
+
+/**
+ * Function freeing env_var nodes on the env list
+ *
+ */
+void	ft_clean_minishell_env(void *env_content_node)
+{
+	t_minishell_env	*content;
+
+	content = (t_minishell_env*) env_content_node;
+	if(!content)
+		return ;
+	if(content->name_value[0])
+	{
+		free(content->name_value[0]);
+		content->name_value[0] = NULL;
+	}
+	if(content->name_value[1])
+	{
+		free(content->name_value[1]);
+		content->name_value[1] = NULL;
+	}
+	if (content->name_value)
+	{
+		free(content->name_value);
+		content->name_value = NULL;
+	}
+	if(content)
+		free(content);
+	env_content_node = NULL;
 }

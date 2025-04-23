@@ -22,9 +22,6 @@ RM = rm -f
 
 SRC = main.c \
 	create_commands.c \
-	execution/execve_args_allocation.c \
-	execution/execve_data_allocation.c \
-	execution/extract_env_var.c \
 	execution/resolve_command_path.c \
 	execution/ft_process.c \
 	execution/ft_run_builtin.c \
@@ -33,10 +30,8 @@ SRC = main.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
-	tests/test_exe_functions.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
-	tests/test_single_cmd.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
@@ -44,12 +39,12 @@ SRC = main.c \
 	builtins/exit.c \
 	builtins/cd.c \
 	builtins/pwd.c \
+	builtins/export.c \
+	builtins/unset.c \
+	builtins/env.c \
 	debug.c
 
 SRC_TEST = create_commands.c \
-	execution/execve_args_allocation.c \
-	execution/execve_data_allocation.c \
-	execution/extract_env_var.c \
 	execution/resolve_command_path.c \
 	execution/ft_process.c \
 	execution/ft_create_pipe.c \
@@ -58,10 +53,8 @@ SRC_TEST = create_commands.c \
 	parser.c \
 	var_expander.c \
 	quotes.c \
-	tests/test_exe_functions.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
-	tests/test_single_cmd.c \
 	initialization.c \
 	signals.c \
 	cleanup.c \
@@ -69,6 +62,9 @@ SRC_TEST = create_commands.c \
 	builtins/echo.c \
 	builtins/cd.c \
 	builtins/pwd.c \
+	builtins/export.c \
+	builtins/unset.c \
+	builtins/env.c \
 	debug.c \
 	tests.c
 

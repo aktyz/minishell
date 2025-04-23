@@ -102,7 +102,7 @@ Test(check_var, consecutive_pipes) {
 }
 
 Test(check_var, mixed_valid_tokens) {
-    t_token *head = create_token("echo", WORD);
+    t_token *head = create_token(ECHO, WORD);
     head->next = create_token("$HOME", VAR);
     head->next->prev = head;
     cr_expect(check_var(&head) == 0, "Expected no error for valid tokens");
@@ -116,7 +116,7 @@ Test(check_var, mixed_valid_tokens) {
 // Helper function to create a mock global env
 t_global *create_mock_global(char **env) {
     t_global *global = malloc(sizeof(t_global));
-    global->env = env;
+    init_env(global, env);
     return global;
 }
 
@@ -125,9 +125,9 @@ Test(var_expander, expands_simple_variable) {
     char *env[] = {"USER=testuser", "HOME=/home/testuser", NULL};
     t_global *global = create_mock_global(env);
     t_token *token = create_token("$USER", VAR);
-    
+
     var_expander(global, &token);
-    
+
     cr_assert_str_eq(token->str, "testuser", "Expected USER to expand to testuser");
     free(token->str);
     free(token);
@@ -140,9 +140,9 @@ Test(var_expander, expands_exit_code) {
     t_global *global = create_mock_global(env);
     g_last_exit_code = 42;
     t_token *token = create_token("$?", VAR);
-    
+
     var_expander(global, &token);
-    
+
     cr_assert_str_eq(token->str, "42", "Expected $? to expand to 42");
     free(token->str);
     free(token);
@@ -154,9 +154,9 @@ Test(var_expander, non_existent_variable) {
     char *env[] = {"USER=testuser", NULL};
     t_global *global = create_mock_global(env);
     t_token *token = create_token("$FOO", VAR);
-    
+
     var_expander(global, &token);
-    
+
     cr_assert_str_eq(token->str, "", "Expected non-existent variable to be removed");
     free(token->str);
     free(token);
@@ -168,9 +168,9 @@ Test(var_expander, expands_within_double_quotes) {
     char *env[] = {"USER=testuser", NULL};
     t_global *global = create_mock_global(env);
     t_token *token = create_token("\"$USER\"", VAR);
-    
+
     var_expander(global, &token);
-    
+
     cr_assert_str_eq(token->str, "\"testuser\"", "Expected expansion inside double quotes");
     free(token->str);
     free(token);
@@ -181,15 +181,15 @@ Test(var_expander, expands_within_double_quotes) {
 Test(var_expander, does_not_expand_within_single_quotes) {
     char *env[] = {"USER=testuser", NULL};
     t_global *global = create_mock_global(env);
-    t_token *head = create_token("echo", WORD);
+    t_token *head = create_token(ECHO, WORD);
     t_token *token = create_token("'$USER'", VAR);
-    
+
     head->next = token;
     token->prev = head;
 
     var_expander(global, &head);
-    
-    cr_assert_str_eq(head->str, "echo");
+
+    cr_assert_str_eq(head->str, ECHO);
     cr_assert_str_eq(token->str, "'$USER'", "Expected no expansion inside single quotes");
     free(head->str);
     free(head);
@@ -300,13 +300,13 @@ void link_tokens(t_token *a, t_token *b) {
 // ===================== TESTS ===================== //
 
 Test(parse_word, handles_single_word) {
-    t_token *tok = create_token("echo", WORD);
+    t_token *tok = create_token(ECHO, WORD);
     t_token *end = create_token("", END);
     link_tokens(tok, end);
     t_command *cmd = lst_new_cmd(false);
 
     parse_word(&cmd, &tok);
-    // cr_assert_str_eq(cmd->command, "echo");
+    // cr_assert_str_eq(cmd->command, ECHO);
 }
 
 Test(parse_input, parses_input_redirection) {
@@ -378,7 +378,7 @@ Test(parse_pipe, creates_next_command) {
 
 Test(create_commands, creates_basic_command_structure) {
     // Simulate: echo hello | grep test > out.txt
-    t_token *tok1 = create_token("echo", WORD);
+    t_token *tok1 = create_token(ECHO, WORD);
     t_token *tok2 = create_token("hello", WORD);
     t_token *tok3 = create_token("|", PIPE);
     t_token *tok4 = create_token("grep", WORD);
@@ -397,7 +397,7 @@ Test(create_commands, creates_basic_command_structure) {
 
     create_commands(&g, g.token);
 
-    cr_assert_str_eq(g.cmd->command, "echo");
+    cr_assert_str_eq(g.cmd->command, ECHO);
     cr_assert_str_eq(g.cmd->next->command, "grep");
     cr_assert_str_eq(g.cmd->next->io_fds->outfile, "/tmp/out.txt");
 }
