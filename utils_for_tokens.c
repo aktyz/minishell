@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_for_tokens.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:12:04 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:12:49 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+// Norm: Too many functions in the file
+
 #include "minishell.h"
 
 // NOTE was lst_new_token
@@ -17,7 +31,6 @@ t_token	*new_node(char *str, int type, int status)
 	new_node->next = NULL;
 	return (new_node);
 }
-
 
 // NOTE was lst_add_back_token
 void	add_node(t_token **list, t_token *new_node)
@@ -127,6 +140,7 @@ int	which_separator(char *str, int i)
 int	add_word_or_sep(int *i, char *str, int start, t_global *global)
 {
 	int	type;
+
 	type = which_separator(str, (*i));
 	if (type)
 	{

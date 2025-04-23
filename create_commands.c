@@ -1,6 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_commands.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-// NOTE TODO this should be inside libft
+// Norm: Too many functions in the file
+
+// TODO @aktyz this should be inside libft
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
@@ -15,7 +29,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 static void	initialize_cmd(t_command **cmd)
 {
-    // TODO use memset with 0 here?
+	// TODO @marlenasn use memset with 0 here?
 	(*cmd)->command = NULL;
 	(*cmd)->path = NULL;
 	(*cmd)->args = NULL;
@@ -36,7 +50,8 @@ t_command	*lst_new_cmd(bool value)
 	if (!(new_node))
 		return (NULL);
 	ft_memset(new_node, 0, sizeof(t_command));
-	new_node->pipe_output = value; //@marlenasn this line is overwritten by the line 22 in every case
+	new_node->pipe_output = value; //TODO @marlenasn this line is
+	// overwritten by the line 22 in every case
 	// please check if we need to save "value" to leverage it later
 	initialize_cmd(&new_node);
 	return (new_node);
@@ -72,7 +87,6 @@ t_command	*lst_last_cmd(t_command *cmd)
 	return (cmd);
 }
 
-
 static void	prep_no_arg_commands(t_global *global)
 {
 	t_command	*cmd;
@@ -92,8 +106,6 @@ static void	prep_no_arg_commands(t_global *global)
 	}
 	cmd = lst_last_cmd(global->cmd);
 }
-
-
 
 t_token	*lst_new_token(char *str, char *str_backup, int type, int status)
 {
@@ -178,7 +190,6 @@ static bool	contains_space(char *str)
 	return (false);
 }
 
-
 int	count_arguments(t_token *temp)
 {
 	int	i;
@@ -248,7 +259,6 @@ static char	**copy_default_in_new_tab(
 	new_tab[i] = NULL;
 	return (new_tab);
 }
-
 
 /*
 **  This function joins all the tokens of a quoted sentence
@@ -534,7 +544,6 @@ void	parse_word(t_command **cmd, t_token **token_lst)
 	*token_lst = temp;
 }
 
-
 /*	INPUT -> REDIR_IN (<)
 	Redirection of input causes the file whose name results from the expansion
 	of word to be opened for reading on file descriptor n, or the standard input
@@ -609,7 +618,6 @@ void	parse_input(t_command **last_cmd, t_token **token_lst)
 	*token_lst = temp;
 }
 
-
 /*
 	TRUNC -> Redirection of output.
 	The file whose name results from the expansion of word has to be opened
@@ -674,8 +682,6 @@ void	parse_trunc(t_command **last_cmd, t_token **token_lst)
 		temp = temp->next;
 	*token_lst = temp;
 }
-
-
 
 /* make_str_from_tab:
 *	Creates a single string from an array of strings by
@@ -773,10 +779,10 @@ static bool	evaluate_heredoc_line(t_global *global, char **line,
 	return (true);
 }
 
-
 /* fill_heredoc:
-*	Copies user input into a temporary file. If user inputs an environment variable
-*	like $USER, expands the variable before writing to the heredoc.
+*	Copies user input into a temporary file. If user inputs an
+*	environment variable like $USER, expands the variable before
+*	writing to the heredoc.
 *	Returns true on success, false on failure.
 */
 bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
@@ -791,9 +797,8 @@ bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 		set_signals_interactive();
 		line = readline(">");
 		set_signals_noninteractive();
-		if (!evaluate_heredoc_line(global, &line, io, &ret)) {
+		if (!evaluate_heredoc_line(global, &line, io, &ret))
 			break ;
-		}
 		ft_putendl_fd(line, fd);
 		free_ptr(line);
 	}
@@ -859,7 +864,8 @@ static char	*get_delim(char *delim, bool *quotes)
 *	Creates a temporary heredoc file which will be filled with
 *	user input.
 */
-void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst)
+void	parse_heredoc(t_global *global, t_command **last_cmd,
+			t_token **token_lst)
 {
 	t_token		*temp;
 	t_command	*cmd;
@@ -883,7 +889,6 @@ void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst)
 		temp = temp->next;
 	*token_lst = temp;
 }
-
 
 /*
 	***APPEND***

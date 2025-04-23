@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/13 12:04:21 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:21:16 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	ft_process(t_global *global)
 		if (cmd_i->pipe_output)
 			pipe(cmd_i->pipe_fd);
 		if (!cmd_i->is_builtin)
-			cmd_i->path = resolve_command_path(ft_get_env_var_value(ENV_PATH, global->env), cmd_i->command);
+			cmd_i->path = resolve_command_path(ft_get_env_var_value(ENV_PATH,
+						global->env), cmd_i->command);
 		if (ft_strncmp(cmd_i->command, EXIT, ft_strlen(EXIT)) == 0)
 			ft_exit(global);
 		if (ft_strncmp(cmd_i->command, CD, ft_strlen(CD)) == 0)
@@ -54,7 +55,7 @@ void	ft_process(t_global *global)
 		if (cmd_i->cmd_pid == 0)
 		{
 			global->is_global = false;
-			break;
+			break ;
 		}
 		cmd_i = cmd_i->next;
 	}
@@ -93,15 +94,15 @@ void	ft_process(t_global *global)
 	cmd_i = lst_last_cmd(global->cmd);
 	if (cmd_i->cmd_pid > 0 && cmd_i->cmd_pid != last_waited_pid)
 		waitpid(cmd_i->cmd_pid, NULL, 0);
-}
+} // Norm: Function too long
 
 char	*ft_get_env_var_value(char *env_var_name, t_list *env)
 {
-	t_minishell_env *content;
+	t_minishell_env	*content;
 
 	while (env)
 	{
-		content = (t_minishell_env*) env->content;
+		content = (t_minishell_env *)env->content;
 		if (ft_strcmp(env_var_name, content->name_value[0]) == 0)
 			return (content->name_value[1]);
 		env = env->next;

@@ -1,14 +1,28 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var_expander.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:13:09 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:31:00 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+// Norm: Too many functions in the file
+
+#include "minishell.h"
 
 bool	is_variable_character(char c)
 {
-	return ft_isalnum(c) || c == '_';
+	return (ft_isalnum(c) || c == '_');
 }
 
-/* returns number of characters in the first encountered variable that starts with $
-
-*/
+/**
+ * returns number of characters in the first encountered variable that
+ * starts with $
+ */
 int	var_length(char *str)
 {
 	int		i;
@@ -30,7 +44,6 @@ int	var_length(char *str)
 	}
 	return (count);
 }
-
 
 void	copy_var_value(char *new_str, char *var_value, int *j)
 {
@@ -77,7 +90,6 @@ char	*get_new_token_string(char *oldstr, char *var_value,
 // so token_node becomes optional.
 // Heredoc variant replace_str_heredoc calls this function with
 // token_node == NULL!
-
 static char	*erase_and_replace(t_token **token_node, char *str,
 			char *var_value, int index)
 {
@@ -98,8 +110,10 @@ static char	*erase_and_replace(t_token **token_node, char *str,
 
 int	replace_var(t_token **token_node, char *var_value, int index)
 {
-	// NOTE: removed erase_var as it looks like a special case for replace with empty string.
-	if (var_value == NULL) {
+	// NOTE: removed erase_var as it looks like a special case
+	// for replace with empty string.
+	if (var_value == NULL)
+	{
 		var_value = malloc(1);
 		var_value[0] = '\0';
 	}
@@ -118,7 +132,6 @@ int	replace_var(t_token **token_node, char *var_value, int index)
 *	by its value. Ex. $USER -> username.
 *	Returns the replaced string.
 */
-
 char	*replace_str_heredoc(char *str, char *var_value, int index)
 {
 	char	*tmp;
@@ -135,9 +148,6 @@ char	*replace_str_heredoc(char *str, char *var_value, int index)
 	free_ptr(var_value);
 	return (var_value = NULL, str);
 }
-
-
-
 
 char	*identify_var(char *str)
 {
@@ -187,7 +197,7 @@ static int	var_exists(t_global *global, char *var)
 	env = global->env;
 	while (env && env->content)
 	{
-		content = (t_minishell_env*) env->content;
+		content = (t_minishell_env *) env->content;
 		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
 			return (0);
 		env = env->next;
@@ -204,7 +214,7 @@ static char	*search_env_var(t_global *global, char *var)
 	env = global->env;
 	while (env && env->content)
 	{
-		content = (t_minishell_env*) env->content;
+		content = (t_minishell_env *) env->content;
 		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
 			break ;
 		env = env->next;
@@ -230,7 +240,8 @@ char	*recover_val(t_token *token, char *str, t_global *global)
 		value = search_env_var(global, var_name);
 	}
 	else if (var_name && var_name[0] == '?' && var_name[1] == '\0')
-		value = ft_itoa(g_last_exit_code); // TODO: figure out how to mark TOKEN/CMD to only print last exit code
+		value = ft_itoa(g_last_exit_code); // TODO @aktyz figure out how to mark
+		// TOKEN/CMD to only print last exit code
 	else
 		value = NULL;
 	free_ptr(var_name);
@@ -306,7 +317,8 @@ char	*var_expander_heredoc(t_global *global, char *str)
 		if (str[i] == '$'
 			&& !is_next_char_a_sep(str[i + 1])
 			&& !var_between_quotes(str, i))
-			str = replace_str_heredoc(str, recover_val(NULL, str + i, global), i);
+			str = replace_str_heredoc(str,
+					recover_val(NULL, str + i, global), i);
 		else
 			i++;
 	}

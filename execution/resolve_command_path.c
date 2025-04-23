@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/11 09:31:43 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:21:16 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*resolve_command_path(char *path, char *cmd)
 		free(ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
 	return (res);
-}
+} // Norm: Function too long
 
 static size_t	ft_count_words(char const *s, char c)
 {

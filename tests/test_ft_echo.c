@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:32:31 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/01 18:46:47 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:55:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static char	**multiple_ens(void);
 static char	**no_ens(void);
 static char	**no_arg(void);
 static char	**no_str(void);
-static char **different_opt(void);
+static char	**different_opt(void);
+// Too many functions in the file
 
 void	test_ft_echo(void)
 {
@@ -92,9 +93,10 @@ static char	**no_str(void)
 	return (args);
 }
 
-static char **different_opt(void)
+static char	**different_opt(void)
 {
 	char	**args;
+
 	ft_printf("Testing: [echo --help]\n");
 	args = (char **)malloc(sizeof(char *) * 3);
 	args[0] = ft_strdup(ECHO);
