@@ -28,6 +28,8 @@ SRC = main.c \
 	execution/ft_create_pipe.c \
 	utils_for_tokens.c \
 	parser.c \
+	characters.c \
+	errors.c \
 	var_expander.c \
 	quotes.c \
 	tests/test_ft_echo.c \
@@ -51,6 +53,8 @@ SRC_TEST = create_commands.c \
 	execution/ft_run_builtin.c \
 	utils_for_tokens.c \
 	parser.c \
+	errors.c \
+	characters.c \
 	var_expander.c \
 	quotes.c \
 	tests/test_ft_echo.c \
