@@ -12,7 +12,11 @@
 
 #include "minishell.h"
 
+bool			ft_is_our_builtin(char *cmd);
+char			*resolve_command_path(char *path, char *cmd);
 static size_t	ft_count_words(char const *s, char c);
+static void		ft_check_candidates(char ***i, char **res, char *ex);
+void			ft_execute_child_proc(t_command *cmd, t_global *global);
 
 bool	ft_is_our_builtin(char *cmd)
 {
@@ -46,25 +50,15 @@ char	*resolve_command_path(char *path, char *cmd)
 	{
 		i = candidates;
 		ex = ft_strjoin("/", cmd);
-		while (*i)
-		{
-			res = ft_strjoin(*i, ex);
-			if (access(res, X_OK) == -1)
-			{
-				free(res);
-				res = NULL;
-				i++;
-			}
-			else
-				break ;
-		}
+		ft_check_candidates(&i, &res, ex);
 	}
 	if (ex)
-		free(ex);
+		free_ptr(ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
 	return (res);
-} // Norm: Function too long
+}
 
+// TODO @aktyz this should be inside libft
 static size_t	ft_count_words(char const *s, char c)
 {
 	size_t	nb_words;
@@ -84,4 +78,40 @@ static size_t	ft_count_words(char const *s, char c)
 			i++;
 	}
 	return (nb_words);
+}
+
+static void	ft_check_candidates(char ***i, char **res, char *ex)
+{
+	char	**candidates;
+
+	candidates = *i;
+	while (*candidates)
+	{
+		*res = ft_strjoin(*candidates, ex);
+		if (access(*res, X_OK) == -1)
+		{
+			free(*res);
+			*res = NULL;
+			candidates++;
+		}
+		else
+			break ;
+	}
+}
+
+void	ft_execute_child_proc(t_command *cmd, t_global *global)
+{
+	if (cmd->prev && cmd->prev->cmd_pid)
+		waitpid(cmd->prev->cmd_pid, NULL, 0);
+	if (cmd->is_builtin)
+	{
+		ft_run_builtin(cmd, global);
+		ft_exit(global);
+	}
+	else
+	{
+		execve(cmd->path, cmd->args, ft_execve_env(global->env));
+		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
 }
