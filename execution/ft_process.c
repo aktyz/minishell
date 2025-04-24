@@ -14,7 +14,7 @@
 
 void		ft_process(t_global *global);
 char		*ft_get_env_var_value(char *env_var_name, t_list *env);
-static bool	ft_run_parent_builtins(t_command *cmd, t_global *global);
+static void	ft_run_parent_builtins(t_command *cmd, t_global *global);
 static void	ft_pipex(t_global *global);
 static void	ft_execute(t_global *global, pid_t *last_waited_pid);
 
@@ -24,7 +24,7 @@ void	ft_process(t_global *global)
 	pid_t		last_waited_pid;
 
 	last_waited_pid = -1;
-	ft_pipex(global); // here we create all the necessary connections
+	ft_pipex(global);
 	ft_execute(global, &last_waited_pid);
 	cmd = lst_last_cmd(global->cmd);
 	if (cmd->cmd_pid > 0 && cmd->cmd_pid != last_waited_pid)
@@ -45,46 +45,46 @@ char	*ft_get_env_var_value(char *env_var_name, t_list *env)
 	return (NULL);
 }
 
-static bool	ft_run_parent_builtins(t_command *cmd, t_global *global)
+static void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 {
+	ft_handle_redirections(cmd);
 	if (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
 	{
 		ft_exit(global);
-		return (false);
+		return ;
 	}
 	if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
 	{
 		ft_cd(cmd, global);
-		return (false);
+		return ;
 	}
 	if (ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
 	{
 		ft_export(cmd, global);
-		return (false);
+		return ;
 	}
 	if (ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0)
 	{
 		ft_unset(cmd, global);
-		return (false);
+		return ;
 	}
 }
 
 static void	ft_pipex(t_global *global)
 {
 	t_command	*cmd;
-	bool		proceed;
 
 	cmd = global->cmd;
 	while (cmd)
 	{
-		proceed = true;
 		if (cmd->pipe_output)
 			pipe(cmd->pipe_fd);
 		if (!cmd->is_builtin)
 			cmd->path = resolve_command_path(ft_get_env_var_value(ENV_PATH,
 						global->env), cmd->command);
-		proceed = ft_run_parent_builtins(cmd, global);
-		if (proceed) //TODO @aktyz cmd->cmd_pid = save_fork();
+		if (cmd->is_builtin && is_parent_builtin(cmd->command))
+			ft_run_parent_builtins(cmd, global);
+		else // TODO @aktyz create safe fork function
 		{
 			cmd->cmd_pid = fork();
 			if (cmd->cmd_pid == -1)
@@ -92,10 +92,8 @@ static void	ft_pipex(t_global *global)
 				perror("Forking failed");
 				return ;
 			}
+			ft_handle_redirections(cmd);
 		}
-		else
-			break ;
-		ft_handle_redirections(cmd);
 		if (cmd->cmd_pid == 0)
 		{
 			global->is_global = false;

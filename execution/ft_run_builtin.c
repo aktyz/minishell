@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+void	ft_run_builtin(t_command *cmd, t_global *global);
+bool	is_parent_builtin(const char *command);
+
 void	ft_run_builtin(t_command *cmd, t_global *global)
 {
 	if (ft_strncmp(cmd->command, ECHO, ft_strlen(ECHO)) == 0)
@@ -20,4 +23,12 @@ void	ft_run_builtin(t_command *cmd, t_global *global)
 		ft_pwd();
 	if (ft_strncmp(cmd->command, ENV, ft_strlen(ENV)) == 0)
 		ft_env(global->env);
+}
+
+bool	is_parent_builtin(const char *command)
+{
+	return (ft_strncmp(command, EXIT, ft_strlen(EXIT)) == 0
+		|| ft_strncmp(command, CD, ft_strlen(CD)) == 0
+		|| ft_strncmp(command, EXPORT, ft_strlen(EXPORT)) == 0
+		|| ft_strncmp(command, UNSET, ft_strlen(UNSET)) == 0);
 }
