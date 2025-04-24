@@ -237,6 +237,10 @@ void	ft_pwd(void);
 void	ft_export(t_command *cmd, t_global *global);
 void	ft_unset(t_command *cmd, t_global *global);
 void	ft_env(t_list *env);
+void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
+void	ft_handle_export_arg(t_command *cmd, t_global *global);
+void	ft_handle_export(t_command *cmd, t_global *global);
+void	ft_handle_existing_var(t_command *cmd, t_minishell_env *content);
 
 // Test functions
 void	run_tests(char **env);

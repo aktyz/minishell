@@ -11,7 +11,6 @@
 # **************************************************************************** #
 
 NAME = minishell
-NAME_TEST = tester
 LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
@@ -44,6 +43,7 @@ SRC = main.c \
 	builtins/cd.c \
 	builtins/pwd.c \
 	builtins/export.c \
+	builtins/export_utils.c \
 	builtins/unset.c \
 	builtins/env.c \
 	debug.c
@@ -53,7 +53,7 @@ OBJ = $(SRC:.c=.o)
 %.o : %.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -g -pthread
 
-all: $(LIBFT) $(NAME) $(NAME_TEST)
+all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline
