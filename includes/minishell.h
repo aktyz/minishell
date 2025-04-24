@@ -157,6 +157,7 @@ void	ft_split_env_variable(char *name_value, char **var_name,
 char	*ft_get_env_var_value(char *env_var_name, t_list *env);
 char	*resolve_command_path(char *path, char *cmd);
 void	ft_execute_child_proc(t_command *cmd, t_global *global);
+bool	is_parent_builtin(const char *command);
 
 //initialization
 bool	init_global(t_global *global, char **env);

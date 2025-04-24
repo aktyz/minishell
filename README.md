@@ -3,8 +3,27 @@
 make
 ./minishell
 ```
-
-
+## Running minishell in gdb
+==What ever command you are testing run it in `bash` first==
+```
+make debug
+make clean
+gdb ./minishell
+(gdb) set follow-fork-mode child
+(gdb) set detach-on-fork off
+(gdb) set print pretty on
+(gdb) break <file_name>:<line nb>
+(gdb) run
+```
+The process is running, it will be stopping on breakpoints and forks.
+Then you can list the processes that are alive with:
+```
+(gdb) info inferior
+```
+and change the focus to the process of choice with command
+```
+(gdb) inferior <nb of process to look at>
+```
 
 # Main program informations
 
