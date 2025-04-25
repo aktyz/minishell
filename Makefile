@@ -45,6 +45,9 @@ SRC = main.c \
 	parser/signals.c \
 	parser/utils_for_tokens.c \
 	parser/var_expander.c \
+	parser/var_expander_env.c \
+	parser/var_expander_utils.c \
+	parser/var_expander_replace.c \
 	command_files.c \
 	command_utils.c \
 	command_vars.c \

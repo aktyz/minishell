@@ -210,6 +210,19 @@ void	delete_node(t_token *node, void (*del)(void *));
 int		var_expander(t_global *global, t_token **token_lst);
 char	*var_expander_heredoc(t_global *global, char *str);
 
+
+// var_expander
+void	copy_var_value(char *new_str, char *var_value, int *j);
+int	var_length(char *str);
+char	*identify_var(char *str);
+char	*get_new_token_string(char *oldstr, char *var_value,
+		int newstr_size, int index);
+bool	var_between_quotes(char *str, int i);
+bool	is_next_char_a_sep(char c);
+char	*replace_str_heredoc(char *str, char *var_value, int index);
+char	*recover_val(t_token *token, char *str, t_global *global);
+int	replace_var(t_token **token_node, char *var_value, int index);
+
 // quotes
 int		handle_quotes(t_global *global);
 
