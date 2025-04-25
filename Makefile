@@ -45,6 +45,16 @@ SRC = main.c \
 	parser/signals.c \
 	parser/utils_for_tokens.c \
 	parser/var_expander.c \
+	command_files.c \
+	command_utils.c \
+	command_vars.c \
+	commands_append_pipe.c \
+	commands_heredoc.c \
+	commands_list.c \
+	command_args.c \
+	command_args_echo.c \
+	tokens_list.c \
+	ft_utils.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
 
