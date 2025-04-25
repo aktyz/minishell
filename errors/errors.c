@@ -12,6 +12,11 @@
 
 #include "minishell.h"
 
+static bool	add_detail_quotes(char *command);
+int			errmsg_cmd(char *command, char *detail, char *error_message,
+				int error_nb);
+void		errmsg(char *errmsg, char *detail, int quotes);
+
 /* add_detail_quotes:
  *	Checks whether to add quotes around the error detail:
  *	i.e. "unset: `@': not a valid identifier"
@@ -37,7 +42,7 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 	bool	detail_quotes;
 
 	detail_quotes = add_detail_quotes(command);
-	msg = ft_strdup("minishell: ");
+	msg = ft_strdup(MINISHELL);
 	if (command != NULL)
 	{
 		msg = ft_strjoin(msg, command);
@@ -49,7 +54,7 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 			msg = ft_strjoin(msg, "`");
 		msg = ft_strjoin(msg, detail);
 		if (detail_quotes)
-			msg = ft_strjoin(msg, "'");
+			msg = ft_strjoin(msg, "`");
 		msg = ft_strjoin(msg, ": ");
 	}
 	msg = ft_strjoin(msg, error_message);
@@ -66,7 +71,7 @@ void	errmsg(char *errmsg, char *detail, int quotes)
 {
 	char	*msg;
 
-	msg = ft_strdup("minishell: ");
+	msg = ft_strdup(MINISHELL);
 	msg = ft_strjoin(msg, errmsg);
 	if (quotes)
 		msg = ft_strjoin(msg, " `");
@@ -74,7 +79,7 @@ void	errmsg(char *errmsg, char *detail, int quotes)
 		msg = ft_strjoin(msg, ": ");
 	msg = ft_strjoin(msg, detail);
 	if (quotes)
-		msg = ft_strjoin(msg, "'");
+		msg = ft_strjoin(msg, "`");
 	ft_putendl_fd(msg, STDERR_FILENO);
 	free_ptr(msg);
 }
