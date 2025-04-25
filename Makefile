@@ -20,33 +20,33 @@ LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 
 SRC = main.c \
-	create_commands.c \
-	execution/resolve_command_path.c \
+	builtins/cd.c \
+	builtins/echo.c \
+	builtins/env.c \
+	builtins/exit.c \
+	builtins/export_utils.c \
+	builtins/export.c \
+	builtins/pwd.c \
+	builtins/unset.c \
+	cleanup/cleanup.c \
+	cleanup/free.c \
+	debug/debug.c \
+	errors/errors.c \
+	execution/ft_create_pipe.c \
+	execution/ft_exec_utils.c \
 	execution/ft_process.c \
 	execution/ft_run_builtin.c \
-	execution/ft_create_pipe.c \
-	utils_for_tokens.c \
-	nodes.c \
-	parser.c \
-	characters.c \
-	errors.c \
-	var_expander.c \
-	quotes.c \
+	parser/characters.c \
+	parser/create_commands.c \
+	parser/initialization.c \
+	parser/nodes.c \
+	parser/parser.c \
+	parser/quotes.c \
+	parser/signals.c \
+	parser/utils_for_tokens.c \
+	parser/var_expander.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
-	initialization.c \
-	signals.c \
-	cleanup.c \
-	free.c \
-	builtins/echo.c \
-	builtins/exit.c \
-	builtins/cd.c \
-	builtins/pwd.c \
-	builtins/export.c \
-	builtins/export_utils.c \
-	builtins/unset.c \
-	builtins/env.c \
-	debug.c
 
 OBJ = $(SRC:.c=.o)
 

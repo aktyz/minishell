@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-void		print_tokens(t_token *list);
-void		minishell_interactive(t_global *global);
+int		main(int ac, char **av, char **env);
+void	minishell_interactive(t_global *global);
 
 int	main(int ac, char **av, char **env)
 {
@@ -28,19 +28,6 @@ int	main(int ac, char **av, char **env)
 		minishell_interactive(&global);
 	}
 	return (0);
-}
-/**/
-
-void	print_tokens(t_token *list)
-{
-	t_token	*temp;
-
-	temp = list;
-	while (temp)
-	{
-		printf("%s \n", temp->str);
-		temp = temp->next;
-	}
 }
 
 void	minishell_interactive(t_global *global)

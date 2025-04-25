@@ -20,6 +20,7 @@
 # include <stdlib.h> // exit()
 # include <string.h> // strerror()
 # include <unistd.h> // pipe() fork()
+# include <signal.h> // struct sigaction
 # include <sys/stat.h> // open()
 # include <sys/wait.h> //
 
@@ -41,6 +42,8 @@
 # define EXIT "exit"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
+
+# define MINISHELL "minishell: "
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"
 
@@ -209,15 +212,14 @@ char	*var_expander_heredoc(t_global *global, char *str);
 int		handle_quotes(t_global *global);
 
 // parse commands
-void	create_commands(t_global *global, t_token *token);
-void	parse_word(t_command **cmd, t_token **token_lst);
-void	parse_input(t_command **last_cmd, t_token **token_lst);
-void	parse_trunc(t_command **last_cmd, t_token **token_lst);
-void	parse_append(t_command **last_cmd, t_token **token_lst);
-void	parse_pipe(t_command **last_cmd, t_token **token_lst);
-void	parse_heredoc(t_global *global, t_command **last_cmd,
-			t_token **token_lst);
-
+void		create_commands(t_global *global, t_token *token);
+void		parse_word(t_command **cmd, t_token **token_lst);
+void		parse_input(t_command **last_cmd, t_token **token_lst);
+void		parse_trunc(t_command **last_cmd, t_token **token_lst);
+void		parse_append(t_command **last_cmd, t_token **token_lst);
+void		parse_pipe(t_command **last_cmd, t_token **token_lst);
+void		parse_heredoc(t_global *global, t_command **last_cmd,
+				t_token **token_lst);
 t_command	*lst_last_cmd(t_command *cmd);
 t_command	*lst_new_cmd(bool value);
 

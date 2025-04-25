@@ -66,7 +66,6 @@ I would prefer we create a clear separation as per functionality of our code. Ou
 - builtin
 - cleanup
 - debug
-- examples
 - execution
 - includes
 - libft as git submodule
