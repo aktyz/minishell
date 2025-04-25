@@ -6,14 +6,11 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:21:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 19:58:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	g_last_exit_code; // TODO @marlenasn - why do we need to have it in two places:
-// header and this file
 
 // Norm: Too many functions in the file
 
@@ -131,7 +128,7 @@ bool	init_global(t_global *global, char **env)
 	global->is_global = true;
 	global->cmd = NULL;
 	// global->pid = -1;
-	g_last_exit_code = 0;
+	global->last_exit_code = 0;
 	return (true);
 }
 
@@ -155,52 +152,6 @@ void	init_io(t_command *cmd)
 		cmd->io_fds->stdin_backup = -1;
 		cmd->io_fds->stdout_backup = -1;
 	}
-}
-
-void	ft_clean_up(t_process **proc)
-{
-	int			i;
-	t_process	*clean;
-
-	clean = *proc;
-	if (clean->executable->execve_argv)
-		ft_clear_char_array(&(clean->executable->execve_argv),
-			clean->executable->execve_argc + 1);
-	if (clean->executable->file_name)
-		free(clean->executable->file_name);
-	if (clean->executable->path)
-		free(clean->executable->path);
-	if (clean->executable)
-		free(clean->executable);
-	free(clean);
-}
-
-void	ft_error(t_process ***proc, char **string)
-{
-	perror(strerror(errno));
-	if (**proc)
-		ft_clean_up(*proc);
-	if (string)
-		free(string);
-	exit(EXIT_FAILURE);
-}
-
-static void	ft_create_process_data(t_process ***proc)
-{
-	int			c;
-	t_process	*process;
-
-	process = **proc;
-	(process)->executable = ft_calloc(1, sizeof(t_executable));
-	if (!(process)->executable)
-		ft_error(proc, NULL);
-	(process)->pipe_receive = 1;
-	c = pipe((process)->pipe_parent);
-	if (c == -1)
-		ft_error(proc, NULL);
-	(process)->child_pid = (int) fork();
-	if ((process)->child_pid == -1)
-		ft_error(proc, NULL);
 }
 
 char	**ft_trim_user_input(char **argv, int argc)

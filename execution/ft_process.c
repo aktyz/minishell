@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:21:16 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:38:13 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,19 @@ void	ft_process(t_global *global)
 {
 	t_command	*cmd;
 	pid_t		last_waited_pid;
+	int			wstatus;
 
 	last_waited_pid = -1;
-	ft_pipex(global);
-	ft_execute(global, &last_waited_pid);
-	cmd = lst_last_cmd(global->cmd);
-	if (cmd->cmd_pid > 0 && cmd->cmd_pid != last_waited_pid)
-		waitpid(cmd->cmd_pid, NULL, 0);
+	if (global->cmd->command)
+	{
+		ft_pipex(global);
+		ft_execute(global, &last_waited_pid);
+		cmd = lst_last_cmd(global->cmd);
+		if (cmd->cmd_pid > 0 && cmd->cmd_pid != last_waited_pid)
+			waitpid(cmd->cmd_pid, &wstatus, 0);
+		if (WIFEXITED(wstatus))
+			global->last_exit_code = WEXITSTATUS(wstatus);
+	}
 }
 
 char	*ft_get_env_var_value(char *env_var_name, t_list *env)
@@ -50,12 +56,12 @@ static void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 	ft_handle_redirections(cmd);
 	if (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
 	{
-		ft_exit(global);
+		ft_exit(global, 0);
 		return ;
 	}
 	if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
 	{
-		ft_cd(cmd, global);
+		global->last_exit_code = ft_cd(cmd, global);
 		return ;
 	}
 	if (ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
@@ -68,6 +74,8 @@ static void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 		ft_unset(cmd, global);
 		return ;
 	}
+	if (ft_strncmp(cmd->command, ZERO, ft_strlen(ZERO)) == 0)
+		ft_printf("%d\n", global->last_exit_code);
 }
 
 static void	ft_pipex(t_global *global)
@@ -82,18 +90,11 @@ static void	ft_pipex(t_global *global)
 		if (!cmd->is_builtin)
 			cmd->path = resolve_command_path(ft_get_env_var_value(ENV_PATH,
 						global->env), cmd->command);
-		if (cmd->is_builtin && is_parent_builtin(cmd->command))
+		if (is_parent_builtin(cmd->command))
 			ft_run_parent_builtins(cmd, global);
-		else // TODO @aktyz create safe fork function
-		{
-			cmd->cmd_pid = fork();
-			if (cmd->cmd_pid == -1)
-			{
-				perror("Forking failed");
-				return ;
-			}
-			ft_handle_redirections(cmd);
-		}
+		else
+			ft_safe_fork(global, cmd);
+		ft_handle_redirections(cmd);
 		if (cmd->cmd_pid == 0)
 		{
 			global->is_global = false;
@@ -106,6 +107,7 @@ static void	ft_pipex(t_global *global)
 static void	ft_execute(t_global *global, pid_t *last_waited_pid)
 {
 	t_command	*cmd;
+	int			wstatus;
 
 	cmd = global->cmd;
 	while (cmd)
@@ -116,11 +118,13 @@ static void	ft_execute(t_global *global, pid_t *last_waited_pid)
 		{
 			if (!cmd->pipe_output && cmd->cmd_pid > 0)
 			{
-				waitpid(cmd->cmd_pid, NULL, 0);
+				waitpid(cmd->cmd_pid, &wstatus, 0);
 				*last_waited_pid = cmd->cmd_pid;
 			}
 			else if (cmd == global->cmd && cmd->cmd_pid > 0)
-				waitpid(cmd->cmd_pid, NULL, WNOHANG);
+				waitpid(cmd->cmd_pid, &wstatus, WNOHANG);
+			if (WIFEXITED(wstatus))
+				global->last_exit_code = WEXITSTATUS(wstatus);
 		}
 		cmd = cmd->next;
 	}

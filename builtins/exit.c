@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 17:33:22 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:04:20 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(t_global *global)
+void	ft_exit(t_global *global, int status)
 {
 	if (global)
 	{
@@ -24,5 +24,6 @@ void	ft_exit(t_global *global)
 	}
 	if (global->env)
 		ft_lstclear(&global->env, ft_clean_minishell_env);
-	exit(EXIT_SUCCESS);
+	global->last_exit_code = status;
+	exit(status);
 }

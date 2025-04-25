@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:21:16 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:26:19 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ bool	ft_is_our_builtin(char *cmd)
 	if (ft_strncmp(UNSET, cmd, ft_strlen(UNSET)) == 0)
 		return (true);
 	if (ft_strncmp(ENV, cmd, ft_strlen(ENV)) == 0)
+		return (true);
+	if (ft_strncmp(ZERO, cmd, ft_strlen(ZERO)) == 0)
 		return (true);
 	return (false);
 }
@@ -105,13 +107,12 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global)
 		waitpid(cmd->prev->cmd_pid, NULL, 0);
 	if (cmd->is_builtin)
 	{
-		ft_run_builtin(cmd, global);
-		ft_exit(global);
+		global->last_exit_code = ft_run_builtin(cmd, global);
+		ft_exit(global, global->last_exit_code);
 	}
 	else
 	{
 		execve(cmd->path, cmd->args, ft_execve_env(global->env));
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		ft_exit(global, EXIT_FAILURE);
 	}
 }

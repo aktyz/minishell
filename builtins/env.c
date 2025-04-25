@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:32:22 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 17:33:15 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:01:17 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_list *env)
+int	ft_env(t_list *env)
 {
 	t_list			*ptr;
 	t_minishell_env	*content;
@@ -25,4 +25,5 @@ void	ft_env(t_list *env)
 		ptr = ptr->next;
 		content = (t_minishell_env *)ptr->content;
 	}
+	return (0);
 }

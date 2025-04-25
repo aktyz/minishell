@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/11 23:00:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:38:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_cd(t_command *cmd, t_global *global)
+int	ft_cd(t_command *cmd, t_global *global)
 {
 	char	*path;
 
@@ -22,9 +22,10 @@ void	ft_cd(t_command *cmd, t_global *global)
 		if (!path)
 		{
 			ft_printf("cd: HOME not set\n");
-			return ;
+			return (1);
 		}
 	}
 	if (chdir(cmd->args[1]) == -1)
-		ft_printf("cd: %s: No such file or directory\n", cmd->args[1]);
+		return (1);
+	return (0);
 }

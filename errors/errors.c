@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:09:52 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:49:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 	if (detail != NULL)
 	{
 		if (detail_quotes)
-			msg = ft_strjoin(msg, "`");
+			msg = ft_strjoin(msg, "'");
 		msg = ft_strjoin(msg, detail);
 		if (detail_quotes)
-			msg = ft_strjoin(msg, "`");
+			msg = ft_strjoin(msg, "'");
 		msg = ft_strjoin(msg, ": ");
 	}
 	msg = ft_strjoin(msg, error_message);
@@ -74,12 +74,12 @@ void	errmsg(char *errmsg, char *detail, int quotes)
 	msg = ft_strdup(MINISHELL);
 	msg = ft_strjoin(msg, errmsg);
 	if (quotes)
-		msg = ft_strjoin(msg, " `");
+		msg = ft_strjoin(msg, " '");
 	else
 		msg = ft_strjoin(msg, ": ");
 	msg = ft_strjoin(msg, detail);
 	if (quotes)
-		msg = ft_strjoin(msg, "`");
+		msg = ft_strjoin(msg, "'");
 	ft_putendl_fd(msg, STDERR_FILENO);
 	free_ptr(msg);
 }

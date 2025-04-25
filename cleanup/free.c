@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 17:58:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 17:40:13 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,6 @@ void	free_global(t_global *global, bool clear_history)
 	}
 	if (global && global->cmd)
 		lst_clear_cmd(&global->cmd, &free_ptr);
+	//if (global && global->cmd)
+	//	lst_clear_cmd(&global->token, &free_ptr); // TODO @aktyz we need to clean Token list as well here
 }

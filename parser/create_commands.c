@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 19:34:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -587,7 +587,7 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 *		< forbidden <README.md cat > test
 *			Permission denied (no README cat)
 */
-static void	open_infile(t_io_fds *io, char *file, char *original_filename)
+static void	open_infile(t_global *g, t_io_fds *io, char *file, char *original_filename)
 {
 	if (!remove_old_file_ref(io, true))
 		return ;
@@ -595,14 +595,17 @@ static void	open_infile(t_io_fds *io, char *file, char *original_filename)
 	if (io->infile && io->infile[0] == '\0')
 	{
 		errmsg_cmd(original_filename, NULL, "ambiguous redirect", false);
-		return ;
+		ft_exit(g, EXIT_FAILURE);
 	}
 	io->fd_in = open(io->infile, O_RDONLY);
 	if (io->fd_in == -1)
+	{
 		errmsg_cmd(io->infile, NULL, strerror(errno), false);
+		ft_exit(g, EXIT_FAILURE);
+	}
 }
 
-void	parse_input(t_command **last_cmd, t_token **token_lst)
+void	parse_input(t_global *global, t_command **last_cmd, t_token **token_lst)
 {
 	t_token		*temp;
 	t_command	*cmd;
@@ -610,7 +613,7 @@ void	parse_input(t_command **last_cmd, t_token **token_lst)
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
 	init_io(cmd);
-	open_infile(cmd->io_fds, temp->next->str, temp->next->str_backup);
+	open_infile(global, cmd->io_fds, temp->next->str, temp->next->str_backup);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
@@ -967,7 +970,7 @@ void	create_commands(t_global *global, t_token *token)
 		if (temp->type == WORD || temp->type == VAR)
 			parse_word(&global->cmd, &temp);
 		else if (temp->type == INPUT)
-			parse_input(&global->cmd, &temp);
+			parse_input(global, &global->cmd, &temp);
 		else if (temp->type == TRUNC)
 			parse_trunc(&global->cmd, &temp);
 		else if (temp->type == HEREDOC)

@@ -94,6 +94,15 @@ That would leave in the main folder only crucial files:
 - cat < ./test_files/loremIpsum.txt
 - wc -l < ./test_files/myfile.txt
 - echo "orange banana apple" | tr ' ' '\n' | sort > ./test_files/test2
+- cat | cat | ls
+- << EOF << END << DEF <- invalid syntax
+
+### Commands to test our minishell error management (with Bash output)
+- zslowian@c4r1s1:~$ touch ./test_files/bashX << EOF
+> Hello World
+> EOF
+touch: cannot touch './test_files/bashX': No such file or directory
+
 
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
 > I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project. Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards (those are in bonus); `cd ./test_files` needs to be implemented first as a built-in to work because bash has it also built-in and not a stand-alone script.

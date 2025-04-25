@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:07:06 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:42:18 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int ac, char **av, char **env)
 	else
 	{
 		if (!init_global(&global, env))
-			exit_shell(NULL, EXIT_FAILURE);
+			ft_exit(NULL, EXIT_FAILURE);
 		minishell_interactive(&global);
 	}
 	return (0);
@@ -43,9 +43,6 @@ void	minishell_interactive(t_global *global)
 			//print_cmd_list(global);
 			ft_process(global);
 		}
-		//g_last_exit_code = execute(global);
-		//else
-		//	g_last_exit_code = 1;
 		free_global(global, false);
 		global->token = NULL;
 	}

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:18:19 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:31:32 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 # define UNSET "unset"
 # define ENV "env"
 # define EXIT "exit"
+# define ZERO "0"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -47,7 +48,6 @@
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"
 
-extern int				g_last_exit_code;
 typedef struct s_io_fds	t_io_fds;
 
 typedef struct s_executable
@@ -57,21 +57,6 @@ typedef struct s_executable
 	int		execve_argc;
 	char	**execve_argv; // args
 }	t_executable;
-
-typedef struct s_process
-{
-	int				pipe_parent[2]; // to_go
-	int				pipe_send; // to_go
-	int				pipe_receive; // to_go
-	int				file_send; // to_go
-	int				file_receive; // to_go
-	int				in_file_fd; // to_go
-	char			*input_data;
-	int				out_file_fd;
-	char			*output_data;
-	int				child_pid;
-	t_executable	*executable;
-}	t_process;
 
 typedef struct s_node_for_token
 {
@@ -114,6 +99,7 @@ typedef struct s_global
 	t_list		*env;
 	t_command	*cmd;
 	bool		is_global;
+	int			last_exit_code;
 }	t_global;
 
 enum	e_token_types
@@ -153,14 +139,13 @@ bool	ft_is_our_builtin(char *cmd);
 void	ft_handle_redirections(t_command *cmd);
 char	**ft_execve_env(t_list *env);
 
-void	ft_error(t_process ***proc, char **string);
-void	ft_clean_up(t_process **proc);
 void	ft_split_env_variable(char *name_value, char **var_name,
 			char **var_value);
 char	*ft_get_env_var_value(char *env_var_name, t_list *env);
 char	*resolve_command_path(char *path, char *cmd);
 void	ft_execute_child_proc(t_command *cmd, t_global *global);
 bool	is_parent_builtin(const char *command);
+void	ft_safe_fork(t_global *g, t_command *cmd);
 
 //initialization
 bool	init_global(t_global *global, char **env);
@@ -169,7 +154,6 @@ void	init_io(t_command *cmd);
 
 //cleanup
 void	ft_clean_minishell_env(void *env_content_node);
-void	exit_shell(t_global *global, int exno);
 bool	restore_io(t_io_fds *io);
 void	lst_clear_cmd(t_command **lst, void (*del)(void *));
 //free
@@ -214,7 +198,8 @@ int		handle_quotes(t_global *global);
 // parse commands
 void		create_commands(t_global *global, t_token *token);
 void		parse_word(t_command **cmd, t_token **token_lst);
-void		parse_input(t_command **last_cmd, t_token **token_lst);
+void		parse_input(t_global *global, t_command **last_cmd,
+				t_token **token_lst);
 void		parse_trunc(t_command **last_cmd, t_token **token_lst);
 void		parse_append(t_command **last_cmd, t_token **token_lst);
 void		parse_pipe(t_command **last_cmd, t_token **token_lst);
@@ -233,14 +218,14 @@ void	print_token_list(t_token **tokens);
 void	print_cmd_list(t_global *global);
 
 // builtins
-void	ft_run_builtin(t_command *cmd, t_global *global);
-void	ft_echo(char **args);
-void	ft_cd(t_command *cmd, t_global *global);
-void	ft_exit(t_global *data);
-void	ft_pwd(void);
+int		ft_run_builtin(t_command *cmd, t_global *global);
+int		ft_echo(char **args);
+int		ft_cd(t_command *cmd, t_global *global);
+void	ft_exit(t_global *data, int status);
+int		ft_pwd(void);
 void	ft_export(t_command *cmd, t_global *global);
 void	ft_unset(t_command *cmd, t_global *global);
-void	ft_env(t_list *env);
+int		ft_env(t_list *env);
 void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
 void	ft_handle_export_arg(t_command *cmd, t_global *global);
 void	ft_handle_export(t_command *cmd, t_global *global);
