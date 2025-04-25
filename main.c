@@ -39,13 +39,8 @@ void	minishell_interactive(t_global *global)
 		set_signals_noninteractive();
 		if (parse_user_input(global))
 		{
-			//print_token_list(&global->token);
-			//print_cmd_list(global);
 			ft_process(global);
 		}
-		//g_last_exit_code = execute(global);
-		//else
-		//	g_last_exit_code = 1;
 		free_global(global, false);
 		global->token = NULL;
 	}
