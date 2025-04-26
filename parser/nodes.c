@@ -16,7 +16,7 @@ t_token	*new_node(char *str, int type, int status)
 {
 	t_token	*new_node;
 
-	new_node = malloc(sizeof(t_token));
+	new_node = ft_calloc(sizeof(t_token), 1);
 	if (!new_node)
 		return (NULL);
 	new_node->str = str;
@@ -50,11 +50,11 @@ void	add_node(t_token **list, t_token *new_node)
 	}
 }
 
-void	delete_node(t_token *node, void (*del)(void *))
+void	delete_node(t_token *node, void (*del)(void **))
 {
 	if (del && node && node->str)
 	{
-		(*del)(node->str);
+		(*del)((void **)&node->str);
 		node->str = NULL;
 	}
 	if (node->prev)

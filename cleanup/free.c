@@ -17,10 +17,11 @@
  * otherwise it won't work.
  *
 */
-void	free_ptr(void *ptr)
+void	free_ptr(void **ptr)
 {
-	if (ptr != NULL)
-		free(ptr);
+	if (ptr && *ptr)
+		free(*ptr);
+	*ptr = NULL;
 }
 
 /* free_io:
@@ -34,14 +35,14 @@ void	free_io(t_io_fds *io)
 	if (io->heredoc_delimiter)
 	{
 		unlink(io->infile);
-		free_ptr(io->heredoc_delimiter);
+		free_ptr((void **)&io->heredoc_delimiter);
 	}
 	if (io->infile)
-		free_ptr(io->infile);
+		free_ptr((void **)&io->infile);
 	if (io->outfile)
-		free_ptr(io->outfile);
+		free_ptr((void **)&io->outfile);
 	if (io)
-		free_ptr(io);
+		free_ptr((void **)&io);
 }
 
 /* free_str_tab:
@@ -58,7 +59,7 @@ void	free_str_tab(char **tab)
 		{
 			if (tab[i])
 			{
-				free_ptr(tab[i]);
+				free_ptr((void **)&tab[i]);
 				tab[i] = NULL;
 			}
 			i++;
@@ -75,12 +76,9 @@ void	free_str_tab(char **tab)
 void	free_global(t_global *global, bool clear_history)
 {
 	if (global && global->user_input)
-	{
-		free_ptr(global->user_input);
-		global->user_input = NULL;
-	}
+		free_ptr((void **)&global->user_input);
 	if (global && global->cmd)
 		lst_clear_cmd(&global->cmd, &free_ptr);
-	//if (global && global->cmd)
-	//	lst_clear_cmd(&global->token, &free_ptr); // TODO @aktyz we need to clean Token list as well here
+	if (global && global->token)
+		ft_clear_token(&global->token);
 }

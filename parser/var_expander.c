@@ -101,7 +101,7 @@ static char	*erase_and_replace(t_token **token_node, char *str,
 	newstr = get_new_token_string(str, var_value, newstr_size, index);
 	if (token_node && *token_node)
 	{
-		free_ptr((*token_node)->str);
+		free_ptr((void **)&(*token_node)->str);
 		(*token_node)->str = NULL;
 		(*token_node)->str = newstr;
 	}
@@ -120,10 +120,10 @@ int	replace_var(t_token **token_node, char *var_value, int index)
 	if (erase_and_replace(token_node, (*token_node)->str, \
 	var_value, index) == NULL)
 	{
-		free_ptr(var_value);
+		free_ptr((void **)&var_value);
 		return (var_value = NULL, 1);
 	}
-	free_ptr(var_value);
+	free_ptr((void **)&var_value);
 	return (var_value = NULL, 0);
 }
 
@@ -143,9 +143,9 @@ char	*replace_str_heredoc(char *str, char *var_value, int index)
 	{
 		tmp = str;
 		str = erase_and_replace(NULL, str, var_value, index);
-		free_ptr(tmp);
+		free_ptr((void **)&tmp);
 	}
-	free_ptr(var_value);
+	free_ptr((void **)&var_value);
 	return (var_value = NULL, str);
 }
 
@@ -173,7 +173,7 @@ char	*identify_var(char *str)
 	if (!var)
 		return (NULL);
 	tmp = ft_strjoin(var, "=");
-	free_ptr(var);
+	free_ptr((void **)&var);
 	var = tmp;
 	return (var);
 }
@@ -231,8 +231,8 @@ char	*recover_val(t_token *token, char *str, t_global *global)
 
 	var = identify_var(str);
 	var_name = ft_strtrim(var, "=");
-	free_ptr(var);
-	var = NULL;
+	value = NULL;
+	free_ptr((void **)&var);
 	if (var_name && var_exists(global, var_name) == 0)
 	{
 		if (token != NULL)
@@ -240,12 +240,12 @@ char	*recover_val(t_token *token, char *str, t_global *global)
 		value = search_env_var(global, var_name);
 	}
 	else if (var_name && var_name[0] == '?' && var_name[1] == '\0')
-		value = ft_itoa(g_last_exit_code); // TODO @aktyz figure out how to mark
-		// TOKEN/CMD to only print last exit code
-	else
-		value = NULL;
-	free_ptr(var_name);
-	return (var_name = NULL, value);
+	{
+		value = ft_itoa(global->last_exit_code);
+		token->status_request = true;
+	}
+	free_ptr((void **)&var_name);
+	return (value);
 }
 
 static void	update_status(t_token **token_node, char c)

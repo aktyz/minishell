@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-bool			ft_is_our_builtin(char *cmd);
-char			*resolve_command_path(char *path, char *cmd);
+bool			ft_is_our_builtin(char *cmd, t_global *global);
+char			*resolve_command_path(t_global *g, char *path, char *cmd);
 static size_t	ft_count_words(char const *s, char c);
 static void		ft_check_candidates(char ***i, char **res, char *ex);
 void			ft_execute_child_proc(t_command *cmd, t_global *global);
 
-bool	ft_is_our_builtin(char *cmd)
+bool	ft_is_our_builtin(char *cmd, t_global *global)
 {
 	if (ft_strncmp(ECHO, cmd, ft_strlen(ECHO)) == 0)
 		return (true);
@@ -34,12 +34,12 @@ bool	ft_is_our_builtin(char *cmd)
 		return (true);
 	if (ft_strncmp(ENV, cmd, ft_strlen(ENV)) == 0)
 		return (true);
-	if (ft_strncmp(ZERO, cmd, ft_strlen(ZERO)) == 0)
+	if (ft_strcmp(ft_itoa(global->last_exit_code), cmd) == 0)
 		return (true);
 	return (false);
 }
 
-char	*resolve_command_path(char *path, char *cmd)
+char	*resolve_command_path(t_global *g, char *path, char *cmd)
 {
 	char	*res;
 	char	**candidates;
@@ -55,8 +55,10 @@ char	*resolve_command_path(char *path, char *cmd)
 		ft_check_candidates(&i, &res, ex);
 	}
 	if (ex)
-		free_ptr(ex);
+		free_ptr((void **)&ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
+	if (!res)
+		ft_exit(g, "command not found", 127);
 	return (res);
 }
 
@@ -105,14 +107,14 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global)
 {
 	if (cmd->prev && cmd->prev->cmd_pid)
 		waitpid(cmd->prev->cmd_pid, NULL, 0);
-	if (cmd->is_builtin)
+	if (cmd->is_builtin && !cmd->status_request)
 	{
 		global->last_exit_code = ft_run_builtin(cmd, global);
-		ft_exit(global, global->last_exit_code);
+		ft_exit(global, cmd->command, global->last_exit_code);
 	}
 	else
 	{
 		execve(cmd->path, cmd->args, ft_execve_env(global->env));
-		ft_exit(global, EXIT_FAILURE);
+		ft_exit(global, cmd->command, EXIT_FAILURE);
 	}
 }

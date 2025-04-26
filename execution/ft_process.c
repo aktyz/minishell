@@ -31,9 +31,11 @@ void	ft_process(t_global *global)
 		ft_execute(global, &last_waited_pid);
 		cmd = lst_last_cmd(global->cmd);
 		if (cmd->cmd_pid > 0 && cmd->cmd_pid != last_waited_pid)
+		{
 			waitpid(cmd->cmd_pid, &wstatus, 0);
-		if (WIFEXITED(wstatus))
-			global->last_exit_code = WEXITSTATUS(wstatus);
+			if (WIFEXITED(wstatus))
+				global->last_exit_code = WEXITSTATUS(wstatus);
+		}
 	}
 }
 
@@ -56,7 +58,7 @@ static void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 	ft_handle_redirections(cmd);
 	if (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
 	{
-		ft_exit(global, 0);
+		ft_exit(global, cmd->command, 0);
 		return ;
 	}
 	if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
@@ -74,8 +76,11 @@ static void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 		ft_unset(cmd, global);
 		return ;
 	}
-	if (ft_strncmp(cmd->command, ZERO, ft_strlen(ZERO)) == 0)
-		ft_printf("%d\n", global->last_exit_code);
+	if (cmd->status_request)
+	{
+		ft_printf("%s %s: command not found\n", MINISHELL, cmd->command);
+		global->last_exit_code = 127;
+	}
 }
 
 static void	ft_pipex(t_global *global)
@@ -88,9 +93,9 @@ static void	ft_pipex(t_global *global)
 		if (cmd->pipe_output)
 			pipe(cmd->pipe_fd);
 		if (!cmd->is_builtin)
-			cmd->path = resolve_command_path(ft_get_env_var_value(ENV_PATH,
+			cmd->path = resolve_command_path(global, ft_get_env_var_value(ENV_PATH,
 						global->env), cmd->command);
-		if (is_parent_builtin(cmd->command))
+		if (is_parent_builtin(cmd))
 			ft_run_parent_builtins(cmd, global);
 		else
 			ft_safe_fork(global, cmd);

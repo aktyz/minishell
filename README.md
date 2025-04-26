@@ -81,21 +81,20 @@ That would leave in the main folder only crucial files:
 
 ## For Zyta where to start next time
 ### Commands to test piping in our minishell:
-- ls | wc -w
-- cat ./test_files/myfile.txt | grep "error" | wc -w
-- ps aux | grep wsl
-- du -h | sort -hr
-- echo "orange banana apple" | wc -w
-- echo "orange banana apple" | tr ' ' '\n' | sort
+- `ls | wc -w`
+- `cat ./test_files/myfile.txt | grep "error" | wc -w`
+- `ps aux | grep wsl`
+- `du -h | sort -hr`
+- `echo "orange banana apple" | wc -w`
+- `echo "orange banana apple" | tr ' ' '\n' | sort`
+- `cat | cat | ls`
 
 ### Commands to test outfile redirections in our minishell:
-- echo "something, something" > ./test_files/test0
-- cat ./test_files/myfile.txt > ./test_files/test1
-- cat < ./test_files/loremIpsum.txt
-- wc -l < ./test_files/myfile.txt
-- echo "orange banana apple" | tr ' ' '\n' | sort > ./test_files/test2
-- cat | cat | ls
-- << EOF << END << DEF <- invalid syntax
+- `echo "something, something" > ./test_files/test0`
+- `cat ./test_files/myfile.txt > ./test_files/test1`
+- `cat < ./test_files/loremIpsum.txt`
+- `wc -l < ./test_files/myfile.txt`
+- `echo "orange banana apple" | tr ' ' '\n' | sort > ./test_files/test2`
 
 ### Commands to test our minishell error management (with Bash output)
 - zslowian@c4r1s1:~$ touch ./test_files/bashX << EOF
@@ -121,7 +120,7 @@ touch: cannot touch './test_files/bashX': No such file or directory
 - [x] Export built-in with no options
 - [x] Unset built-in with no options
 - [x] Env built-in with no options or arguments - print out all env
-- [ ] Check signal handling in both modes - interactive and non-interactive
+- [x] Check signal handling in both modes - interactive and non-interactive
 - [ ] test for handling single and double quotes as per subject requirements
 - [ ] remove unused `t_process` structure and depending functions
 - [ ] make sure we need to be able to call `./minishell` from our `./minishell` and if yes, implement it

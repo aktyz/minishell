@@ -13,8 +13,9 @@
 #include "minishell.h"
 
 int		ft_run_builtin(t_command *cmd, t_global *global);
-bool	is_parent_builtin(const char *command);
+bool	is_parent_builtin(t_command *command);
 void	ft_safe_fork(t_global *g, t_command *cmd);
+void	ft_is_status_request(t_token *token, t_command *cmd);
 
 int	ft_run_builtin(t_command *cmd, t_global *global)
 {
@@ -27,21 +28,25 @@ int	ft_run_builtin(t_command *cmd, t_global *global)
 	return (1);
 }
 
-bool	is_parent_builtin(const char *command)
+bool	is_parent_builtin(t_command *cmd)
 {
-	return (ft_strncmp(command, EXIT, ft_strlen(EXIT)) == 0
-		|| ft_strncmp(command, CD, ft_strlen(CD)) == 0
-		|| ft_strncmp(command, EXPORT, ft_strlen(EXPORT)) == 0
-		|| ft_strncmp(command, UNSET, ft_strlen(UNSET)) == 0
-		|| ft_strncmp(command, ZERO, ft_strlen(ZERO)) == 0);
+	return (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0
+		|| ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0
+		|| ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0
+		|| ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0
+		|| (cmd->is_builtin && cmd->status_request)); // => NO, WE NEED TO DO IT MANUALLY we want the child to call ie. the cmd "0"
+		//and return "command not found" in order to be called next
 }
 
 void	ft_safe_fork(t_global *g, t_command *cmd)
 {
 	cmd->cmd_pid = fork();
 	if (cmd->cmd_pid == -1)
-	{
-		errmsg_cmd(cmd->command, NULL, strerror(errno), false);
-		ft_exit(g, EXIT_FAILURE);
-	}
+		ft_exit(g, cmd->command, EXIT_FAILURE);
+}
+
+void	ft_is_status_request(t_token *token, t_command *cmd)
+{
+	if (token->status_request)
+		cmd->status_request = true;
 }

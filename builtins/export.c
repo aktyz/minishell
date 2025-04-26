@@ -92,8 +92,8 @@ void	ft_handle_existing_var(t_command *cmd, t_minishell_env *content)
 	equal_pos = ft_strlen(content->name_value[0]);
 	if (cmd->args[1][equal_pos] == '=')
 	{
-		free_ptr(content->name_value[0]);
-		free_ptr(content->name_value[1]);
+		free_ptr((void **)&content->name_value[0]);
+		free_ptr((void **)&content->name_value[1]);
 		ft_split_env_variable(cmd->args[1], &content->name_value[0],
 			&content->name_value[1]);
 	}

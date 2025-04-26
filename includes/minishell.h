@@ -40,7 +40,6 @@
 # define UNSET "unset"
 # define ENV "env"
 # define EXIT "exit"
-# define ZERO "0"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
@@ -50,14 +49,6 @@
 
 typedef struct s_io_fds	t_io_fds;
 
-typedef struct s_executable
-{
-	char	*path; //path
-	char	*file_name; //command
-	int		execve_argc;
-	char	**execve_argv; // args
-}	t_executable;
-
 typedef struct s_node_for_token
 {
 	char					*str;
@@ -66,6 +57,7 @@ typedef struct s_node_for_token
 	int						type;
 	int						status;
 	bool					join;
+	bool					status_request;
 	struct s_node_for_token	*prev;
 	struct s_node_for_token	*next;
 }	t_token;
@@ -79,6 +71,7 @@ typedef struct s_command
 	bool				pipe_output; // pipes
 	int					pipe_fd[2]; // pipes
 	bool				is_builtin;
+	bool				status_request;
 	pid_t				cmd_pid;
 	t_io_fds			*io_fds;
 	struct s_command	*next;
@@ -135,16 +128,16 @@ struct s_io_fds
 };
 
 void	ft_process(t_global *global);
-bool	ft_is_our_builtin(char *cmd);
+bool	ft_is_our_builtin(char *cmd, t_global *global);
 void	ft_handle_redirections(t_command *cmd);
 char	**ft_execve_env(t_list *env);
 
 void	ft_split_env_variable(char *name_value, char **var_name,
 			char **var_value);
 char	*ft_get_env_var_value(char *env_var_name, t_list *env);
-char	*resolve_command_path(char *path, char *cmd);
+char	*resolve_command_path(t_global *g, char *path, char *cmd);
 void	ft_execute_child_proc(t_command *cmd, t_global *global);
-bool	is_parent_builtin(const char *command);
+bool	is_parent_builtin(t_command *command);
 void	ft_safe_fork(t_global *g, t_command *cmd);
 
 //initialization
@@ -153,12 +146,14 @@ bool	init_env(t_global *global, char **env);
 void	init_io(t_command *cmd);
 
 //cleanup
-void	ft_clean_minishell_env(void *env_content_node);
+void	ft_clear_minishell_env(void *env_content_node);
 bool	restore_io(t_io_fds *io);
-void	lst_clear_cmd(t_command **lst, void (*del)(void *));
+void	lst_clear_cmd(t_command **lst, void (*del)(void **));
+void	ft_clear_token(t_token	**list);
+
 //free
 
-void	free_ptr(void *ptr);
+void	free_ptr(void **ptr);
 void	free_io(t_io_fds *io);
 void	free_str_tab(char **tab);
 void	free_global(t_global *global, bool clear_history);
@@ -186,7 +181,7 @@ int	which_separator(char *str, int i);
 
 t_token	*new_node(char *str, int type, int status);
 void	add_node(t_token **list, t_token *new_node);
-void	delete_node(t_token *node, void (*del)(void *));
+void	delete_node(t_token *node, void (*del)(void **));
 
 // env variables
 int		var_expander(t_global *global, t_token **token_lst);
@@ -197,7 +192,7 @@ int		handle_quotes(t_global *global);
 
 // parse commands
 void		create_commands(t_global *global, t_token *token);
-void		parse_word(t_command **cmd, t_token **token_lst);
+void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
 void		parse_trunc(t_command **last_cmd, t_token **token_lst);
@@ -207,6 +202,7 @@ void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
 t_command	*lst_last_cmd(t_command *cmd);
 t_command	*lst_new_cmd(bool value);
+void		ft_is_status_request(t_token *token, t_command *cmd);
 
 // signals
 void	ignore_sigquit(void);
@@ -221,7 +217,7 @@ void	print_cmd_list(t_global *global);
 int		ft_run_builtin(t_command *cmd, t_global *global);
 int		ft_echo(char **args);
 int		ft_cd(t_command *cmd, t_global *global);
-void	ft_exit(t_global *data, int status);
+void	ft_exit(t_global *global, char *cmd, int status);
 int		ft_pwd(void);
 void	ft_export(t_command *cmd, t_global *global);
 void	ft_unset(t_command *cmd, t_global *global);

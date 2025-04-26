@@ -38,6 +38,7 @@ static void	initialize_cmd(t_command **cmd)
 	(*cmd)->pipe_fd[1] = -1;
 	(*cmd)->cmd_pid = -1;
 	(*cmd)->is_builtin = false;
+	(*cmd)->status_request = false;
 	(*cmd)->prev = NULL;
 	(*cmd)->next = NULL;
 }
@@ -144,26 +145,26 @@ void	lst_add_back_token(t_token **alst, t_token *new_node)
 	}
 }
 
-void	lstdelone_token(t_token *lst, void (*del)(void *))
+void	lstdelone_token(t_token *lst, void (*del)(void **))
 {
 	if (del && lst && lst->str)
 	{
-		(*del)(lst->str);
+		(*del)((void **)&lst->str);
 		lst->str = NULL;
 	}
 	if (del && lst && lst->str_backup)
 	{
-		(*del)(lst->str_backup);
+		(*del)((void **)&lst->str_backup);
 		lst->str_backup = NULL;
 	}
 	if (lst->prev)
 		lst->prev->next = lst->next;
 	if (lst->next)
 		lst->next->prev = lst->prev;
-	free_ptr(lst);
+	free_ptr((void **)&lst);
 }
 
-void	lstclear_token(t_token **lst, void (*del)(void *))
+void	lstclear_token(t_token **lst, void (*del)(void **))
 {
 	t_token	*tmp;
 
@@ -517,7 +518,7 @@ static void	split_var_cmd_token(t_command *last_cmd, char *cmd_str)
 	free_str_tab(strs);
 }
 
-void	parse_word(t_command **cmd, t_token **token_lst)
+void	parse_word(t_command **cmd, t_token **token_lst, t_global *g)
 {
 	t_token		*temp;
 	t_command	*last_cmd;
@@ -534,7 +535,8 @@ void	parse_word(t_command **cmd, t_token **token_lst)
 			else
 			{
 				last_cmd->command = ft_strdup(temp->str);
-				last_cmd->is_builtin = ft_is_our_builtin(last_cmd->command);
+				last_cmd->is_builtin = ft_is_our_builtin(last_cmd->command, g);
+				ft_is_status_request(temp, last_cmd);
 			}
 			temp = temp->next;
 		}
@@ -560,18 +562,18 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 			return (false);
 		if (io->heredoc_delimiter != NULL)
 		{
-			free_ptr(io->heredoc_delimiter);
+			free_ptr((void **)&io->heredoc_delimiter);
 			io->heredoc_delimiter = NULL;
 			unlink(io->infile);
 		}
-		free_ptr(io->infile);
+		free_ptr((void **)&io->infile);
 		close(io->fd_in);
 	}
 	else if (infile == false && io->outfile)
 	{
 		if (io->fd_out == -1 || (io->infile && io->fd_in == -1))
 			return (false);
-		free_ptr(io->outfile);
+		free_ptr((void **)&io->outfile);
 		close(io->fd_out);
 	}
 	return (true);
@@ -593,16 +595,10 @@ static void	open_infile(t_global *g, t_io_fds *io, char *file, char *original_fi
 		return ;
 	io->infile = ft_strdup(file);
 	if (io->infile && io->infile[0] == '\0')
-	{
-		errmsg_cmd(original_filename, NULL, "ambiguous redirect", false);
-		ft_exit(g, EXIT_FAILURE);
-	}
+		ft_exit(g, original_filename, EXIT_FAILURE);
 	io->fd_in = open(io->infile, O_RDONLY);
 	if (io->fd_in == -1)
-	{
-		errmsg_cmd(io->infile, NULL, strerror(errno), false);
-		ft_exit(g, EXIT_FAILURE);
-	}
+		ft_exit(g, io->infile, EXIT_FAILURE);
 }
 
 void	parse_input(t_global *global, t_command **last_cmd, t_token **token_lst)
@@ -706,13 +702,13 @@ static char	*make_str_from_tab(char **tab)
 		else
 		{
 			str = ft_strjoin(tmp, tab[i]);
-			free_ptr(tmp);
+			free_ptr((void **)&tmp);
 		}
 		if (tab[i + 1])
 		{
 			tmp = str;
 			str = ft_strjoin(tmp, " ");
-			free_ptr(tmp);
+			free_ptr((void **)&tmp);
 		}
 	}
 	free_str_tab(tab);
@@ -774,7 +770,7 @@ static bool	evaluate_heredoc_line(t_global *global, char **line,
 		*line = get_expanded_var_line(global, *line);
 		if (!(*line))
 		{
-			free_ptr(*line);
+			free_ptr((void **)&*line);
 			*ret = false;
 			return (false);
 		}
@@ -803,9 +799,9 @@ bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 		if (!evaluate_heredoc_line(global, &line, io, &ret))
 			break ;
 		ft_putendl_fd(line, fd);
-		free_ptr(line);
+		free_ptr((void **)&line);
 	}
-	free_ptr(line);
+	free_ptr((void **)&line);
 	return (ret);
 }
 
@@ -968,7 +964,7 @@ void	create_commands(t_global *global, t_token *token)
 		if (temp == global->token)
 			lst_add_back_cmd(&global->cmd, lst_new_cmd(false));
 		if (temp->type == WORD || temp->type == VAR)
-			parse_word(&global->cmd, &temp);
+			parse_word(&global->cmd, &temp, global);
 		else if (temp->type == INPUT)
 			parse_input(global, &global->cmd, &temp);
 		else if (temp->type == TRUNC)

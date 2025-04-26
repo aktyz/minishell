@@ -46,13 +46,13 @@ bool	init_env(t_global *global, char **env)
 		content = ft_calloc(sizeof(t_minishell_env), 1);
 		if (!content)
 		{
-			ft_lstclear(&list, ft_clean_minishell_env);
+			ft_lstclear(&list, ft_clear_minishell_env);
 			return (false);
 		}
 		content->name_value = ft_calloc(sizeof(char *), 2);
 		if (!content->name_value)
 			{
-				ft_lstclear(&list, ft_clean_minishell_env);
+				ft_lstclear(&list, ft_clear_minishell_env);
 				return (false);
 			}
 		ft_split_env_variable(env[i], &content->name_value[0],
@@ -60,7 +60,7 @@ bool	init_env(t_global *global, char **env)
 		if (!content->name_value[0] || !content->name_value[1])
 		{
 			free(content);
-			ft_lstclear(&list, ft_clean_minishell_env);
+			ft_lstclear(&list, ft_clear_minishell_env);
 			return (false);
 		}
 		if (ft_strcmp(content->name_value[0], "_"))
@@ -112,10 +112,7 @@ static bool	init_wds(t_data *data)
 bool	init_global(t_global *global, char **env)
 {
 	if (!init_env(global, env))
-	{
-		errmsg_cmd("Fatal", NULL, "Could not initialize environment", 1);
-		return (false);
-	}
+		ft_exit(global, "Fatal", EXIT_FAILURE);
 	// TODO ucomment when relevant parts are ready
 	// if (!init_wds(data))
 	// {

@@ -23,9 +23,8 @@ int	main(int ac, char **av, char **env)
 		run_tests(env);
 	else
 	{
-		if (!init_global(&global, env))
-			ft_exit(NULL, EXIT_FAILURE);
-		minishell_interactive(&global);
+		if (init_global(&global, env))
+			minishell_interactive(&global);
 	}
 	return (0);
 }
@@ -38,12 +37,7 @@ void	minishell_interactive(t_global *global)
 		global->user_input = readline(PROMPT);
 		set_signals_noninteractive();
 		if (parse_user_input(global))
-		{
-			//print_token_list(&global->token);
-			//print_cmd_list(global);
 			ft_process(global);
-		}
 		free_global(global, false);
-		global->token = NULL;
 	}
 }

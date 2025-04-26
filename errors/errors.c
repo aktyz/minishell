@@ -59,7 +59,7 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 	}
 	msg = ft_strjoin(msg, error_message);
 	ft_putendl_fd(msg, STDERR_FILENO);
-	free_ptr(msg);
+	free_ptr((void **)&msg);
 	return (error_nb);
 }
 
@@ -81,5 +81,5 @@ void	errmsg(char *errmsg, char *detail, int quotes)
 	if (quotes)
 		msg = ft_strjoin(msg, "'");
 	ft_putendl_fd(msg, STDERR_FILENO);
-	free_ptr(msg);
+	free_ptr((void **)&msg);
 }

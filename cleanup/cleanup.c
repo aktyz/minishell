@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+bool	restore_io(t_io_fds *io);
+void	lst_delone_cmd(t_command *lst, void (*del)(void **));
+void	lst_clear_cmd(t_command **lst, void (*del)(void **));
+void	ft_clear_minishell_env(void *env_content_node);
+void	ft_clear_token(t_token	**list);
+
 /* restore_io:
 *	Restores the original standard input and standard output
 *	to their original fds of 0 and 1. Used to clear the input/output
@@ -42,18 +48,18 @@ bool	restore_io(t_io_fds *io)
 	return (ret);
 }
 
-void	lst_delone_cmd(t_command *lst, void (*del)(void *))
+void	lst_delone_cmd(t_command *lst, void (*del)(void **))
 {
 	if (lst->command)
-		(*del)(lst->command);
+		(*del)((void **)&lst->command);
 	if (lst->args)
 		free_str_tab(lst->args);
 	if (lst->io_fds)
 		free_io(lst->io_fds);
-	(*del)(lst);
+	(*del)((void **)&lst);
 }
 
-void	lst_clear_cmd(t_command **lst, void (*del)(void *))
+void	lst_clear_cmd(t_command **lst, void (*del)(void **))
 {
 	t_command	*temp;
 
@@ -70,7 +76,7 @@ void	lst_clear_cmd(t_command **lst, void (*del)(void *))
  * Function freeing env_var nodes on the env list
  *
  */
-void	ft_clean_minishell_env(void *env_content_node)
+void	ft_clear_minishell_env(void *env_content_node)
 {
 	t_minishell_env	*content;
 
@@ -95,4 +101,27 @@ void	ft_clean_minishell_env(void *env_content_node)
 	if (content)
 		free(content);
 	env_content_node = NULL;
+}
+
+void	ft_clear_token(t_token	**list)
+{
+	t_token	*head;
+	t_token	*tmp;
+
+	if (list && *list)
+	{
+		head = *list;
+		while (head)
+		{
+			tmp = head->next;
+			if (head->str)
+				free_ptr((void **)&head->str);
+			if (head->str_backup)
+				free_ptr((void **)&head->str_backup);
+			if (head)
+				free_ptr((void **)&head);
+			head = tmp;
+		}
+		*list = NULL;
+	}
 }
