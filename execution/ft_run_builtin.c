@@ -16,6 +16,7 @@ int		ft_run_builtin(t_command *cmd, t_global *global);
 bool	is_parent_builtin(t_command *command);
 void	ft_safe_fork(t_global *g, t_command *cmd);
 void	ft_is_status_request(t_token *token, t_command *cmd);
+void	ft_split_child_parent_run(t_global *g, t_command *cmd);
 
 int	ft_run_builtin(t_command *cmd, t_global *global)
 {
@@ -34,8 +35,7 @@ bool	is_parent_builtin(t_command *cmd)
 		|| ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0
 		|| ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0
 		|| ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0
-		|| (cmd->is_builtin && cmd->status_request)); // => NO, WE NEED TO DO IT MANUALLY we want the child to call ie. the cmd "0"
-		//and return "command not found" in order to be called next
+		|| (cmd->is_builtin && cmd->status_request));
 }
 
 void	ft_safe_fork(t_global *g, t_command *cmd)
@@ -49,4 +49,13 @@ void	ft_is_status_request(t_token *token, t_command *cmd)
 {
 	if (token->status_request)
 		cmd->status_request = true;
+}
+
+void	ft_split_child_parent_run(t_global *g, t_command *cmd)
+{
+	if (is_parent_builtin(cmd))
+		ft_run_parent_builtins(cmd, g);
+	else
+		ft_safe_fork(g, cmd);
+	ft_handle_redirections(cmd);
 }

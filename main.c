@@ -19,13 +19,8 @@ int	main(int ac, char **av, char **env)
 {
 	t_global	global;
 
-	if (ac == 2 && ft_strncmp(av[1], "testing", 8) == 0)
-		run_tests(env);
-	else
-	{
-		if (init_global(&global, env))
-			minishell_interactive(&global);
-	}
+	if (init_global(&global, env))
+		minishell_interactive(&global);
 	return (0);
 }
 

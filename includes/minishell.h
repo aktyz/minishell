@@ -127,68 +127,70 @@ struct s_io_fds
 	int		stdout_backup;
 };
 
-void	ft_process(t_global *global);
-bool	ft_is_our_builtin(char *cmd, t_global *global);
-void	ft_handle_redirections(t_command *cmd);
-char	**ft_execve_env(t_list *env);
+t_command	*lst_last_cmd(t_command *cmd);
+t_command	*lst_new_cmd(bool value);
+void		ft_process(t_global *global);
+bool		ft_is_our_builtin(char *cmd, t_global *global);
+void		ft_handle_redirections(t_command *cmd);
+char		**ft_execve_env(t_list *env);
 
-void	ft_split_env_variable(char *name_value, char **var_name,
-			char **var_value);
-char	*ft_get_env_var_value(char *env_var_name, t_list *env);
-char	*resolve_command_path(t_global *g, char *path, char *cmd);
-void	ft_execute_child_proc(t_command *cmd, t_global *global);
-bool	is_parent_builtin(t_command *command);
-void	ft_safe_fork(t_global *g, t_command *cmd);
+void		ft_split_env_variable(char *name_value, char **var_name,
+				char **var_value);
+char		*ft_get_env_var_value(char *env_var_name, t_list *env);
+char		*resolve_command_path(t_global *g, char *path, char *cmd);
+void		ft_execute_child_proc(t_command *cmd, t_global *global);
+bool		is_parent_builtin(t_command *command);
+void		ft_safe_fork(t_global *g, t_command *cmd);
+void		ft_split_child_parent_run(t_global *g, t_command *cmd);
 
 //initialization
-bool	init_global(t_global *global, char **env);
-bool	init_env(t_global *global, char **env);
-void	init_io(t_command *cmd);
+bool		init_global(t_global *global, char **env);
+bool		init_env(t_global *global, char **env);
+void		init_io(t_command *cmd);
 
 //cleanup
-void	ft_clear_minishell_env(void *env_content_node);
-bool	restore_io(t_io_fds *io);
-void	lst_clear_cmd(t_command **lst, void (*del)(void **));
-void	ft_clear_token(t_token	**list);
+void		ft_clear_minishell_env(void *env_content_node);
+bool		restore_io(t_io_fds *io);
+void		lst_clear_cmd(t_command **lst, void (*del)(void **));
+void		ft_clear_token(t_token	**list);
 
 //free
 
-void	free_ptr(void **ptr);
-void	free_io(t_io_fds *io);
-void	free_str_tab(char **tab);
-void	free_global(t_global *global, bool clear_history);
-
+void		free_ptr(void **ptr);
+void		free_io(t_io_fds *io);
+void		free_str_tab(char **tab);
+void		free_global(t_global *global, bool clear_history);
 
 //lexer
-int		tokenization(t_global *global);
-bool	input_is_space(char *input);
-bool	parse_user_input(t_global *global);
-int		ft_strcmp(const char *s1, const char *s2);
+int			tokenization(t_global *global);
+bool		input_is_space(char *input);
+bool		parse_user_input(t_global *global);
+int			ft_strcmp(const char *s1, const char *s2);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
 
-int		check_var(t_token **token_lst);
+int			check_var(t_token **token_lst);
 
 // errors
-int		errmsg_cmd(char *command, char *detail,
-			char *error_message, int error_nb);
+int			errmsg_cmd(char *command, char *detail,
+				char *error_message, int error_nb);
 
 // characters
-bool	input_is_space(char *input);
-int	which_separator(char *str, int i);
+bool		input_is_space(char *input);
+int			which_separator(char *str, int i);
 
 // nodes
 
-t_token	*new_node(char *str, int type, int status);
-void	add_node(t_token **list, t_token *new_node);
-void	delete_node(t_token *node, void (*del)(void **));
+t_token		*new_node(char *str, int type, int status);
+void		add_node(t_token **list, t_token *new_node);
+void		delete_node(t_token *node, void (*del)(void **));
 
 // env variables
-int		var_expander(t_global *global, t_token **token_lst);
-char	*var_expander_heredoc(t_global *global, char *str);
+int			var_expander(t_global *global, t_token **token_lst);
+char		*var_expander_heredoc(t_global *global, char *str);
 
 // quotes
-int		handle_quotes(t_global *global);
+int			handle_quotes(t_global *global);
 
 // parse commands
 void		create_commands(t_global *global, t_token *token);
@@ -200,35 +202,34 @@ void		parse_append(t_command **last_cmd, t_token **token_lst);
 void		parse_pipe(t_command **last_cmd, t_token **token_lst);
 void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-t_command	*lst_last_cmd(t_command *cmd);
-t_command	*lst_new_cmd(bool value);
 void		ft_is_status_request(t_token *token, t_command *cmd);
 
 // signals
-void	ignore_sigquit(void);
-void	set_signals_interactive(void);
-void	set_signals_noninteractive(void);
+void		ignore_sigquit(void);
+void		set_signals_interactive(void);
+void		set_signals_noninteractive(void);
 
 // debug
-void	print_token_list(t_token **tokens);
-void	print_cmd_list(t_global *global);
+void		print_token_list(t_token **tokens);
+void		print_cmd_list(t_global *global);
 
 // builtins
-int		ft_run_builtin(t_command *cmd, t_global *global);
-int		ft_echo(char **args);
-int		ft_cd(t_command *cmd, t_global *global);
-void	ft_exit(t_global *global, char *cmd, int status);
-int		ft_pwd(void);
-void	ft_export(t_command *cmd, t_global *global);
-void	ft_unset(t_command *cmd, t_global *global);
-int		ft_env(t_list *env);
-void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
-void	ft_handle_export_arg(t_command *cmd, t_global *global);
-void	ft_handle_export(t_command *cmd, t_global *global);
-void	ft_handle_existing_var(t_command *cmd, t_minishell_env *content);
+int			ft_run_builtin(t_command *cmd, t_global *global);
+void		ft_run_parent_builtins(t_command *cmd, t_global *global);
+int			ft_echo(char **args);
+int			ft_cd(t_command *cmd, t_global *global);
+void		ft_exit(t_global *global, char *cmd, int status);
+int			ft_pwd(void);
+void		ft_export(t_command *cmd, t_global *global);
+void		ft_unset(t_command *cmd, t_global *global);
+int			ft_env(t_list *env);
+void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
+void		ft_handle_export_arg(t_command *cmd, t_global *global);
+void		ft_handle_export(t_command *cmd, t_global *global);
+void		ft_handle_existing_var(t_command *cmd, t_minishell_env *content);
 
 // Test functions
-void	run_tests(char **env);
-void	test_ft_echo(void);
+void		run_tests(char **env);
+void		test_ft_echo(void);
 
 #endif

@@ -18,7 +18,6 @@ void	ft_exit(t_global *global, char *cmd, int status)
 {
 	if (status)
 		ft_handle_minishell_errors(cmd, status);
-
 	if (global)
 		free_global(global, true);
 	if (global->env)
@@ -29,7 +28,8 @@ void	ft_exit(t_global *global, char *cmd, int status)
 static void	ft_handle_minishell_errors(char *cmd, int status)
 {
 	if (ft_strcmp("Fatal", cmd) == 0)
-		errmsg_cmd(cmd, "Could not initialize environment", strerror(errno), false);
+		errmsg_cmd(cmd, "Could not initialize environment",
+			strerror(errno), false);
 	if (ft_strcmp("command not found", cmd) == 0)
 		errmsg_cmd(cmd, NULL, strerror(127), false);
 	errmsg_cmd(cmd, NULL, strerror(errno), false);

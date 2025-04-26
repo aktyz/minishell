@@ -14,7 +14,7 @@
 
 void		ft_process(t_global *global);
 char		*ft_get_env_var_value(char *env_var_name, t_list *env);
-static void	ft_run_parent_builtins(t_command *cmd, t_global *global);
+void		ft_run_parent_builtins(t_command *cmd, t_global *global);
 static void	ft_pipex(t_global *global);
 static void	ft_execute(t_global *global, pid_t *last_waited_pid);
 
@@ -53,61 +53,45 @@ char	*ft_get_env_var_value(char *env_var_name, t_list *env)
 	return (NULL);
 }
 
-static void	ft_run_parent_builtins(t_command *cmd, t_global *global)
+void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 {
 	ft_handle_redirections(cmd);
 	if (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
-	{
 		ft_exit(global, cmd->command, 0);
-		return ;
-	}
-	if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
-	{
+	else if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
 		global->last_exit_code = ft_cd(cmd, global);
-		return ;
-	}
-	if (ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
-	{
+	else if (ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
 		ft_export(cmd, global);
-		return ;
-	}
-	if (ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0)
-	{
+	else if (ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0)
 		ft_unset(cmd, global);
-		return ;
-	}
-	if (cmd->status_request)
+	else if (cmd->status_request)
 	{
 		ft_printf("%s %s: command not found\n", MINISHELL, cmd->command);
 		global->last_exit_code = 127;
 	}
 }
 
-static void	ft_pipex(t_global *global)
+static void	ft_pipex(t_global *g)
 {
 	t_command	*cmd;
 
-	cmd = global->cmd;
+	cmd = g->cmd;
 	while (cmd)
 	{
 		if (cmd->pipe_output)
 			pipe(cmd->pipe_fd);
 		if (!cmd->is_builtin)
-			cmd->path = resolve_command_path(global, ft_get_env_var_value(ENV_PATH,
-						global->env), cmd->command);
-		if (is_parent_builtin(cmd))
-			ft_run_parent_builtins(cmd, global);
-		else
-			ft_safe_fork(global, cmd);
-		ft_handle_redirections(cmd);
+			cmd->path = resolve_command_path(g,
+					ft_get_env_var_value(ENV_PATH, g->env), cmd->command);
+		ft_split_child_parent_run(g, cmd);
 		if (cmd->cmd_pid == 0)
 		{
-			global->is_global = false;
+			g->is_global = false;
 			break ;
 		}
 		cmd = cmd->next;
 	}
-} // Norm: Function too long
+}
 
 static void	ft_execute(t_global *global, pid_t *last_waited_pid)
 {

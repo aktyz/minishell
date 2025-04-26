@@ -61,12 +61,12 @@ static void	ft_chandle_child_io(t_command *cmd)
 static void	ft_chandle_parent_io(t_command *cmd)
 {
 	if (cmd->prev && cmd->prev->pipe_output)
-		{
-			close(cmd->prev->pipe_fd[0]);
-			close(cmd->prev->pipe_fd[1]);
-		}
-		if (cmd->io_fds && cmd->io_fds->outfile)
-			close(cmd->io_fds->fd_out);
-		if (cmd->io_fds && cmd->io_fds->infile)
-			close(cmd->io_fds->fd_in);
+	{
+		close(cmd->prev->pipe_fd[0]);
+		close(cmd->prev->pipe_fd[1]);
+	}
+	if (cmd->io_fds && cmd->io_fds->outfile)
+		close(cmd->io_fds->fd_out);
+	if (cmd->io_fds && cmd->io_fds->infile)
+		close(cmd->io_fds->fd_in);
 }

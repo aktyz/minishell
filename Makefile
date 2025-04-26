@@ -44,9 +44,7 @@ SRC = main.c \
 	parser/quotes.c \
 	parser/signals.c \
 	parser/utils_for_tokens.c \
-	parser/var_expander.c \
-	tests/test_ft_echo.c \
-	tests/test_master.c \
+	parser/var_expander.c
 
 OBJ = $(SRC:.c=.o)
 
