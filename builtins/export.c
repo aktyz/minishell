@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 12:43:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 13:56:09 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,22 @@
 void		ft_export(t_command *cmd, t_global *global);
 char		**ft_execve_env(t_list *env);
 static void	ft_sort_export_list(t_list **list);
-void		ft_handle_existing_var(t_command *cmd, t_minishell_env *content);
+void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
 static void	ft_swap_nodes(t_list **current, t_list **next, bool *swapped);
 
 void	ft_export(t_command *cmd, t_global *global)
 {
 	t_list			*env;
 	t_minishell_env	*content;
+	int				i;
 
 	env = global->env;
+	i = 0;
 	if (cmd->args[1])
-		global->last_exit_code = ft_handle_export_arg(cmd, global);
+	{
+		while (cmd->args[++i])
+			global->last_exit_code = ft_handle_export_arg(cmd->args[i], global);
+	}
 	else
 	{
 		ft_sort_export_list(&env);
@@ -85,16 +90,16 @@ static void	ft_sort_export_list(t_list **list)
 	}
 }
 
-void	ft_handle_existing_var(t_command *cmd, t_minishell_env *content)
+void	ft_handle_existing_var(char *cmd, t_minishell_env *content)
 {
 	int	equal_pos;
 
 	equal_pos = ft_strlen(content->name_value[0]);
-	if (cmd->args[1][equal_pos] == '=')
+	if (cmd[equal_pos] == '=')
 	{
 		free_ptr((void **)&content->name_value[0]);
 		free_ptr((void **)&content->name_value[1]);
-		ft_split_env_variable(cmd->args[1], &content->name_value[0],
+		ft_split_env_variable(cmd, &content->name_value[0],
 			&content->name_value[1]);
 	}
 	content->export = true;

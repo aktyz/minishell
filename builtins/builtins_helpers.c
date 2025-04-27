@@ -6,14 +6,14 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 11:45:11 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 12:48:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 13:56:07 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 bool	is_valid_var_name(char *var_name);
-void	ft_update_value_or_add(t_command *cmd, t_global *global);
+void	ft_update_value_or_add(char *cmd, t_global *global);
 
 bool	is_valid_var_name(char *var_name)
 {
@@ -44,7 +44,7 @@ bool	is_valid_var_name(char *var_name)
 	return (contains);
 }
 
-void	ft_update_value_or_add(t_command *cmd, t_global *global)
+void	ft_update_value_or_add(char *cmd, t_global *global)
 {
 	t_minishell_env	*content;
 	t_list			*env;
@@ -55,9 +55,9 @@ void	ft_update_value_or_add(t_command *cmd, t_global *global)
 	while (env && env->content)
 	{
 		content = (t_minishell_env *)env->content;
-		split_ptr = ft_strchr(cmd->args[1], '=');
-		split_index = split_ptr - cmd->args[1];
-		if (ft_strncmp(cmd->args[1], content->name_value[0], split_index) == 0)
+		split_ptr = ft_strchr(cmd, '=');
+		split_index = split_ptr - cmd;
+		if (ft_strncmp((const char *)cmd, content->name_value[0], split_index) == 0)
 		{
 			ft_handle_existing_var(cmd, content);
 			return ;
@@ -65,5 +65,5 @@ void	ft_update_value_or_add(t_command *cmd, t_global *global)
 		env = env->next;
 	}
 	if (!env)
-		ft_add_new_env_var(cmd->args[1], global);
+		ft_add_new_env_var(cmd, global);
 }

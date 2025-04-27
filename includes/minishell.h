@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 12:49:10 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 13:56:11 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,11 +224,11 @@ void		ft_export(t_command *cmd, t_global *global);
 void		ft_unset(t_command *cmd, t_global *global);
 int			ft_env(t_list *env);
 void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
-int			ft_handle_export_arg(t_command *cmd, t_global *global);
+int			ft_handle_export_arg(char *cmd, t_global *global);
 void		ft_handle_export(t_command *cmd, t_global *global);
-void		ft_handle_existing_var(t_command *cmd, t_minishell_env *content);
+void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
 bool		is_valid_var_name(char *var_name);
-void		ft_update_value_or_add(t_command *cmd, t_global *global);
+void		ft_update_value_or_add(char *cmd, t_global *global);
 void		ft_add_new_env_var(char *var_name, t_global *global);
 
 // Test functions
