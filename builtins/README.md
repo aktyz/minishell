@@ -1,52 +1,5 @@
 # Test cases to fix
 
-## export
-```
-export A-
-```
-mini exit code = 0<br>
-bash exit code = 1<br>
-mini error = ()<br>
-bash error = ( not a valid identifier)<br>
-```
-export HELLO-=123
-```
-mini exit code = 0<br>
-bash exit code = 1<br>
-mini error = ()<br>
-bash error = ( not a valid identifier)<br>
-```
-export =
-```
-mini exit code = 0<br>
-bash exit code = 1<br>
-mini error = ()<br>
-bash error = ( not a valid identifier)<br>
-```
-export 123
-```
-mini exit code = 0<br>
-bash exit code = 1<br>
-mini error = ()<br>
-bash error = ( not a valid identifier)<br>
-
-## unset
-```
-unset
-```
-mini exit code = 139<br>
-bash exit code = 0<br>
-```
-unset HELLO
-```
-mini exit code = 139<br>
-bash exit code = 0<br>
-```
-unset HELLO1 HELLO2
-```
-mini exit code = 139<br>
-bash exit code = 0<br>
-
 ## pwd
 ```
 cd $PWD hi
