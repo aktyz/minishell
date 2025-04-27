@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 16:32:58 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:35:23 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,5 +231,6 @@ bool		is_valid_var_name(char *var_name);
 void		ft_update_value_or_add(char *cmd, t_global *global);
 void		ft_add_new_env_var(char *var_name, t_global *global);
 void		ft_mini_exit_wrapper(t_command *cmd, t_global *g);
+void		ft_mini_export_wrapper(t_command *cmd, t_global *global);
 
 #endif

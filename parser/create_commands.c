@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/25 19:34:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:44:17 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ static void	prep_no_arg_commands(t_global *global)
 			cmd->args = malloc(sizeof * cmd->args * 2);
 			cmd->args[0] = ft_strdup(cmd->command);
 			cmd->args[1] = NULL;
+			cmd->args_size = 2;
 		}
 		cmd = cmd->next;
 	}
@@ -214,13 +215,12 @@ int	count_arguments(t_token *temp)
 int	create_args_default_mode(t_token **token_node, t_command *last_cmd)
 {
 	int		i;
-	int		nb_args;
 	t_token	*temp;
 
 	i = 0;
 	temp = *token_node;
-	nb_args = count_arguments(temp);
-	last_cmd->args = malloc(sizeof(char *) * (nb_args + 2));
+	last_cmd->args_size = count_arguments(temp) + 2;
+	last_cmd->args = malloc(sizeof(char *) * (last_cmd->args_size));
 	if (!last_cmd->args)
 		return (1);
 	temp = *token_node;
@@ -414,14 +414,13 @@ int	add_args_default_mode(t_token **token_node, t_command *last_cmd)
 */
 int	create_args_echo_mode(t_token **token_node, t_command *last_cmd)
 {
-	int		nb_args;
 	t_token	*temp;
 	int		i;
 
 	remove_empty_var_args(token_node);
 	temp = *token_node;
-	nb_args = count_args(temp);
-	last_cmd->args = malloc(sizeof(char *) * (nb_args + 2));
+	last_cmd->args_size = count_arguments(temp) + 2;
+	last_cmd->args = malloc(sizeof(char *) * (last_cmd->args_size));
 	if (!last_cmd->args)
 		return (1);
 	i = 0;
