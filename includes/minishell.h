@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 21:35:23 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 22:17:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@
 # define UNSET "unset"
 # define ENV "env"
 # define EXIT "exit"
+
+# define CAT_CAT "cat"
+# define CAT_SORT "sort"
+# define CAT_UNIQ "uniq"
+# define CAT_TEE "tee"
+# define CAT_TAIL "tail"
+# define CAT_HEAD "head"
 
 # define PROMPT "\e[0;35mminishell$ \e[0m"
 
