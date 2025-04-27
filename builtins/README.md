@@ -1,19 +1,5 @@
 # Test cases to fix
 
-## pwd
-```
-cd $PWD hi
-```
-mini exit code = 0<br>
-bash exit code = 1<br>
-mini error = ()<br>
-bash error = ( too many arguments)<br>
-```
-cd 123123
-```
-mini error = ()<br>
-bash error = ( No such file or directory)<br>
-
 ## exit
 ```
 exit 123
