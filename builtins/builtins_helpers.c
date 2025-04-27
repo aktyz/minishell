@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 11:45:11 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 13:56:07 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 16:22:59 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	ft_update_value_or_add(char *cmd, t_global *global)
 		content = (t_minishell_env *)env->content;
 		split_ptr = ft_strchr(cmd, '=');
 		split_index = split_ptr - cmd;
-		if (ft_strncmp((const char *)cmd, content->name_value[0], split_index) == 0)
+		if (ft_strncmp((const char *)cmd, content->name_value[0],
+				split_index) == 0)
 		{
 			ft_handle_existing_var(cmd, content);
 			return ;

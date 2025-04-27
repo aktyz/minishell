@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/25 20:38:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 16:32:19 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 {
 	ft_handle_redirections(cmd);
 	if (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
-		ft_exit(global, cmd->command, 0);
+		ft_mini_exit_wrapper(cmd, global);
 	else if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
 		global->last_exit_code = ft_cd(cmd, global);
 	else if (ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 13:56:11 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 16:32:58 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,9 +230,6 @@ void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
 bool		is_valid_var_name(char *var_name);
 void		ft_update_value_or_add(char *cmd, t_global *global);
 void		ft_add_new_env_var(char *var_name, t_global *global);
-
-// Test functions
-void		run_tests(char **env);
-void		test_ft_echo(void);
+void		ft_mini_exit_wrapper(t_command *cmd, t_global *g);
 
 #endif
