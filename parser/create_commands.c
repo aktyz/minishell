@@ -651,35 +651,41 @@ char	*get_relative_path(char *file_to_open)
 *		< forbidden_file cat > test
 *	In these 3 cases, the test file should not be opened or created.
 */
-static void	open_outfile_trunc(t_io_fds *io, char *file, char *var_filename)
+static int	open_outfile_trunc(t_io_fds *io, char *file, char *var_filename)
 {
 	if (!remove_old_file_ref(io, false))
-		return ;
+		return 1;
 	io->outfile = ft_strdup(file);
 	if (io->outfile && io->outfile[0] == '\0')
 	{
 		errmsg_cmd(var_filename, NULL, "ambiguous redirect", false);
-		return ;
+		return 1;
 	}
 	io->fd_out = open(io->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (io->fd_out == -1)
+	if (io->fd_out == -1) {
 		errmsg_cmd(io->outfile, NULL, strerror(errno), false);
+		return 1;
+	}
+	return 0;
 }
 
-void	parse_trunc(t_command **last_cmd, t_token **token_lst)
+int	parse_trunc(t_command **last_cmd, t_token **token_lst)
 {
 	t_token		*temp;
 	t_command	*cmd;
+	int res;
 
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
 	init_io(cmd);
-	open_outfile_trunc(cmd->io_fds, temp->next->str, temp->next->str_backup);
+	// printf("OPEN\n");
+	res = open_outfile_trunc(cmd->io_fds, temp->next->str, temp->next->str_backup);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
 	*token_lst = temp;
+	return res;
 }
 
 /* make_str_from_tab:
@@ -952,13 +958,14 @@ void	parse_pipe(t_command **cmd, t_token **token_lst)
 	*token_lst = (*token_lst)->next;
 }
 
-void	create_commands(t_global *global, t_token *token)
+bool	create_commands(t_global *global, t_token *token)
 {
 	t_token	*temp;
+	int res;
 
 	temp = token;
 	if (temp->type == END)
-		return ;
+		return true;
 	while (temp->next != NULL)
 	{
 		if (temp == global->token)
@@ -967,8 +974,14 @@ void	create_commands(t_global *global, t_token *token)
 			parse_word(&global->cmd, &temp, global);
 		else if (temp->type == INPUT)
 			parse_input(global, &global->cmd, &temp);
-		else if (temp->type == TRUNC)
-			parse_trunc(&global->cmd, &temp);
+		else if (temp->type == TRUNC) {
+			res = parse_trunc(&global->cmd, &temp);
+			if (res != 0) {
+				// printf("parse_trunc FAILED\n");
+				global->last_exit_code = res;
+				return false;
+			}
+		}
 		else if (temp->type == HEREDOC)
 			parse_heredoc(global, &global->cmd, &temp);
 		else if (temp->type == APPEND)
@@ -979,4 +992,5 @@ void	create_commands(t_global *global, t_token *token)
 			break ;
 	}
 	prep_no_arg_commands(global);
+	return true;
 }

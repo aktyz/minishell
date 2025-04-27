@@ -193,11 +193,11 @@ char		*var_expander_heredoc(t_global *global, char *str);
 int			handle_quotes(t_global *global);
 
 // parse commands
-void		create_commands(t_global *global, t_token *token);
+bool		create_commands(t_global *global, t_token *token);
 void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-void		parse_trunc(t_command **last_cmd, t_token **token_lst);
+int		parse_trunc(t_command **last_cmd, t_token **token_lst);
 void		parse_append(t_command **last_cmd, t_token **token_lst);
 void		parse_pipe(t_command **last_cmd, t_token **token_lst);
 void		parse_heredoc(t_global *global, t_command **last_cmd,

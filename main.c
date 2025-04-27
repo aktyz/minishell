@@ -31,8 +31,11 @@ void	minishell_interactive(t_global *global)
 		set_signals_interactive();
 		global->user_input = readline(PROMPT);
 		set_signals_noninteractive();
-		if (parse_user_input(global))
+		if (parse_user_input(global)) {
+			// print_cmd_list(global);
 			ft_process(global);
+		} else
+			global->last_exit_code = 1;
 		free_global(global, false);
 	}
 }

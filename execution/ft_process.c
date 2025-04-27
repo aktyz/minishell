@@ -33,8 +33,10 @@ void	ft_process(t_global *global)
 		if (cmd->cmd_pid > 0 && cmd->cmd_pid != last_waited_pid)
 		{
 			waitpid(cmd->cmd_pid, &wstatus, 0);
-			if (WIFEXITED(wstatus))
+			if (WIFEXITED(wstatus)) {
 				global->last_exit_code = WEXITSTATUS(wstatus);
+				// printf("[debug] ft_process, last_exit_code: %d\n", global->last_exit_code);
+			}
 		}
 	}
 }
@@ -99,21 +101,35 @@ static void	ft_execute(t_global *global, pid_t *last_waited_pid)
 	int			wstatus;
 
 	cmd = global->cmd;
+	// printf("[debug] ft_execute\n");
 	while (cmd)
 	{
-		if (cmd->cmd_pid == 0)
+		if (cmd->cmd_pid == 0) {
 			ft_execute_child_proc(cmd, global);
+			// printf("[debug]\tft_execute_child_proc\n");
+		}
 		else if (cmd->cmd_pid > 0 && global->is_global)
 		{
 			if (!cmd->pipe_output && cmd->cmd_pid > 0)
 			{
+				// printf("[debug]\t!pipe_output, pid not 0\n");
 				waitpid(cmd->cmd_pid, &wstatus, 0);
 				*last_waited_pid = cmd->cmd_pid;
 			}
-			else if (cmd == global->cmd && cmd->cmd_pid > 0)
+			else if (cmd == global->cmd && cmd->cmd_pid > 0) {
+				// printf("[debug]\there 3\n");
 				waitpid(cmd->cmd_pid, &wstatus, WNOHANG);
-			if (WIFEXITED(wstatus))
+			}
+			if (WIFEXITED(wstatus)) {
 				global->last_exit_code = WEXITSTATUS(wstatus);
+				// printf("[debug]\tlast exit code %d\n", global->last_exit_code);
+				if (global->last_exit_code != 0) {
+					printf("here early break\n");
+					break;
+				}
+			} else {
+				// printf("[debug]\tnot exited\n");
+			}
 		}
 		cmd = cmd->next;
 	}

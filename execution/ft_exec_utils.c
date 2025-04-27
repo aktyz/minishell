@@ -110,11 +110,14 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global)
 	if (cmd->is_builtin && !cmd->status_request)
 	{
 		global->last_exit_code = ft_run_builtin(cmd, global);
+		// printf("[debug] ft_execute_child_proc, last_exit_code: %d\n", global->last_exit_code);
 		ft_exit(global, cmd->command, global->last_exit_code);
 	}
 	else
 	{
-		execve(cmd->path, cmd->args, ft_execve_env(global->env));
+		int ret = execve(cmd->path, cmd->args, ft_execve_env(global->env));
+
+		// printf("[debug] ft_execute_child_proc, execve: %d\n", ret);
 		ft_exit(global, cmd->command, EXIT_FAILURE);
 	}
 }
