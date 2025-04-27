@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:19:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:08:22 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ char	*ft_get_env_var_value(char *env_var_name, t_list *env)
 
 void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 {
-	if (ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
+	if (cmd->command && ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
 		ft_mini_exit_wrapper(cmd, global);
-	else if (ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
+	else if (cmd->command && ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
 		global->last_exit_code = ft_cd(cmd, global);
-	else if (ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
+	else if (cmd->command && ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
 		ft_mini_export_wrapper(cmd, global);
-	else if (ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0)
+	else if (cmd->command && ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0)
 		ft_unset(cmd, global);
 	else if (cmd->status_request)
 	{
