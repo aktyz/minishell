@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:21:16 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 12:43:03 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_export(t_command *cmd, t_global *global)
 
 	env = global->env;
 	if (cmd->args[1])
-		ft_handle_export_arg(cmd, global);
+		global->last_exit_code = ft_handle_export_arg(cmd, global);
 	else
 	{
 		ft_sort_export_list(&env);

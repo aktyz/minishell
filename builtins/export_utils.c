@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/27 12:15:55 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/27 12:49:18 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void		ft_split_env_variable(char *name_value, char **var_name,
 				char **var_value);
 void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
-void		ft_handle_export_arg(t_command *cmd, t_global *global);
+int			ft_handle_export_arg(t_command *cmd, t_global *global);
 void		ft_handle_export(t_command *cmd, t_global *global);
-static void	ft_add_new_env_var(char *var_name, t_global *global);
+void		ft_add_new_env_var(char *var_name, t_global *global);
 
 void	ft_split_env_variable(char *name_value, char **var_name,
 			char **var_value)
@@ -43,30 +55,16 @@ void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content)
 	*ptr = env_var;
 }
 
-void	ft_handle_export_arg(t_command *cmd, t_global *global)
+int	ft_handle_export_arg(t_command *cmd, t_global *global)
 {
-	t_minishell_env	*content;
-	t_list			*env;
-	char			*var_name;
-	char			*split_ptr;
-	int				split_index;
-
-	env = global->env;
-	var_name = cmd->args[1];
-	while (env && env->content)
+	if (!is_valid_var_name(cmd->args[1]))
 	{
-		content = (t_minishell_env *)env->content;
-		split_ptr = ft_strchr(var_name, '=');
-		split_index = split_ptr - var_name;
-		if (ft_strncmp(var_name, content->name_value[0], split_index) == 0)
-		{
-			ft_handle_existing_var(cmd, content);
-			return ;
-		}
-		env = env->next;
+		ft_printf("minishell: export: '%s': not a valid identifier\n",
+			cmd->args[1]);
+		return (1);
 	}
-	if (!env)
-		ft_add_new_env_var(var_name, global);
+	ft_update_value_or_add(cmd, global);
+	return (0);
 }
 
 void	ft_handle_export(t_command *cmd, t_global *global)
@@ -90,7 +88,7 @@ void	ft_handle_export(t_command *cmd, t_global *global)
 	}
 }
 
-static void	ft_add_new_env_var(char *var_name, t_global *global)
+void	ft_add_new_env_var(char *var_name, t_global *global)
 {
 	t_minishell_env	*content;
 

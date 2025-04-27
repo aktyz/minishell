@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/11 09:59:40 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/27 11:47:47 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 
 SRC = main.c \
+	builtins/builtins_helpers.c \
 	builtins/cd.c \
 	builtins/echo.c \
 	builtins/env.c \
