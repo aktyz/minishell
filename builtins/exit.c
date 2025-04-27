@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 16:54:58 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/27 17:27:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	ft_exit(t_global *global, char *cmd, int status)
 		free_global(global, true);
 	if (global->env)
 		ft_lstclear(&global->env, ft_clear_minishell_env);
-	ft_printf("exit\n");
+	if (global->is_global == true)
+		ft_printf("exit\n");
 	exit(status);
 }
 
