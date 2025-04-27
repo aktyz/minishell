@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:52:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:11:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct s_command
 	char				*path;
 	int					args_size;
 	char				**args;
-	bool				pipe_output; // pipes
-	int					pipe_fd[2]; // pipes
+	bool				pipe_output;
+	int					pipe_fd[2];
 	bool				is_builtin;
 	bool				status_request;
 	pid_t				cmd_pid;
@@ -150,6 +150,8 @@ bool		is_parent_builtin(t_command *command);
 void		ft_safe_fork(t_global *g, t_command *cmd);
 void		ft_split_child_parent_run(t_global *g, t_command *cmd);
 void		ft_attach_tty(t_command *cmd);
+void		clean_unnecessary_fds(t_global *g);
+void		ft_chandle_parent_io(t_command *cmd);
 
 //initialization
 bool		init_global(t_global *global, char **env);
