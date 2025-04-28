@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:42:52 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 22:14:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"
 
-extern int		g_last_exit_code;
-typedef struct	s_io_fds	t_io_fds;
+typedef struct s_io_fds	t_io_fds;
 
 typedef struct s_node_for_token
 {
@@ -138,7 +137,7 @@ struct s_io_fds
 t_command	*lst_last_cmd(t_command *cmd);
 t_command	*lst_new_cmd(bool value);
 void		ft_process(t_global *global);
-bool		ft_is_our_builtin(char *cmd, t_global *global);
+bool		ft_is_our_builtin(t_command *cmd, t_global *global);
 void		ft_handle_redirections(t_command *cmd);
 char		**ft_execve_env(t_list *env);
 
@@ -153,6 +152,7 @@ void		ft_split_child_parent_run(t_global *g, t_command *cmd);
 void		ft_attach_tty(t_command *cmd);
 void		clean_unnecessary_fds(t_global *g);
 void		ft_chandle_parent_io(t_command *cmd);
+bool		process_env_variable(char *env_var, t_list **list);
 
 //initialization
 bool		init_global(t_global *global, char **env);
@@ -240,7 +240,6 @@ char		*replace_str_heredoc(char *str, char *var_value, int index);
 void		copy_var_value(char *new_str, char *var_value, int *j);
 char		*get_new_token_string(char *oldstr, char *var_value,
 				int newstr_size, int index);
-
 
 // signals
 void		ignore_sigquit(void);

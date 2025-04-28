@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 11:45:11 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 16:39:22 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:52:14 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ void	ft_mini_export_wrapper(t_command *cmd, t_global *global)
 {
 	if (cmd->pipe_output || (cmd->io_fds && cmd->io_fds->outfile))
 		return ;
-	if ((cmd->prev && cmd->prev->pipe_output) ||
-		(cmd->io_fds && cmd->io_fds->infile))
+	if ((cmd->prev && cmd->prev->pipe_output)
+		|| (cmd->io_fds && cmd->io_fds->infile))
 	{
 		ft_clear_char_array(&cmd->args, cmd->args_size);
 		cmd->args = ft_calloc(sizeof(char *), 2);

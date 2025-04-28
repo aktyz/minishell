@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialization.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 19:59:40 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 22:11:32 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,11 @@ bool	init_env(t_global *global, char **env)
 	i = 0;
 	while (env[i])
 	{
-		content = ft_calloc(sizeof(t_minishell_env), 1);
-		if (!content)
+		if (!process_env_variable(env[i], &list))
 		{
 			ft_lstclear(&list, ft_clear_minishell_env);
 			return (false);
 		}
-		content->name_value = ft_calloc(sizeof(char *), 2);
-		if (!content->name_value)
-		{
-			ft_lstclear(&list, ft_clear_minishell_env);
-			return (false);
-		}
-		ft_split_env_variable(env[i], &content->name_value[0],
-			&content->name_value[1]);
-		if (!content->name_value[0] || !content->name_value[1])
-		{
-			free(content);
-			ft_lstclear(&list, ft_clear_minishell_env);
-			return (false);
-		}
-		if (ft_strcmp(content->name_value[0], "_"))
-			content->export = true;
-		ft_lstadd_back(&list, ft_lstnew(content));
 		i++;
 	}
 	global->env = list;

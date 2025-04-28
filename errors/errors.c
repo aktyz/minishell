@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/25 20:49:33 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 21:14:27 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 	msg = ft_strjoin(msg, error_message);
 	ft_putendl_fd(msg, STDERR_FILENO);
 	free_ptr((void **)&msg);
-	return (error_nb);
+	return (free_ptr((void **) &msg), error_nb);
 }
 
 /* errmsg:

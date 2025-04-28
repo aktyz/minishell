@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 19:09:28 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 21:10:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,11 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 		ft_mini_exit_wrapper(cmd, global);
 	else if (cmd->command && ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
 		global->last_exit_code = ft_cd(cmd, global);
-	else if (cmd->command && ft_strncmp(cmd->command, EXPORT, ft_strlen(EXPORT)) == 0)
+	else if (cmd->command && ft_strncmp(cmd->command,
+			EXPORT, ft_strlen(EXPORT)) == 0)
 		ft_mini_export_wrapper(cmd, global);
-	else if (cmd->command && ft_strncmp(cmd->command, UNSET, ft_strlen(UNSET)) == 0)
+	else if (cmd->command && ft_strncmp(cmd->command,
+			UNSET, ft_strlen(UNSET)) == 0)
 		ft_unset(cmd, global);
 	else if (cmd->status_request)
 	{
@@ -86,6 +88,7 @@ static void	ft_execute(t_global *global)
 	int			wstatus;
 
 	cmd = global->cmd;
+	wstatus = 0;
 	while (cmd)
 	{
 		if (cmd->cmd_pid == 0)

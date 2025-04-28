@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/25 19:41:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:06:34 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	lst_delone_cmd(t_command *lst, void (*del)(void **))
 {
 	if (lst->command)
 		(*del)((void **)&lst->command);
+	if (lst->path)
+		(*del)((void **)&lst->path);
 	if (lst->args)
 		free_str_tab(lst->args);
 	if (lst->io_fds)
