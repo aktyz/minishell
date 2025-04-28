@@ -11,7 +11,6 @@
 # **************************************************************************** #
 
 NAME = minishell
-NAME_TEST = tester
 LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
@@ -21,87 +20,73 @@ LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 
 SRC = main.c \
-	create_commands.c \
-	execution/resolve_command_path.c \
+	builtins/cd.c \
+	builtins/echo.c \
+	builtins/env.c \
+	builtins/exit.c \
+	builtins/export_utils.c \
+	builtins/export.c \
+	builtins/pwd.c \
+	builtins/unset.c \
+	cleanup/cleanup.c \
+	cleanup/free.c \
+	debug/debug.c \
+	errors/errors.c \
+	execution/ft_create_pipe.c \
+	execution/ft_exec_utils.c \
 	execution/ft_process.c \
 	execution/ft_run_builtin.c \
-	execution/ft_create_pipe.c \
-	utils_for_tokens.c \
-	parser.c \
-	var_expander.c \
-	quotes.c \
+	parser/characters.c \
+	parser/create_commands.c \
+	parser/initialization.c \
+	parser/nodes.c \
+	parser/parser.c \
+	parser/quotes.c \
+	parser/signals.c \
+	parser/utils_for_tokens.c \
+	parser/var_expander.c \
+	parser/var_expander_env.c \
+	parser/var_expander_utils.c \
+	parser/var_expander_replace.c \
+	command_files.c \
+	command_utils.c \
+	command_vars.c \
+	commands_append_pipe.c \
+	commands_heredoc.c \
+	commands_list.c \
+	command_args.c \
+	command_args_echo.c \
+	tokens_list.c \
+	ft_utils.c \
 	tests/test_ft_echo.c \
 	tests/test_master.c \
-	initialization.c \
-	signals.c \
-	cleanup.c \
-	builtins/echo.c \
-	builtins/exit.c \
-	builtins/cd.c \
-	builtins/pwd.c \
-	builtins/export.c \
-	builtins/unset.c \
-	builtins/env.c \
-	debug.c
-
-SRC_TEST = create_commands.c \
-	execution/resolve_command_path.c \
-	execution/ft_process.c \
-	execution/ft_create_pipe.c \
-	execution/ft_run_builtin.c \
-	utils_for_tokens.c \
-	parser.c \
-	var_expander.c \
-	quotes.c \
-	tests/test_ft_echo.c \
-	tests/test_master.c \
-	initialization.c \
-	signals.c \
-	cleanup.c \
-	builtins/exit.c \
-	builtins/echo.c \
-	builtins/cd.c \
-	builtins/pwd.c \
-	builtins/export.c \
-	builtins/unset.c \
-	builtins/env.c \
-	debug.c \
-	tests.c
-
-# libft_functions.c \
-# tests/test_ft_echo.c \
 
 OBJ = $(SRC:.c=.o)
-OBJ_TEST = $(SRC_TEST:.c=.o)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ -g -pthread
 
-all: $(LIBFT) $(NAME) $(NAME_TEST)
+all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline
-
-$(NAME_TEST): $(OBJ_TEST) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ_TEST) $(LIB) -o $(NAME_TEST)  -l readline -lcriterion
 
 $(LIBFT):
 	@git submodule update --init --recursive
 	$(MAKE) -C $(LIBFT_F)
 
 fclean: clean
-	@$(RM) $(NAME) $(NAME_TEST) $(OBJ) $(OBJ_TEST)
+	@$(RM) $(NAME) $(OBJ)
 
 clean:
-	@$(RM) $(OBJ) $(OBJ_TEST)
+	@$(RM) $(OBJ)
 	@$(MAKE) -C $(LIBFT_F) fclean
 
 re: fclean all
 
 rebug: fclean debug clean
 
-debug: $(OBJ) $(OBJ_TEST) $(LIBFT)
+debug: $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline -g -pthread
-	@$(CC) $(CFLAGS) $(OBJ_TEST) $(LIB) -o $(NAME_TEST) -lcriterion -lreadline -g -pthread
 
 .PHONY: all clean fclean libft re

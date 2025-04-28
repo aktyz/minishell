@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   characters.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 17:32:22 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 17:33:15 by zslowian         ###   ########.fr       */
+/*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:09:52 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_list *env)
+// TODO @aktyz this should be inside libft
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	t_list			*ptr;
-	t_minishell_env	*content;
+	size_t	i;
 
-	ptr = env;
-	content = (t_minishell_env *)ptr->content;
-	while (ptr && ptr->content)
-	{
-		ft_printf("%s=%s\n", content->name_value[0], content->name_value[1]);
-		ptr = ptr->next;
-		content = (t_minishell_env *)ptr->content;
-	}
+	i = 0;
+	if (!s1 || !s2)
+		return (1);
+	while (s1[i] && s2[i] && (s1[i] == s2[i]))
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
