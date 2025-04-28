@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_args_echo.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:56:34 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,26 +74,15 @@ int	count_args(t_token *temp)
 	return (i);
 }
 
-/*
-**  This function deals with the specific case when the command is "echo"
-**    - It allocates the array of arguments thanks to the count_args function
-**    - It loops through the tokens list while the nodes are of type
-**        VAR or WORD:
-**         * If "bool join = true" in the token structure is true : we join all
-**           the tokens of type VAR that have the setting "join = true"
-**         * if "join = false" we just fill the last_cmd_>args[i]
-**            with the current token.
-*/
 int	create_args_echo_mode(t_token **token_node, t_command *last_cmd)
 {
-	int		nb_args;
 	t_token	*temp;
 	int		i;
 
 	remove_empty_var_args(token_node);
 	temp = *token_node;
-	nb_args = count_args(temp);
-	last_cmd->args = malloc(sizeof(char *) * (nb_args + 2));
+	last_cmd->args_size = count_arguments(temp) + 2;
+	last_cmd->args = malloc(sizeof(char *) * (last_cmd->args_size));
 	if (!last_cmd->args)
 		return (1);
 	i = 0;

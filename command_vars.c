@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_commands.c                                  :+:      :+:    :+:   */
+/*   command_vars.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:43:36 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ static void	split_var_cmd_token(t_command *last_cmd, char *cmd_str)
 	free_str_tab(strs);
 }
 
-void	parse_word(t_command **cmd, t_token **token_lst)
+void	parse_word(t_command **cmd, t_token **token_lst, t_global *g)
 {
 	t_token		*temp;
 	t_command	*last_cmd;
@@ -131,7 +131,8 @@ void	parse_word(t_command **cmd, t_token **token_lst)
 			else
 			{
 				last_cmd->command = ft_strdup(temp->str);
-				last_cmd->is_builtin = ft_is_our_builtin(last_cmd->command);
+				last_cmd->is_builtin = ft_is_our_builtin(last_cmd->command, g);
+				ft_is_status_request(temp, last_cmd);
 			}
 			temp = temp->next;
 		}

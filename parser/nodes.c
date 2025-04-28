@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nodes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:12:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:12:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:36:34 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token	*new_node(char *str, int type, int status)
 {
 	t_token	*new_node;
 
-	new_node = malloc(sizeof(t_token));
+	new_node = ft_calloc(sizeof(t_token), 1);
 	if (!new_node)
 		return (NULL);
 	new_node->str = str;
@@ -50,11 +50,11 @@ void	add_node(t_token **list, t_token *new_node)
 	}
 }
 
-void	delete_node(t_token *node, void (*del)(void *))
+void	delete_node(t_token *node, void (*del)(void **))
 {
 	if (del && node && node->str)
 	{
-		(*del)(node->str);
+		(*del)((void **)&node->str);
 		node->str = NULL;
 	}
 	if (node->prev)

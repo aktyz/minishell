@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_commands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:58:55 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,13 @@ static void	prep_no_arg_commands(t_global *global)
 			cmd->args = malloc(sizeof * cmd->args * 2);
 			cmd->args[0] = ft_strdup(cmd->command);
 			cmd->args[1] = NULL;
+			cmd->args_size = 2;
 		}
 		cmd = cmd->next;
 	}
 	cmd = lst_last_cmd(global->cmd);
 }
 
-/* get_delim:
-*	Returns the heredoc delimiter. Quotes are removed if present
-*	around the delimiter, and the quotes boolean is set to true.
-*/
 static char	*get_delim(char *delim, bool *quotes)
 {
 	int	len;
@@ -50,10 +47,6 @@ static char	*get_delim(char *delim, bool *quotes)
 	return (ft_strdup(delim));
 }
 
-/* get_heredoc_name:
-*	Generates a unique name for the current heredoc.
-*	Returns the new heredoc name.
-*/
 static char	*get_heredoc_name(void)
 {
 	static int	i;
@@ -69,10 +62,6 @@ static char	*get_heredoc_name(void)
 	return (name);
 }
 
-/* parse_heredoc:
-*	Creates a temporary heredoc file which will be filled with
-*	user input.
-*/
 void	parse_heredoc(t_global *global, t_command **last_cmd,
 			t_token **token_lst)
 {
@@ -111,9 +100,9 @@ void	create_commands(t_global *global, t_token *token)
 		if (temp == global->token)
 			lst_add_back_cmd(&global->cmd, lst_new_cmd(false));
 		if (temp->type == WORD || temp->type == VAR)
-			parse_word(&global->cmd, &temp);
+			parse_word(&global->cmd, &temp, global);
 		else if (temp->type == INPUT)
-			parse_input(&global->cmd, &temp);
+			parse_input(global, &global->cmd, &temp);
 		else if (temp->type == TRUNC)
 			parse_trunc(&global->cmd, &temp);
 		else if (temp->type == HEREDOC)

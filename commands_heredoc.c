@@ -3,20 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   commands_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:01:53 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* make_str_from_tab:
-*	Creates a single string from an array of strings by
-*	joining a string to the next.
-*	Returns the string.
-*/
 static char	*make_str_from_tab(char **tab)
 {
 	char	*str;
@@ -32,26 +27,19 @@ static char	*make_str_from_tab(char **tab)
 		else
 		{
 			str = ft_strjoin(tmp, tab[i]);
-			free_ptr(tmp);
+			free_ptr((void **)&tmp);
 		}
 		if (tab[i + 1])
 		{
 			tmp = str;
 			str = ft_strjoin(tmp, " ");
-			free_ptr(tmp);
+			free_ptr((void **)&tmp);
 		}
 	}
 	free_str_tab(tab);
 	return (str);
 }
 
-/* get_exoanded_var_line:
-*	Prepares a line containing '$' for environment variable expansion.
-*	Splits the line into words to avoid issues with inexistent
-*	environment variables.
-*	ex. $USER uses $LANGUAGE -> username uses en_US:en
-*	Returns a new line with expanded variables.
-*/
 static char	*get_expanded_var_line(t_global *global, char *line)
 {
 	char	**words;
@@ -74,12 +62,6 @@ static char	*get_expanded_var_line(t_global *global, char *line)
 	return (make_str_from_tab(words));
 }
 
-/* evaluate_heredoc_line:
-*	Checks whether the read line should be written to heredoc file.
-*	If the line is NULL or the same as the given delimiter, returns false
-*	to signify that we should stop reading with readline. Otherwise, returns
-*	true.
-*/
 static bool	evaluate_heredoc_line(t_global *global, char **line,
 									t_io_fds *io, bool *ret)
 {
@@ -100,7 +82,7 @@ static bool	evaluate_heredoc_line(t_global *global, char **line,
 		*line = get_expanded_var_line(global, *line);
 		if (!(*line))
 		{
-			free_ptr(*line);
+			free_ptr((void **)&*line);
 			*ret = false;
 			return (false);
 		}
@@ -108,12 +90,6 @@ static bool	evaluate_heredoc_line(t_global *global, char **line,
 	return (true);
 }
 
-/* fill_heredoc:
-*	Copies user input into a temporary file. If user inputs an
-*	environment variable like $USER, expands the variable before
-*	writing to the heredoc.
-*	Returns true on success, false on failure.
-*/
 bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 {
 	char	*line;
@@ -129,17 +105,12 @@ bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 		if (!evaluate_heredoc_line(global, &line, io, &ret))
 			break ;
 		ft_putendl_fd(line, fd);
-		free_ptr(line);
+		free_ptr((void **)&line);
 	}
-	free_ptr(line);
+	free_ptr((void **)&line);
 	return (ret);
 }
 
-/* get_heredoc:
-*	Opens a heredoc awaiting user input.
-*	Translates any given variables into	their environment values.
-*	Returns false in case of error, true if successful.
-*/
 bool	get_heredoc(t_global *global, t_io_fds *io)
 {
 	int		tmp_fd;

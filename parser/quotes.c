@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:10:06 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:10:34 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:18:38 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	remove_quotes(t_token **token_node)
 		new_line[j++] = (*token_node)->str[i++];
 	}
 	new_line[j] = '\0';
-	free_ptr((*token_node)->str);
+	free_ptr((void **)&(*token_node)->str);
 	(*token_node)->str = new_line;
 	(*token_node)->join = true;
 	return (0);

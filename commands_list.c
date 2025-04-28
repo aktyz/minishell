@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands_list.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:04:28 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	initialize_cmd(t_command **cmd)
 	(*cmd)->pipe_fd[1] = -1;
 	(*cmd)->cmd_pid = -1;
 	(*cmd)->is_builtin = false;
+	(*cmd)->status_request = false;
 	(*cmd)->prev = NULL;
 	(*cmd)->next = NULL;
 }
@@ -34,9 +35,7 @@ t_command	*lst_new_cmd(bool value)
 	if (!(new_node))
 		return (NULL);
 	ft_memset(new_node, 0, sizeof(t_command));
-	new_node->pipe_output = value; //TODO @marlenasn this line is
-	// overwritten by the line 22 in every case
-	// please check if we need to save "value" to leverage it later
+	new_node->pipe_output = value;
 	initialize_cmd(&new_node);
 	return (new_node);
 }
@@ -60,10 +59,6 @@ void	lst_add_back_cmd(t_command **alst, t_command *new_node)
 	}
 }
 
-/**
- * Returns the last command of the user input
- *
- */
 t_command	*lst_last_cmd(t_command *cmd)
 {
 	while (cmd->next != NULL)

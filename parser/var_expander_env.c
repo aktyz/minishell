@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_expander_env.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:13:09 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:31:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:36:38 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ char	*recover_val(t_token *token, char *str, t_global *global)
 
 	var = identify_var(str);
 	var_name = ft_strtrim(var, "=");
-	free_ptr(var);
-	var = NULL;
+	value = NULL;
+	free_ptr((void **)&var);
 	if (var_name && var_exists(global, var_name) == 0)
 	{
 		if (token != NULL)
@@ -74,11 +74,12 @@ char	*recover_val(t_token *token, char *str, t_global *global)
 		value = search_env_var(global, var_name);
 	}
 	else if (var_name && var_name[0] == '?' && var_name[1] == '\0')
-		value = ft_itoa(g_last_exit_code);
-	else
-		value = NULL;
-	free_ptr(var_name);
-	return (var_name = NULL, value);
+	{
+		value = ft_itoa(global->last_exit_code);
+		token->status_request = true;
+	}
+	free_ptr((void **)&var_name);
+	return (value);
 }
 
 char	*identify_var(char *str)
@@ -105,7 +106,7 @@ char	*identify_var(char *str)
 	if (!var)
 		return (NULL);
 	tmp = ft_strjoin(var, "=");
-	free_ptr(var);
+	free_ptr((void **)&var);
 	var = tmp;
 	return (var);
 }

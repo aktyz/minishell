@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:36:41 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,23 +49,23 @@ void	lst_add_back_token(t_token **alst, t_token *new_node)
 	}
 }
 
-void	lstdelone_token(t_token *lst, void (*del)(void *))
+void	lstdelone_token(t_token *lst, void (*del)(void **))
 {
 	if (del && lst && lst->str)
 	{
-		(*del)(lst->str);
+		(*del)((void **)&lst->str);
 		lst->str = NULL;
 	}
 	if (del && lst && lst->str_backup)
 	{
-		(*del)(lst->str_backup);
+		(*del)((void **)&lst->str_backup);
 		lst->str_backup = NULL;
 	}
 	if (lst->prev)
 		lst->prev->next = lst->next;
 	if (lst->next)
 		lst->next->prev = lst->prev;
-	free_ptr(lst);
+	free_ptr((void **)&lst);
 }
 
 void	lstclear_token(t_token **lst, void (*del)(void *))
