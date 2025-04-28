@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 09:30:07 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:17:26 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,12 @@ static void	ft_handle_minishell_cats(t_command *cmd);
 
 void	ft_handle_redirections(t_command *cmd)
 {
-	// printf("[debug] inside ft_handle_redirections\n");
 	if (cmd->cmd_pid == 0)
 	{
 		ft_chandle_child_pipe(cmd);
 		ft_chandle_child_io(cmd);
 	}
-	else if (cmd->cmd_pid > 0)
+	else if (cmd->cmd_pid > 0 || cmd->cmd_pid == -1)
 		ft_chandle_parent_io(cmd);
 }
 

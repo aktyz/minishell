@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 17:27:50 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:21:18 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ static void	handle_exit_err(t_command *cmd, t_global *g, int code)
 {
 	ft_printf("exit\n");
 	g->last_exit_code = code;
-	// printf("[debug] handle_exit_err, last_exit_code: %d\n", code);
 	if (code == 1)
 		ft_printf("%s %s: too many arguments\n", MINISHELL, cmd->command);
 	else if (code == 2)

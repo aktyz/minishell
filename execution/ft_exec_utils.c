@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/25 20:26:19 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:05:20 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,14 +110,11 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global)
 	if (cmd->is_builtin && !cmd->status_request)
 	{
 		global->last_exit_code = ft_run_builtin(cmd, global);
-		// printf("[debug] ft_execute_child_proc, last_exit_code: %d\n", global->last_exit_code);
 		ft_exit(global, cmd->command, global->last_exit_code);
 	}
 	else
 	{
-		int ret = execve(cmd->path, cmd->args, ft_execve_env(global->env));
-
-		// printf("[debug] ft_execute_child_proc, execve: %d\n", ret);
+		execve(cmd->path, cmd->args, ft_execve_env(global->env));
 		ft_exit(global, cmd->command, EXIT_FAILURE);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 17:54:00 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/25 20:02:23 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 17:29:28 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ void	ft_is_status_request(t_token *token, t_command *cmd)
 
 void	ft_split_child_parent_run(t_global *g, t_command *cmd)
 {
-	if (is_parent_builtin(cmd))
-		ft_run_parent_builtins(cmd, g);
-	else
+	if (!is_parent_builtin(cmd))
 		ft_safe_fork(g, cmd);
 	ft_handle_redirections(cmd);
 }
