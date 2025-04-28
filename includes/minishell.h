@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 19:11:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 21:42:52 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"
 
-typedef struct s_io_fds	t_io_fds;
+extern int		g_last_exit_code;
+typedef struct	s_io_fds	t_io_fds;
 
 typedef struct s_node_for_token
 {
@@ -163,6 +164,7 @@ void		ft_clear_minishell_env(void *env_content_node);
 bool		restore_io(t_io_fds *io);
 void		lst_clear_cmd(t_command **lst, void (*del)(void **));
 void		ft_clear_token(t_token	**list);
+bool		remove_old_file_ref(t_io_fds *io, bool infile);
 
 //free
 
@@ -203,16 +205,42 @@ char		*var_expander_heredoc(t_global *global, char *str);
 int			handle_quotes(t_global *global);
 
 // parse commands
-bool		create_commands(t_global *global, t_token *token);
+void		create_commands(t_global *global, t_token *token);
 void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-int		parse_trunc(t_command **last_cmd, t_token **token_lst);
+void		parse_trunc(t_command **last_cmd, t_token **token_lst);
 void		parse_append(t_command **last_cmd, t_token **token_lst);
 void		parse_pipe(t_command **last_cmd, t_token **token_lst);
 void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
 void		ft_is_status_request(t_token *token, t_command *cmd);
+bool		get_heredoc(t_global *global, t_io_fds *io);
+int			var_length(char *str);
+int			create_args_echo_mode(t_token **token_node, t_command *last_cmd);
+int			add_args_echo_mode(t_token **token_node, t_command *last_cmd);
+int			create_args_default_mode(t_token **token_node, t_command *last_cmd);
+t_token		*lst_new_token(char *str, char *str_backup, int type, int status);
+void		lst_add_back_token(t_token **alst, t_token *new_node);
+void		lstclear_token(t_token **lst, void (*del)(void **));
+bool		contains_space(char *str);
+int			count_arguments(t_token *temp);
+char		*join_vars(t_token **token_node);
+char		**copy_in_new_tab(int len, char **new_tab,
+				t_command *last_cmd, t_token *tmp);
+void		lst_add_back_cmd(t_command **alst, t_command *new_node);
+void		lstdelone_token(t_token *lst, void (*del)(void **));
+bool		quotes_in_string(char *str);
+bool		is_next_char_a_sep(char c);
+bool		var_between_quotes(char *str, int i);
+int			count_len(char *str, int count, int i);
+int			replace_var(t_token **token_node, char *var_value, int index);
+char		*recover_val(t_token *token, char *str, t_global *global);
+char		*replace_str_heredoc(char *str, char *var_value, int index);
+void		copy_var_value(char *new_str, char *var_value, int *j);
+char		*get_new_token_string(char *oldstr, char *var_value,
+				int newstr_size, int index);
+
 
 // signals
 void		ignore_sigquit(void);

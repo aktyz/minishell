@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   quotes.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:10:06 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:10:34 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:18:38 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// Norm: Too many functions in the file
 
 #include "minishell.h"
 
@@ -45,35 +43,6 @@ static bool	change_back_to_default(t_token **token_node, int *i)
 		return (false);
 }
 
-int	count_len(char *str, int count, int i)
-{
-	int	status;
-
-	status = 0;
-	while (str[i])
-	{
-		if ((str[i] == '\'' || str[i] == '\"') && status == DEFAULT)
-		{
-			if (str[i] == '\'')
-				status = SQUOTE;
-			if (str[i] == '\"')
-				status = DQUOTE;
-			i++;
-			continue ;
-		}
-		else if ((str[i] == '\'' && status == SQUOTE)
-			|| (str[i] == '\"' && status == DQUOTE))
-		{
-			status = DEFAULT;
-			i++;
-			continue ;
-		}
-		count++;
-		i++;
-	}
-	return (count + 1);
-}
-
 int	remove_quotes(t_token **token_node)
 {
 	char	*new_line;
@@ -101,20 +70,6 @@ int	remove_quotes(t_token **token_node)
 	(*token_node)->str = new_line;
 	(*token_node)->join = true;
 	return (0);
-}
-
-bool	quotes_in_string(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-			return (true);
-		i++;
-	}
-	return (false);
 }
 
 int	handle_quotes(t_global *global)

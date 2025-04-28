@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils_for_tokens.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:12:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:12:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 21:53:46 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	add_separator(t_token **token, char *str, int index, int type)
+static int	add_separator(t_token **token, char *str, int index, int type)
 {
 	int		i;
 	char	*separator;
@@ -41,7 +41,7 @@ int	add_separator(t_token **token, char *str, int index, int type)
 	return (0);
 }
 
-int	add_word(t_token **token, char *str, int index, int start)
+static int	add_word(t_token **token, char *str, int index, int start)
 {
 	int		i;
 	char	*word;
@@ -57,7 +57,7 @@ int	add_word(t_token **token, char *str, int index, int start)
 	return (0);
 }
 
-int	add_word_or_sep(int *i, char *str, int start, t_global *global)
+static int	add_word_or_sep(int *i, char *str, int start, t_global *global)
 {
 	int	type;
 
@@ -78,7 +78,7 @@ int	add_word_or_sep(int *i, char *str, int start, t_global *global)
 	return (start);
 }
 
-int	set_status(int status, char *str, int i)
+static int	set_status(int status, char *str, int i)
 {
 	if (str[i] == '\'' && status == DEFAULT)
 		status = SQUOTE;
