@@ -22,13 +22,13 @@
 int	create_args_default_mode(t_token **token_node, t_command *last_cmd)
 {
 	int		i;
-	int		nb_args;
 	t_token	*temp;
 
 	i = 0;
 	temp = *token_node;
-	nb_args = count_arguments(temp);
-	last_cmd->args = malloc(sizeof(char *) * (nb_args + 2));
+	last_cmd->args_size = count_arguments(temp) + 2;
+	last_cmd->args = malloc(sizeof(char *) * (last_cmd->args_size));
+
 	if (!last_cmd->args)
 		return (1);
 	temp = *token_node;

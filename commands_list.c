@@ -22,6 +22,7 @@ static void	initialize_cmd(t_command **cmd)
 	(*cmd)->pipe_fd[1] = -1;
 	(*cmd)->cmd_pid = -1;
 	(*cmd)->is_builtin = false;
+	(*cmd)->status_request = false;
 	(*cmd)->prev = NULL;
 	(*cmd)->next = NULL;
 }

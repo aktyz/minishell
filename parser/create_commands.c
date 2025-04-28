@@ -26,6 +26,7 @@ static void	prep_no_arg_commands(t_global *global)
 			cmd->args = malloc(sizeof * cmd->args * 2);
 			cmd->args[0] = ft_strdup(cmd->command);
 			cmd->args[1] = NULL;
+			cmd->args_size = 2;
 		}
 		cmd = cmd->next;
 	}

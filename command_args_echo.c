@@ -86,14 +86,13 @@ int	count_args(t_token *temp)
 */
 int	create_args_echo_mode(t_token **token_node, t_command *last_cmd)
 {
-	int		nb_args;
 	t_token	*temp;
 	int		i;
 
 	remove_empty_var_args(token_node);
 	temp = *token_node;
-	nb_args = count_args(temp);
-	last_cmd->args = malloc(sizeof(char *) * (nb_args + 2));
+	last_cmd->args_size = count_arguments(temp) + 2;
+	last_cmd->args = malloc(sizeof(char *) * (last_cmd->args_size));
 	if (!last_cmd->args)
 		return (1);
 	i = 0;
