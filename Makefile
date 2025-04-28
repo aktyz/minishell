@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/28 18:52:20 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/28 19:11:03 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRC = main.c \
 	execution/ft_process.c \
 	execution/ft_run_builtin.c \
 	parser/characters.c \
+	parser/clean_unnecessary_fds.c \
 	parser/create_commands.c \
 	parser/initialization.c \
 	parser/nodes.c \
