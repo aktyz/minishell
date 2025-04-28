@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
+#    By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/28 19:11:03 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/28 21:53:42 by mwiecek          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,14 @@ SRC = main.c \
 	builtins/unset.c \
 	cleanup/cleanup.c \
 	cleanup/free.c \
+	command_files.c \
+	command_utils.c \
+	command_vars.c \
+	commands_append_pipe.c \
+	commands_heredoc.c \
+	commands_list.c \
+	command_args.c \
+	command_args_echo.c \
 	debug/debug.c \
 	errors/errors.c \
 	execution/ft_create_pipe.c \
@@ -47,7 +55,12 @@ SRC = main.c \
 	parser/quotes.c \
 	parser/signals.c \
 	parser/utils_for_tokens.c \
-	parser/var_expander.c
+	parser/var_expander.c \
+	parser/var_expander_env.c \
+	parser/var_expander_utils.c \
+	parser/var_expander_replace.c \
+	tokens_list.c \
+	ft_utils.c \
 
 OBJ = $(SRC:.c=.o)
 

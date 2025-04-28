@@ -6,11 +6,13 @@
 /*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 19:56:34 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 21:30:12 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	create_args_echo_mode(t_token **token_node, t_command *last_cmd);
 
 /* remove_empty_var_args:
 **	If a variable does not exist in the environment, the token string

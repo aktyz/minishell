@@ -6,7 +6,7 @@
 /*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 20:01:53 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 22:01:33 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static char	*make_str_from_tab(char **tab)
 	int		i;
 
 	i = -1;
+	tmp = "";
 	while (tab[++i])
 	{
-		tmp = str;
 		if (i == 0)
 			str = ft_strdup(tab[0]);
 		else

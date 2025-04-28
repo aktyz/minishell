@@ -6,7 +6,7 @@
 /*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 20:16:05 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 21:25:45 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ static void	open_infile(t_global *g, t_io_fds *io, char *file,
 	if (io->infile && io->infile[0] == '\0')
 	{
 		errmsg_cmd(io->infile, NULL, strerror(errno), false);
-		ft_exit(g, EXIT_FAILURE);
+		ft_exit(g, NULL, EXIT_FAILURE);
 	}
 	io->fd_in = open(io->infile, O_RDONLY);
 	if (io->fd_in == -1)
 	{
 		errmsg_cmd(io->infile, NULL, strerror(errno), false);
-		ft_exit(g, EXIT_FAILURE);
+		ft_exit(g, NULL, EXIT_FAILURE);
 	}
 }
 

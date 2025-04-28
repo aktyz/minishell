@@ -6,11 +6,13 @@
 /*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:13:09 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:36:38 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 21:27:46 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*identify_var(char *str);
 
 /*
 *  After splitting the user's input into tokens, we have to expand

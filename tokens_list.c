@@ -6,7 +6,7 @@
 /*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:36:41 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/28 21:35:59 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	lstdelone_token(t_token *lst, void (*del)(void **))
 	free_ptr((void **)&lst);
 }
 
-void	lstclear_token(t_token **lst, void (*del)(void *))
+void	lstclear_token(t_token **lst, void (*del)(void **))
 {
 	t_token	*tmp;
 
