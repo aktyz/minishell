@@ -51,10 +51,10 @@ bool	init_env(t_global *global, char **env)
 		}
 		content->name_value = ft_calloc(sizeof(char *), 2);
 		if (!content->name_value)
-			{
-				ft_lstclear(&list, ft_clear_minishell_env);
-				return (false);
-			}
+		{
+			ft_lstclear(&list, ft_clear_minishell_env);
+			return (false);
+		}
 		ft_split_env_variable(env[i], &content->name_value[0],
 			&content->name_value[1]);
 		if (!content->name_value[0] || !content->name_value[1])
@@ -113,18 +113,10 @@ bool	init_global(t_global *global, char **env)
 {
 	if (!init_env(global, env))
 		ft_exit(global, "Fatal", EXIT_FAILURE);
-	// TODO ucomment when relevant parts are ready
-	// if (!init_wds(data))
-	// {
-	// 	errmsg_cmd("Fatal", NULL, "Could not initialize working directories",
-	// 		1);
-	// 	return (false);
-	// }
 	global->token = NULL;
 	global->user_input = NULL;
 	global->is_global = true;
 	global->cmd = NULL;
-	// global->pid = -1;
 	global->last_exit_code = 0;
 	return (true);
 }
