@@ -20,6 +20,7 @@ static void	ft_handle_minishell_cats(t_command *cmd);
 
 void	ft_handle_redirections(t_command *cmd)
 {
+	// printf("[debug] inside ft_handle_redirections\n");
 	if (cmd->cmd_pid == 0)
 	{
 		ft_chandle_child_pipe(cmd);
