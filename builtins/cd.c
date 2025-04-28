@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 16:26:39 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 16:31:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	ft_cd_home(t_global *g, char *cmd);
+static int	ft_cd_home(t_global *g, char *cmd);
 
 int	ft_cd(t_command *cmd, t_global *global)
 {
@@ -35,7 +35,7 @@ int	ft_cd(t_command *cmd, t_global *global)
 	return (0);
 }
 
-static bool	ft_cd_home(t_global *g, char *cmd)
+static int	ft_cd_home(t_global *g, char *cmd)
 {
 	char	*path;
 

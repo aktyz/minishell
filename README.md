@@ -102,7 +102,7 @@ That would leave in the main folder only crucial files:
 > EOF
 touch: cannot touch './test_files/bashX': No such file or directory
 
-
+## TODO for minishell (aka. our Backlog)
 - [x] run single commands in minishell to check if working, then use to develop the piping mechanism between minishell kids
 > I need to come up with a list of examples of piped commands that would not run into "bonus" part of the project. Ie. trying to run `ls *.c` resolves into error because we should not handle wildcards (those are in bonus); `cd ./test_files` needs to be implemented first as a built-in to work because bash has it also built-in and not a stand-alone script.
 - [x] make sure the parent process closes the pipes in the right place so that it doesn't interfere in the pipes between child processes
@@ -121,17 +121,14 @@ touch: cannot touch './test_files/bashX': No such file or directory
 - [x] Unset built-in with no options
 - [x] Env built-in with no options or arguments - print out all env
 - [x] Check signal handling in both modes - interactive and non-interactive
-- [ ] test for handling single and double quotes as per subject requirements
-- [ ] remove unused `t_process` structure and depending functions
-- [ ] make sure we need to be able to call `./minishell` from our `./minishell` and if yes, implement it
-
-## TODO for minishell (aka. our Backlog)
+- [x] test for handling single and double quotes as per subject requirements
+- [x] remove unused `t_process` structure and depending functions
 - [x] (Z) create mocs of the `t_data` and `s_command` in order to be able to work on execution part
 	- [x] program executes a single command with one argument
 	- [x] program executes single command with variable inside `$VAR`
-- [ ] (Zytka) rework/tidy up Libft list functions so that we can move ```libft_functions.c``` there
-- [ ] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
-- [ ] How to make parent process fail gracefully when child is exiting with ERROR(?)
+- [x] (Zytka) rework/tidy up Libft list functions so that we can move ```libft_functions.c``` there
+- [x] replace char ```*args[4]``` in structure with args array and name of the file in the right variable if necessary
+- [x] How to make parent process fail gracefully when child is exiting with ERROR(?)
 - [ ] learn AST (Abstract Syntax Three) and if they would be usefull for keeping my processes
 - [x] unify ```pipex_child.c``` and ```pipex_parent.c``` into one function
 - [x] create a list of different Linux command calls in chain (test cases)
@@ -139,11 +136,6 @@ touch: cannot touch './test_files/bashX': No such file or directory
 - [x] figure out the structure to keep multiple commands -> KISS - list
 - [x] (Marlenka) start working on a inbetween pipes string parse into a list node with struct so that our program after compile can execute:<br>
 ```./minishell "./test_files/infile1 > grep a1 | wc -l >> ./test_files/outfile"```
-## Test cases
-```./test_files/infile0 "grep a1" "wc -l" ./test_files/outfile```<br>
-```./test_files/infile1 "ls -la" "grep minishell" ./test_files/outfile```<br>
-```./test_files/infile1 "ls -la" "grep minishell"```<br>
-```./test_files/infile1 "not a command" "grep minishell" ./test_files/outfile```<br>
 
 # BASH Notes (Minishell concept notes for allowed functions)
 
@@ -245,32 +237,7 @@ Upon successful completion, these functions shall open the file and return a non
 
 ```
 ```
-Marlena to do
 
-# renames
-
-data -> global
-
-# todo.txt
-
-
-* implement and understand missing functions used in parse_user_input
-- [x] check_if_var -> check_var
-	- [x] TESTS
-- [x] var_expander
-	- [x] TESTS
-	- [x] understand tests
-- [x] handle quotes
-	- [x] TESTS
-- [ ] create_commands (skeleton)
-
-
-* implement functions used by create_commands
-- [ ] lst_add_back_cmd
-- [ ] parse_word
-- [ ] parse_input
-- [ ] parse_trunc
-- [ ] parse_heredoc
-- [ ] parse_append
-- [ ] parse_pipe
-- [ ] prep_no_arg_commands
+# Hidden
+- [ ] `export | grep hello` - parent does not set up the redirections before executing the builin he have to do
+- [ ] make sure we need to be able to call `./minishell` from our `./minishell` and if yes, implement it
