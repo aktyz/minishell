@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/27 11:47:47 by zslowian         ###   ########.fr        #
+#    Updated: 2025/04/28 18:52:20 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC = main.c \
 	errors/errors.c \
 	execution/ft_create_pipe.c \
 	execution/ft_exec_utils.c \
+	execution/ft_input.c \
 	execution/ft_process.c \
 	execution/ft_run_builtin.c \
 	parser/characters.c \

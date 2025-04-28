@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:17:26 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:49:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,6 @@ static void	ft_chandle_parent_io(t_command *cmd)
 
 static void	ft_handle_minishell_cats(t_command *cmd)
 {
-	int	tty_fd;
-
 	if (ft_strcmp(cmd->command, CAT_CAT) == 0
 		|| ft_strcmp(cmd->command, CAT_SORT) == 0
 		|| ft_strcmp(cmd->command, CAT_UNIQ) == 0
@@ -84,22 +82,9 @@ static void	ft_handle_minishell_cats(t_command *cmd)
 		|| ft_strcmp(cmd->command, CAT_TAIL) == 0
 		|| ft_strcmp(cmd->command, CAT_HEAD) == 0)
 	{
-		if (isatty(STDIN_FILENO) != 1) // start GDB and check out how childs behave here
-		// read more man on 'isatty'
-		{
-			tty_fd = open("/dev/tty", O_RDONLY);
-			if (tty_fd == -1)
-			{
-				perror(MINISHELL);
-				return ;
-			}
-			if (dup2(tty_fd, STDIN_FILENO) == -1)
-			{
-				perror(MINISHELL);
-				close(tty_fd);
-				return ;
-			}
-			close(tty_fd);
-		}
+		if (((cmd->prev && !cmd->prev->pipe_output)
+				|| (cmd->io_fds && !cmd->io_fds->infile))
+			&& isatty(STDIN_FILENO) != 1)
+			ft_attach_tty(cmd);
 	}
 }

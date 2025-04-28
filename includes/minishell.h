@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 22:17:33 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:52:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ void		ft_execute_child_proc(t_command *cmd, t_global *global);
 bool		is_parent_builtin(t_command *command);
 void		ft_safe_fork(t_global *g, t_command *cmd);
 void		ft_split_child_parent_run(t_global *g, t_command *cmd);
+void		ft_attach_tty(t_command *cmd);
 
 //initialization
 bool		init_global(t_global *global, char **env);
