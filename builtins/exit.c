@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:21:18 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 21:55:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,22 @@ static int	ft_is_numeric_arg(const char *c)
 
 static void	handle_exit_err(t_command *cmd, t_global *g, int code)
 {
+	char	*value;
+	char	*final;
+
 	ft_printf("exit\n");
 	g->last_exit_code = code;
+	value = ft_strjoin("minishell: ", cmd->args[0]);
 	if (code == 1)
-		ft_printf("%s %s: too many arguments\n", MINISHELL, cmd->command);
+	{
+		final = ft_strjoin(value, ": too many arguments\n");
+		ft_putstr_fd(final, 2);
+	}
 	else if (code == 2)
-		ft_printf("%s %s: %s: numeric argument required\n",
-			MINISHELL, cmd->command, cmd->args[1]);
+	{
+		final = ft_strjoin(value, ": numeric argument required\n");
+		ft_putstr_fd(final, 2);
+	}
+	free_ptr((void **) &value);
+	free_ptr((void **) &final);
 }

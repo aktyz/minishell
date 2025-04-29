@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 12:15:55 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 13:56:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 21:50:02 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,19 @@ void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content)
 int	ft_handle_export_arg(char *cmd, t_global *global)
 {
 	char	*value;
+	char	*final;
 
-	value = ft_strdup(cmd);
-	if (!is_valid_var_name(value))
+	value = ft_strjoin("minishell: ", cmd);
+	final = ft_strjoin(value, ": not a valid identifier\n");
+	if (!is_valid_var_name(cmd))
 	{
-		ft_printf("minishell: export: '%s': not a valid identifier\n",
-			value);
+		ft_putstr_fd(final, 2);
 		free_ptr((void **) &value);
+		free_ptr((void **) &final);
 		return (1);
 	}
 	ft_update_value_or_add(cmd, global);
+	free_ptr((void **) &final);
 	return (free_ptr((void **) &value), 0);
 }
 

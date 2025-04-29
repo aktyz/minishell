@@ -6,30 +6,31 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 16:31:50 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 22:02:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int			ft_cd(t_command *cmd, t_global *g);
 static int	ft_cd_home(t_global *g, char *cmd);
+static void	handle_cd_err(char *cmd, t_global *g, int code);
 
-int	ft_cd(t_command *cmd, t_global *global)
+int	ft_cd(t_command *cmd, t_global *g)
 {
 	if (cmd->args[2])
 	{
-		ft_printf("%s %s: too many arguments\n", MINISHELL, cmd->command);
+		handle_cd_err(cmd->args[0], g, 1);
 		return (1);
 	}
 	if (!cmd->args[1])
 	{
-		if (ft_cd_home(global, cmd->command) == -1)
+		if (ft_cd_home(g, cmd->command) == -1)
 			return (1);
 	}
 	else if (chdir(cmd->args[1]) == -1)
 	{
-		ft_printf("%s %s: No such file or directory\n", MINISHELL,
-			cmd->command);
+		handle_cd_err(cmd->args[1], g, 2);
 		return (1);
 	}
 	return (0);
@@ -42,9 +43,34 @@ static int	ft_cd_home(t_global *g, char *cmd)
 	path = ft_get_env_var_value(ENV_HOME, g->env);
 	if (!path)
 	{
-		ft_printf("%s %s: HOME not set\n", MINISHELL,
-			cmd);
+		handle_cd_err(cmd, g, 3);
 		return (1);
 	}
 	return (chdir(path));
+}
+
+static void	handle_cd_err(char *cmd, t_global *g, int code)
+{
+	char	*value;
+	char	*final;
+
+	g->last_exit_code = 1;
+	value = ft_strjoin("minishell: ", cmd);
+	if (code == 1)
+	{
+		final = ft_strjoin(value, ": too many arguments\n");
+		ft_putstr_fd(final, 2);
+	}
+	else if (code == 2)
+	{
+		final = ft_strjoin(value, ": No such file or directory\n");
+		ft_putstr_fd(final, 2);
+	}
+	else if (code == 3)
+	{
+		final = ft_strjoin(value, ": HOME not set\n");
+		ft_putstr_fd(final, 2);
+	}
+	free_ptr((void **) &value);
+	free_ptr((void **) &final);
 }

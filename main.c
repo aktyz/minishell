@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 09:53:22 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 22:33:37 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	minishell_interactive(t_global *global)
 			clean_unnecessary_fds(global);
 			ft_process(global);
 		}
-		else
-			global->last_exit_code = 1;
 		free_global(global, false);
 	}
 }
