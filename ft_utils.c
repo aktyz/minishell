@@ -1,33 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_master.c                                      :+:      :+:    :+:   */
+/*   characters.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/06 15:44:34 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/06 16:25:19 by zslowian         ###   ########.fr       */
+/*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:09:52 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	test_builtins();
-static void test_exe_functions(char **env);
-
-void	run_tests(char **env)
+// TODO @aktyz this should be inside libft
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	test_builtins();
-	test_exe_functions(env);
-}
+	size_t	i;
 
-static void	test_builtins()
-{
-	ft_printf("\n======= Testing minishell builtins =======\n");
-	test_ft_echo();
-}
-
-static void test_exe_functions(char **env)
-{
-	ft_printf("\n======= Testing minishell builtins =======\n");
+	i = 0;
+	if (!s1 || !s2)
+		return (1);
+	while (s1[i] && s2[i] && (s1[i] == s2[i]))
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 16:24:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/03/26 16:31:50 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:01:06 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_echo(char **args)
+int	ft_echo(char **args)
 {
 	int		i;
 	bool	nl;
@@ -30,4 +30,5 @@ void	ft_echo(char **args)
 	}
 	if (nl)
 		ft_printf("\n");
+	return (0);
 }

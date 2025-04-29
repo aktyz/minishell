@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:10:52 by zslowian          #+#    #+#             */
+/*   Updated: 2025/04/23 18:11:01 by zslowian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* signal_reset_prompt:
@@ -35,7 +47,6 @@ void	set_signals_interactive(void)
 void	signal_print_newline(int signal)
 {
 	(void)signal;
-	write(1, "\n", 1);
 	rl_on_new_line();
 }
 

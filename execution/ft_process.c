@@ -6,105 +6,104 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/13 12:04:21 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 21:10:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_process(t_global *global);
-char	*ft_get_env_var_value(char *env_var_name, t_list *env);
+void		ft_process(t_global *global);
+char		*ft_get_env_var_value(char *env_var_name, t_list *env);
+void		ft_run_parent_builtins(t_command *cmd, t_global *global);
+static void	ft_pipex(t_global *global);
+static void	ft_execute(t_global *global);
 
 void	ft_process(t_global *global)
 {
-	t_command	*cmd_i;
-	pid_t		last_waited_pid;
-
-	cmd_i = global->cmd;
-	while (cmd_i)
+	if (global->cmd->command)
 	{
-		if (cmd_i->pipe_output)
-			pipe(cmd_i->pipe_fd);
-		if (!cmd_i->is_builtin)
-			cmd_i->path = resolve_command_path(ft_get_env_var_value(ENV_PATH, global->env), cmd_i->command);
-		if (ft_strncmp(cmd_i->command, EXIT, ft_strlen(EXIT)) == 0)
-			ft_exit(global);
-		if (ft_strncmp(cmd_i->command, CD, ft_strlen(CD)) == 0)
-		{
-			ft_cd(cmd_i, global);
-			break ;
-		}
-		if (ft_strncmp(cmd_i->command, EXPORT, ft_strlen(EXPORT)) == 0)
-		{
-			ft_export(cmd_i, global);
-			break ;
-		}
-		if (ft_strncmp(cmd_i->command, UNSET, ft_strlen(UNSET)) == 0)
-		{
-			ft_unset(cmd_i, global);
-			break ;
-		}
-		cmd_i->cmd_pid = fork();
-		if (cmd_i->cmd_pid == -1)
-		{
-			perror("Forking failed");
-			return ;
-		}
-		ft_handle_redirections(cmd_i);
-		if (cmd_i->cmd_pid == 0)
-		{
-			global->is_global = false;
-			break;
-		}
-		cmd_i = cmd_i->next;
+		ft_pipex(global);
+		ft_execute(global);
 	}
-	cmd_i = global->cmd;
-	last_waited_pid = -1;
-	while (cmd_i)
-	{
-		if (cmd_i->cmd_pid == 0)
-		{
-			if (cmd_i->prev && cmd_i->prev->cmd_pid)
-				waitpid(cmd_i->prev->cmd_pid, NULL, 0);
-			if (cmd_i->is_builtin)
-			{
-				ft_run_builtin(cmd_i, global);
-				ft_exit(global);
-			}
-			else
-			{
-				execve(cmd_i->path, cmd_i->args, ft_execve_env(global->env));
-				perror("execve failed");
-				exit(EXIT_FAILURE);
-			}
-		}
-		else if (cmd_i->cmd_pid > 0 && global->is_global)
-		{
-			if (!cmd_i->pipe_output && cmd_i->cmd_pid > 0)
-			{
-				waitpid(cmd_i->cmd_pid, NULL, 0);
-				last_waited_pid = cmd_i->cmd_pid;
-			}
-			else if (cmd_i == global->cmd && cmd_i->cmd_pid > 0)
-				waitpid(cmd_i->cmd_pid, NULL, WNOHANG);
-		}
-		cmd_i = cmd_i->next;
-	}
-	cmd_i = lst_last_cmd(global->cmd);
-	if (cmd_i->cmd_pid > 0 && cmd_i->cmd_pid != last_waited_pid)
-		waitpid(cmd_i->cmd_pid, NULL, 0);
 }
 
 char	*ft_get_env_var_value(char *env_var_name, t_list *env)
 {
-	t_minishell_env *content;
+	t_minishell_env	*content;
 
 	while (env)
 	{
-		content = (t_minishell_env*) env->content;
+		content = (t_minishell_env *)env->content;
 		if (ft_strcmp(env_var_name, content->name_value[0]) == 0)
 			return (content->name_value[1]);
 		env = env->next;
 	}
 	return (NULL);
+}
+
+void	ft_run_parent_builtins(t_command *cmd, t_global *global)
+{
+	if (cmd->command && ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
+		ft_mini_exit_wrapper(cmd, global);
+	else if (cmd->command && ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
+		global->last_exit_code = ft_cd(cmd, global);
+	else if (cmd->command && ft_strncmp(cmd->command,
+			EXPORT, ft_strlen(EXPORT)) == 0)
+		ft_mini_export_wrapper(cmd, global);
+	else if (cmd->command && ft_strncmp(cmd->command,
+			UNSET, ft_strlen(UNSET)) == 0)
+		ft_unset(cmd, global);
+	else if (cmd->status_request)
+	{
+		ft_printf("%s %s: command not found\n", MINISHELL, cmd->command);
+		global->last_exit_code = 127;
+	}
+}
+
+static void	ft_pipex(t_global *g)
+{
+	t_command	*cmd;
+
+	cmd = g->cmd;
+	while (cmd)
+	{
+		if (cmd->pipe_output)
+			pipe(cmd->pipe_fd);
+		if (!cmd->is_builtin)
+			cmd->path = resolve_command_path(g,
+					ft_get_env_var_value(ENV_PATH, g->env), cmd->command);
+		ft_split_child_parent_run(g, cmd);
+		if (cmd->cmd_pid == 0)
+		{
+			g->is_global = false;
+			break ;
+		}
+		cmd = cmd->next;
+	}
+}
+
+static void	ft_execute(t_global *global)
+{
+	t_command	*cmd;
+	int			wstatus;
+
+	cmd = global->cmd;
+	wstatus = 0;
+	while (cmd)
+	{
+		if (cmd->cmd_pid == 0)
+			ft_execute_child_proc(cmd, global);
+		else
+		{
+			if (cmd->cmd_pid == -1)
+				ft_run_parent_builtins(cmd, global);
+			else
+			{
+				waitpid(cmd->cmd_pid, &wstatus, 0);
+				if (WIFEXITED(wstatus))
+					global->last_exit_code = WEXITSTATUS(wstatus);
+			}
+		}
+		cmd = cmd->next;
+	}
 }

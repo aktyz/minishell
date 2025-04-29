@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/11 22:59:51 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/28 22:14:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h> // exit()
 # include <string.h> // strerror()
 # include <unistd.h> // pipe() fork()
+# include <signal.h> // struct sigaction
 # include <sys/stat.h> // open()
 # include <sys/wait.h> //
 
@@ -40,35 +41,20 @@
 # define ENV "env"
 # define EXIT "exit"
 
+# define CAT_CAT "cat"
+# define CAT_SORT "sort"
+# define CAT_UNIQ "uniq"
+# define CAT_TEE "tee"
+# define CAT_TAIL "tail"
+# define CAT_HEAD "head"
+
 # define PROMPT "\e[0;35mminishell$ \e[0m"
+
+# define MINISHELL "minishell: "
 
 # define HEREDOC_NAME "/tmp/.__heredoc__"
 
-extern int	g_last_exit_code;
-typedef struct s_io_fds t_io_fds;
-
-typedef struct s_executable
-{
-	char	*path; //path
-	char	*file_name; //command
-	int		execve_argc;
-	char	**execve_argv; // args
-}	t_executable;
-
-typedef struct s_process
-{
-	int				pipe_parent[2]; // to_go
-	int				pipe_send; // to_go
-	int				pipe_receive; // to_go
-	int				file_send; // to_go
-	int				file_receive; // to_go
-	int				in_file_fd; // to_go
-	char			*input_data;
-	int				out_file_fd;
-	char			*output_data;
-	int				child_pid;
-	t_executable	*executable;
-}	t_process;
+typedef struct s_io_fds	t_io_fds;
 
 typedef struct s_node_for_token
 {
@@ -78,6 +64,7 @@ typedef struct s_node_for_token
 	int						type;
 	int						status;
 	bool					join;
+	bool					status_request;
 	struct s_node_for_token	*prev;
 	struct s_node_for_token	*next;
 }	t_token;
@@ -88,9 +75,10 @@ typedef struct s_command
 	char				*path;
 	int					args_size;
 	char				**args;
-	bool				pipe_output; // pipes
-	int					pipe_fd[2]; // pipes
+	bool				pipe_output;
+	int					pipe_fd[2];
 	bool				is_builtin;
+	bool				status_request;
 	pid_t				cmd_pid;
 	t_io_fds			*io_fds;
 	struct s_command	*next;
@@ -111,6 +99,7 @@ typedef struct s_global
 	t_list		*env;
 	t_command	*cmd;
 	bool		is_global;
+	int			last_exit_code;
 }	t_global;
 
 enum	e_token_types
@@ -139,98 +128,146 @@ struct s_io_fds
 	char	*outfile;
 	char	*heredoc_delimiter;
 	bool	heredoc_quotes;
-	int	fd_in;
-	int	fd_out;
-	int	stdin_backup;
-	int	stdout_backup;
+	int		fd_in;
+	int		fd_out;
+	int		stdin_backup;
+	int		stdout_backup;
 };
 
-void	ft_process(t_global *global);
-bool	ft_is_our_builtin(char *cmd);
-void	ft_handle_redirections(t_command *cmd);
-char	**ft_execve_env(t_list *env);
+t_command	*lst_last_cmd(t_command *cmd);
+t_command	*lst_new_cmd(bool value);
+void		ft_process(t_global *global);
+bool		ft_is_our_builtin(t_command *cmd, t_global *global);
+void		ft_handle_redirections(t_command *cmd);
+char		**ft_execve_env(t_list *env);
 
-void	ft_error(t_process ***proc, char **string);
-void	ft_clean_up(t_process **proc);
-void	ft_split_env_variable(char *name_value, char **var_name, char **var_value);
-char	*ft_get_env_var_value(char *env_var_name, t_list *env);
-char	*resolve_command_path(char *path, char *cmd);
+void		ft_split_env_variable(char *name_value, char **var_name,
+				char **var_value);
+char		*ft_get_env_var_value(char *env_var_name, t_list *env);
+char		*resolve_command_path(t_global *g, char *path, char *cmd);
+void		ft_execute_child_proc(t_command *cmd, t_global *global);
+bool		is_parent_builtin(t_command *command);
+void		ft_safe_fork(t_global *g, t_command *cmd);
+void		ft_split_child_parent_run(t_global *g, t_command *cmd);
+void		ft_attach_tty(t_command *cmd);
+void		clean_unnecessary_fds(t_global *g);
+void		ft_chandle_parent_io(t_command *cmd);
+bool		process_env_variable(char *env_var, t_list **list);
 
 //initialization
-
-
-bool	init_global(t_global *global, char **env);
-bool	init_env(t_global *global, char **env);
-void	init_io(t_command *cmd);
+bool		init_global(t_global *global, char **env);
+bool		init_env(t_global *global, char **env);
+void		init_io(t_command *cmd);
 
 //cleanup
+void		ft_clear_minishell_env(void *env_content_node);
+bool		restore_io(t_io_fds *io);
+void		lst_clear_cmd(t_command **lst, void (*del)(void **));
+void		ft_clear_token(t_token	**list);
+bool		remove_old_file_ref(t_io_fds *io, bool infile);
 
-void	free_ptr(void *ptr);
-void	free_global(t_global *global, bool clear_history);
-void	free_str_tab(char **tab);
-void	ft_clean_minishell_env(void *env_content_node);
+//free
 
-void	exit_shell(t_global *global, int exno);
+void		free_ptr(void **ptr);
+void		free_io(t_io_fds *io);
+void		free_str_tab(char **tab);
+void		free_global(t_global *global, bool clear_history);
 
 //lexer
-
-int		tokenization(t_global *global);
-bool	input_is_space(char * input);
-bool	parse_user_input(t_global *global);
-int		ft_strcmp(const char *s1, const char *s2);
+int			tokenization(t_global *global);
+bool		input_is_space(char *input);
+bool		parse_user_input(t_global *global);
+int			ft_strcmp(const char *s1, const char *s2);
 // void	ft_delete_lst_node(t_list *node);
 // void	ft_delete_lst(t_list **node, int size);
 
-int	check_var(t_token **token_lst);
-
+int			check_var(t_token **token_lst);
 
 // errors
-int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb);
+int			errmsg_cmd(char *command, char *detail,
+				char *error_message, int error_nb);
 
+// characters
+bool		input_is_space(char *input);
+int			which_separator(char *str, int i);
+
+// nodes
+
+t_token		*new_node(char *str, int type, int status);
+void		add_node(t_token **list, t_token *new_node);
+void		delete_node(t_token *node, void (*del)(void **));
 
 // env variables
-
-int		var_expander(t_global *global, t_token **token_lst);
-char	*var_expander_heredoc(t_global *global, char *str);
+int			var_expander(t_global *global, t_token **token_lst);
+char		*var_expander_heredoc(t_global *global, char *str);
 
 // quotes
-
-int handle_quotes(t_global *global);
+int			handle_quotes(t_global *global);
 
 // parse commands
-void	create_commands(t_global *global, t_token *token);
-void	parse_word(t_command **cmd, t_token **token_lst);
-void	parse_input(t_command **last_cmd, t_token **token_lst);
-void	parse_trunc(t_command **last_cmd, t_token **token_lst);
-void	parse_append(t_command **last_cmd, t_token **token_lst);
-void	parse_pipe(t_command **last_cmd, t_token **token_lst);
-void	parse_heredoc(t_global *global, t_command **last_cmd, t_token **token_lst);
-t_command	*lst_last_cmd(t_command *cmd);
-t_command	*lst_new_cmd(bool value);
+void		create_commands(t_global *global, t_token *token);
+void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
+void		parse_input(t_global *global, t_command **last_cmd,
+				t_token **token_lst);
+void		parse_trunc(t_command **last_cmd, t_token **token_lst);
+void		parse_append(t_command **last_cmd, t_token **token_lst);
+void		parse_pipe(t_command **last_cmd, t_token **token_lst);
+void		parse_heredoc(t_global *global, t_command **last_cmd,
+				t_token **token_lst);
+void		ft_is_status_request(t_token *token, t_command *cmd);
+bool		get_heredoc(t_global *global, t_io_fds *io);
+int			var_length(char *str);
+int			create_args_echo_mode(t_token **token_node, t_command *last_cmd);
+int			add_args_echo_mode(t_token **token_node, t_command *last_cmd);
+int			create_args_default_mode(t_token **token_node, t_command *last_cmd);
+t_token		*lst_new_token(char *str, char *str_backup, int type, int status);
+void		lst_add_back_token(t_token **alst, t_token *new_node);
+void		lstclear_token(t_token **lst, void (*del)(void **));
+bool		contains_space(char *str);
+int			count_arguments(t_token *temp);
+char		*join_vars(t_token **token_node);
+char		**copy_in_new_tab(int len, char **new_tab,
+				t_command *last_cmd, t_token *tmp);
+void		lst_add_back_cmd(t_command **alst, t_command *new_node);
+void		lstdelone_token(t_token *lst, void (*del)(void **));
+bool		quotes_in_string(char *str);
+bool		is_next_char_a_sep(char c);
+bool		var_between_quotes(char *str, int i);
+int			count_len(char *str, int count, int i);
+int			replace_var(t_token **token_node, char *var_value, int index);
+char		*recover_val(t_token *token, char *str, t_global *global);
+char		*replace_str_heredoc(char *str, char *var_value, int index);
+void		copy_var_value(char *new_str, char *var_value, int *j);
+char		*get_new_token_string(char *oldstr, char *var_value,
+				int newstr_size, int index);
 
 // signals
-
 void		ignore_sigquit(void);
 void		set_signals_interactive(void);
 void		set_signals_noninteractive(void);
 
 // debug
-
-void	print_token_list(t_token **tokens);
-void	print_cmd_list(t_global *global);
+void		print_token_list(t_token **tokens);
+void		print_cmd_list(t_global *global);
 
 // builtins
-void	ft_run_builtin(t_command *cmd, t_global *global);
-void	ft_echo(char **args);
-void	ft_cd(t_command *cmd, t_global *global);
-void	ft_exit(t_global *data);
-void	ft_pwd(void);
-void	ft_export(t_command *cmd, t_global *global);
-void	ft_unset(t_command *cmd, t_global *global);
-void	ft_env(t_list *env);
-
-// Test functions
-void	run_tests(char **env);
-void	test_ft_echo();
+int			ft_run_builtin(t_command *cmd, t_global *global);
+void		ft_run_parent_builtins(t_command *cmd, t_global *global);
+int			ft_echo(char **args);
+int			ft_cd(t_command *cmd, t_global *global);
+void		ft_exit(t_global *global, char *cmd, int status);
+int			ft_pwd(void);
+void		ft_export(t_command *cmd, t_global *global);
+void		ft_unset(t_command *cmd, t_global *global);
+int			ft_env(t_list *env);
+void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
+int			ft_handle_export_arg(char *cmd, t_global *global);
+void		ft_handle_export(t_command *cmd, t_global *global);
+void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
+bool		is_valid_var_name(char *var_name);
+void		ft_update_value_or_add(char *cmd, t_global *global);
+void		ft_add_new_env_var(char *var_name, t_global *global);
+void		ft_mini_exit_wrapper(t_command *cmd, t_global *g);
+void		ft_mini_export_wrapper(t_command *cmd, t_global *global);
 
 #endif
