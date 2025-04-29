@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:14:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 23:58:13 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ t_command	*lst_last_cmd(t_command *cmd);
 t_command	*lst_new_cmd(bool value);
 void		ft_process(t_global *global);
 bool		ft_is_our_builtin(t_command *cmd, t_global *global);
-void		ft_handle_redirections(t_command *cmd);
+void		ft_handle_redirections(t_command *cmd, t_global *g);
 char		**ft_execve_env(t_list *env);
 
 void		ft_split_env_variable(char *name_value, char **var_name,
@@ -184,6 +184,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 int			check_var(t_token **token_lst);
 
 // errors
+void		ft_minishell_perror(t_global *g, char *cmd, int status);
 int			errmsg_cmd(char *command, char *detail,
 				char *error_message, int error_nb);
 

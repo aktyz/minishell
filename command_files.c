@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_files.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:25:45 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/04/29 23:58:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 {
 	if (infile == true && io->infile)
 	{
-		if (io->fd_in == -1 || (io->outfile && io->fd_out == -1))
+		if (io->outfile && io->fd_out == -1)
 			return (false);
 		if (io->heredoc_delimiter != NULL)
 		{
@@ -25,11 +25,10 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 			unlink(io->infile);
 		}
 		free_ptr((void **)&io->infile);
-		close(io->fd_in);
 	}
 	else if (infile == false && io->outfile)
 	{
-		if (io->fd_out == -1 || (io->infile && io->fd_in == -1))
+		if (io->fd_out == -1)
 			return (false);
 		free_ptr((void **)&io->outfile);
 		close(io->fd_out);
@@ -37,8 +36,8 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 	return (true);
 }
 
-static void	open_infile(t_global *g, t_io_fds *io, char *file,
-	char *original_filename)
+static void	open_infile(t_global *global, t_io_fds *io, char *file,
+		char *original_filename)
 {
 	if (!remove_old_file_ref(io, true))
 		return ;
@@ -46,14 +45,9 @@ static void	open_infile(t_global *g, t_io_fds *io, char *file,
 	if (io->infile && io->infile[0] == '\0')
 	{
 		errmsg_cmd(io->infile, NULL, strerror(errno), false);
-		ft_exit(g, NULL, EXIT_FAILURE);
+		ft_exit(global, NULL, EXIT_FAILURE);
 	}
-	io->fd_in = open(io->infile, O_RDONLY);
-	if (io->fd_in == -1)
-	{
-		errmsg_cmd(io->infile, NULL, strerror(errno), false);
-		ft_exit(g, NULL, EXIT_FAILURE);
-	}
+	// check if the file exists for the files chained => Test 9
 }
 
 void	parse_input(t_global *global, t_command **last_cmd, t_token **token_lst)

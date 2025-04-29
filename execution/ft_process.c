@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 22:04:41 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 23:36:14 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,7 @@ static void	ft_pipex(t_global *g)
 					ft_get_env_var_value(ENV_PATH, g->env), cmd->command);
 		ft_split_child_parent_run(g, cmd);
 		if (cmd->cmd_pid == 0)
-		{
-			g->is_global = false;
 			break ;
-		}
 		cmd = cmd->next;
 	}
 }

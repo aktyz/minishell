@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 21:55:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 23:36:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static void	ft_handle_minishell_errors(char *cmd, int status)
 			strerror(errno), false);
 	if (ft_strcmp("command not found", cmd) == 0)
 		errmsg_cmd(cmd, NULL, strerror(127), false);
-	errmsg_cmd(cmd, NULL, strerror(errno), false);
 }
 
 void	ft_mini_exit_wrapper(t_command *cmd, t_global *g)
