@@ -239,5 +239,11 @@ Upon successful completion, these functions shall open the file and return a non
 ```
 
 # Hidden
+- [ ] debug ` ` (space as a command) (seg fault)
+- [ ] debug ` cat | cat | ls `
+- [ ] where does "Key has expired No such file or directory" is comming from
+- [ ] one by one error from tester untill next evaluation or untill clear
+- [ ] how to break a pipe (`echo hi | echo >>./outfiles/outfile01 bye` or `echo hi | echo bye >>./outfiles/oufile01/ ../outfiles/outfile02`)
+- [ ] debug: `cat <minishell.h|ls`> (Bash error: `bash: minishell.h: No such file or directory`) minishell error:minishell: minishell.h: No such file or directory + segfault
 - [ ] `export | grep hello` - parent does not set up the redirections before executing the builin he have to do
 - [ ] make sure we need to be able to call `./minishell` from our `./minishell` and if yes, implement it

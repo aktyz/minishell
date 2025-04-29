@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 13:56:09 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:51:27 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	ft_handle_existing_var(char *cmd, t_minishell_env *content)
 	int	equal_pos;
 
 	equal_pos = ft_strlen(content->name_value[0]);
-	if (cmd[equal_pos] == '=')
+	if (equal_pos < ft_strlen(cmd) && cmd[equal_pos] == '=')
 	{
 		free_ptr((void **)&content->name_value[0]);
 		free_ptr((void **)&content->name_value[1]);

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:20:04 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 09:52:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ char	*get_relative_path(char *file_to_open)
 		return (ft_strdup(file_to_open));
 	path = ft_strdup("./");
 	ret = ft_strjoin(path, file_to_open);
-	printf("PARSING - Get_rel_path function return : %s\n", ret);
 	return (ret);
 }
 
