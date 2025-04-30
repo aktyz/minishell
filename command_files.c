@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 12:04:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:51:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,7 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile, t_global *g)
 {
 	if (infile == true && io->infile)
 	{
-		if (io->outfile && io->fd_out == -1)
-			return (false);
-		if (io->heredoc_delimiter != NULL)
-		{
-			free_ptr((void **)&io->heredoc_delimiter);
-			io->heredoc_delimiter = NULL;
-			unlink(io->infile);
-		}
-		if (access(io->infile, F_OK) == -1)
-		{
-			ft_minishell_perror(NULL, io->infile, ENOENT);
-			ft_exit(g, NULL, 1);
-		}
-		free_ptr((void **)&io->infile);
+		
 	}
 	else if (infile == false && io->outfile)
 	{
@@ -45,6 +32,8 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile, t_global *g)
 
 /**
  * Function creates new io_fds_struct and adds it to the cmd->io list
+ * because of the existing token with f_name as an input
+ *
  */
 static void	add_io_infile_data(t_global *global, t_command *cmd, char *f_name)
 {
@@ -54,7 +43,10 @@ static void	add_io_infile_data(t_global *global, t_command *cmd, char *f_name)
 	new->fd_in = -1;
 	new->fd_out = -1;
 	new->infile = ft_strdup(f_name);
-	ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
+	if (!cmd->io_fds)
+		cmd->io_fds = ft_lstnew(new);
+	else
+		ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
 	if (new->infile && new->infile[0] == '\0') // debug - in parent or in child?
 	{
 		errmsg_cmd(new->infile, NULL, strerror(errno), false);
@@ -63,7 +55,8 @@ static void	add_io_infile_data(t_global *global, t_command *cmd, char *f_name)
 }
 
 /**
- * Function adds new entry on io_fds list,
+ * Function adds new entry on io_fds list, with infile name
+ *
  */
 void	parse_input(t_global *g, t_command **last_cmd, t_token **token_lst)
 {
@@ -72,7 +65,6 @@ void	parse_input(t_global *g, t_command **last_cmd, t_token **token_lst)
 
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
-	init_io(cmd);
 	add_io_infile_data(g, cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
@@ -81,22 +73,35 @@ void	parse_input(t_global *g, t_command **last_cmd, t_token **token_lst)
 	*token_lst = temp;
 }
 
-static void	open_outfile_trunc(t_io_fds *io, char *file, char *var_filename,
-				t_global *g)
+/**
+ * Function creates new io_fds_struct and adds it to the cmd->io list
+ * because of the existing token with f_name as an output
+ *
+ */
+static void	add_io_outfile_data(t_global *g, t_command *cmd, char *f_name)
 {
-	if (!remove_old_file_ref(io, false, g))
-		return ;
-	io->outfile = ft_strdup(file);
-	if (io->outfile && io->outfile[0] == '\0')
+	t_io_fds	*new;
+	
+	new = ft_calloc(sizeof(t_io_fds), 1);
+	new->fd_in = -1;
+	new->fd_out = -1;
+	new->outfile = ft_strdup(f_name);
+	ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
+	if (new->outfile && new->outfile[0] == '\0')  // debug - in parent or in child?
 	{
-		errmsg_cmd(var_filename, NULL, "ambiguous redirect", false);
+		errmsg_cmd(f_name, NULL, "ambiguous redirect", false);
 		return ;
 	}
-	io->fd_out = open(io->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (io->fd_out == -1)
-		errmsg_cmd(io->outfile, NULL, strerror(errno), false);
+	new->fd_out = open(new->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664); // move to child 100%
+	if (new->fd_out == -1)
+		errmsg_cmd(new->outfile, NULL, strerror(errno), false);
 }
 
+/**
+ * Function adds new entry on the io_fds list, with outfile name
+ * (what about heredoc?)
+ *
+ */
 void	parse_trunc(t_command **last_cmd, t_token **token_lst, t_global *g)
 {
 	t_token		*temp;
@@ -104,8 +109,7 @@ void	parse_trunc(t_command **last_cmd, t_token **token_lst, t_global *g)
 
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
-	init_io(cmd);
-	open_outfile_trunc(cmd->io_fds, temp->next->str, temp->next->str_backup, g);
+	add_io_outfile_data(g, *last_cmd, temp->next->str);	
 	if (temp->next->next)
 		temp = temp->next->next;
 	else

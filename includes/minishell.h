@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 11:29:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 19:21:00 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_command
 	bool				status_request;
 	pid_t				cmd_pid;
 	t_list				*io_fds;
+	t_io_fds			*final_io;
 	struct s_command	*next;
 	struct s_command	*prev;
 }	t_command;
@@ -151,15 +152,14 @@ void		ft_attach_tty(t_command *cmd);
 void		clean_unnecessary_fds(t_global *g);
 void		ft_chandle_parent_io(t_command *cmd);
 bool		process_env_variable(char *env_var, t_list **list);
+bool		ft_check_infile_sources(t_global *g, t_command *cmd);
 
 //initialization
 bool		init_global(t_global *global, char **env);
 bool		init_env(t_global *global, char **env);
-void		init_io(t_command *cmd);
 
 //cleanup
 void		ft_clear_minishell_env(void *env_content_node);
-bool		restore_io(t_io_fds *io);
 void		lst_clear_cmd(t_command **lst, void (*del)(void **));
 void		ft_clear_token(t_token	**list);
 bool		remove_old_file_ref(t_io_fds *io, bool infile, t_global *g);
@@ -167,7 +167,7 @@ bool		remove_old_file_ref(t_io_fds *io, bool infile, t_global *g);
 //free
 
 void		free_ptr(void **ptr);
-void		free_io(t_io_fds *io);
+void		free_io(void *io);
 void		free_str_tab(char **tab);
 void		free_global(t_global *global, bool clear_history);
 

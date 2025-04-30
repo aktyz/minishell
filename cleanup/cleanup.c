@@ -6,13 +6,12 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 11:50:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:03:39 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	restore_io(t_io_fds *io);
 void	lst_delone_cmd(t_command *lst, void (*del)(void **));
 void	lst_clear_cmd(t_command **lst, void (*del)(void **));
 void	ft_clear_minishell_env(void *env_content_node);
@@ -27,7 +26,7 @@ void	lst_delone_cmd(t_command *lst, void (*del)(void **))
 	if (lst->args)
 		free_str_tab(lst->args);
 	if (lst->io_fds)
-		ft_lstclear(&lst->io_fds, free_ptr); // check io delete function
+		ft_lstclear(&lst->io_fds, free_io);
 	(*del)((void **)&lst);
 }
 

@@ -25,7 +25,7 @@
         },
         {
           "description": "Follow forked processes",
-          "text": "set follow-fork-mode parent"
+          "text": "set follow-fork-mode child"
         }
       ]
     },

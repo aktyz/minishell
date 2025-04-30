@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:00:23 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:04:00 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,34 @@ void	free_ptr(void **ptr)
 	*ptr = NULL;
 }
 
-/* free_io:
-*	Frees the input/output fd structure.
-*/
-void	free_io(t_io_fds *io)
+/**
+ * Function can be passed as argument to ft_lstclear() in order
+ * to free the memory of io redirections for a command
+ *
+ */
+void	free_io(void *io)
 {
+	t_io_fds	*ptr;
+
 	if (!io)
 		return ;
-	restore_io(io);
-	if (io->heredoc_delimiter)
+	ptr = (t_io_fds *) io;
+	if (ptr->heredoc_delimiter)
 	{
-		unlink(io->infile);
-		free_ptr((void **)&io->heredoc_delimiter);
+		unlink(ptr->infile);
+		free_ptr((void **)&ptr->heredoc_delimiter);
 	}
-	if (io->infile)
-		free_ptr((void **)&io->infile);
-	if (io->outfile)
-		free_ptr((void **)&io->outfile);
-	if (io)
-		free_ptr((void **)&io);
+	if (ptr->infile)
+		free_ptr((void **)&ptr->infile);
+	if (ptr->outfile)
+		free_ptr((void **)&ptr->outfile);
+	if (ptr)
+		free_ptr((void **)&ptr);
+	return ;
 }
 
 /* free_str_tab:
-*	Frees an array of strings.
+*	Frees an array of strings. (we can take the function from Libft)
 */
 void	free_str_tab(char **tab)
 {

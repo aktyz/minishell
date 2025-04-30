@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 11:54:59 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:18:07 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,27 +53,6 @@ bool	init_global(t_global *global, char **env)
 	global->cmd = NULL;
 	global->last_exit_code = 0;
 	return (true);
-}
-
-/**
- * Function creates the io_fds list and adds there
- * first default (empty) content of redirections
- *
- */
-void	init_io(t_command *cmd)
-{
-	t_list		*lst;
-	t_io_fds	*content;
-
-	content = ft_calloc(sizeof(t_io_fds), 1);
-	if (!content)
-		return ;
-	content->fd_in = -1;
-	content->fd_out = -1;
-	if (!cmd->io_fds)
-		cmd->io_fds = ft_lstnew(content);
-	else
-		ft_lstadd_back(&cmd->io_fds, ft_lstnew(content));
 }
 
 char	**ft_trim_user_input(char **argv, int argc)

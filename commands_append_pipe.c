@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 09:48:48 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:18:16 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,15 @@ void	parse_append(t_command **last_cmd, t_token **token_lst, t_global *g)
 {
 	t_token		*temp;
 	t_command	*cmd;
+	t_io_fds	*io;
+	t_list		*lst;
 
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
-	init_io(cmd);
-	open_outfile_append(cmd->io_fds, temp->next->str,
+	lst = cmd->io_fds;
+	while (lst && lst->next)
+		lst = lst->next;
+	open_outfile_append((t_io_fds *)lst->content, temp->next->str,
 		temp->next->str_backup, g);
 	if (temp->next->next)
 		temp = temp->next->next;
