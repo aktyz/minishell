@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:11:32 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:54:59 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,22 +55,25 @@ bool	init_global(t_global *global, char **env)
 	return (true);
 }
 
+/**
+ * Function creates the io_fds list and adds there
+ * first default (empty) content of redirections
+ *
+ */
 void	init_io(t_command *cmd)
 {
+	t_list		*lst;
+	t_io_fds	*content;
+
+	content = ft_calloc(sizeof(t_io_fds), 1);
+	if (!content)
+		return ;
+	content->fd_in = -1;
+	content->fd_out = -1;
 	if (!cmd->io_fds)
-	{
-		cmd->io_fds = malloc(sizeof * cmd->io_fds);
-		if (!cmd->io_fds)
-			return ;
-		cmd->io_fds->infile = NULL;
-		cmd->io_fds->outfile = NULL;
-		cmd->io_fds->heredoc_delimiter = NULL;
-		cmd->io_fds->heredoc_quotes = false;
-		cmd->io_fds->fd_in = -1;
-		cmd->io_fds->fd_out = -1;
-		cmd->io_fds->stdin_backup = -1;
-		cmd->io_fds->stdout_backup = -1;
-	}
+		cmd->io_fds = ft_lstnew(content);
+	else
+		ft_lstadd_back(&cmd->io_fds, ft_lstnew(content));
 }
 
 char	**ft_trim_user_input(char **argv, int argc)

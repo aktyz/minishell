@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:03:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:03:44 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:34:49 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,28 @@ static void	print_cmd_args(t_command *cmd)
 
 static void	print_cmd_io(t_command *cmd)
 {
+	t_io_fds	*io;
+	t_list		*lst;
+
 	if (!cmd->io_fds)
 		return ;
-	if (cmd->io_fds->infile)
+	lst = cmd->io_fds;
+	while (lst && lst->content)
 	{
-		printf("\tInfile: %s\n", cmd->io_fds->infile);
-		printf("\t\tfd_in: %d\n", cmd->io_fds->fd_in);
-	}
-	if (cmd->io_fds->heredoc_delimiter)
-		printf("\tHeredoc delimiter: %s\n", cmd->io_fds->heredoc_delimiter);
-	if (cmd->io_fds->outfile)
-	{
-		printf("\tOutfile: %s\n", cmd->io_fds->outfile);
-		printf("\t\tfd_in: %d\n", cmd->io_fds->fd_out);
+		io = (t_io_fds *) lst->content;
+		if (io->infile)
+		{
+			printf("\tInfile: %s\n", io->infile);
+			printf("\t\tfd_in: %d\n", io->fd_in);
+		}
+		if (io->heredoc_delimiter)
+			printf("\tHeredoc delimiter: %s\n", io->heredoc_delimiter);
+		if (io->outfile)
+		{
+			printf("\tOutfile: %s\n", io->outfile);
+			printf("\t\tfd_in: %d\n", io->fd_out);
+		}
+		lst = lst->next;
 	}
 }
 

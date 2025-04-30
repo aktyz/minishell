@@ -6,13 +6,15 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 09:55:07 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:04:03 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 bool	remove_old_file_ref(t_io_fds *io, bool infile, t_global *g)
+// Those are checks I need to transfer to ft_create_piping
+// but the function itself is not needed here
 {
 	if (infile == true && io->infile)
 	{
@@ -41,20 +43,29 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile, t_global *g)
 	return (true);
 }
 
-static void	open_infile(t_global *global, t_io_fds *io, char *file,
-		char *original_filename)
+/**
+ * Function creates new io_fds_struct and adds it to the cmd->io list
+ */
+static void	add_io_infile_data(t_global *global, t_command *cmd, char *f_name)
 {
-	if (!remove_old_file_ref(io, true, global))
-		return ;
-	io->infile = ft_strdup(file);
-	if (io->infile && io->infile[0] == '\0')
+	t_io_fds	*new;
+
+	new = ft_calloc(sizeof(t_io_fds), 1);
+	new->fd_in = -1;
+	new->fd_out = -1;
+	new->infile = ft_strdup(f_name);
+	ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
+	if (new->infile && new->infile[0] == '\0') // debug - in parent or in child?
 	{
-		errmsg_cmd(io->infile, NULL, strerror(errno), false);
+		errmsg_cmd(new->infile, NULL, strerror(errno), false);
 		ft_exit(global, NULL, EXIT_FAILURE);
 	}
 }
 
-void	parse_input(t_global *global, t_command **last_cmd, t_token **token_lst)
+/**
+ * Function adds new entry on io_fds list,
+ */
+void	parse_input(t_global *g, t_command **last_cmd, t_token **token_lst)
 {
 	t_token		*temp;
 	t_command	*cmd;
@@ -62,7 +73,7 @@ void	parse_input(t_global *global, t_command **last_cmd, t_token **token_lst)
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
 	init_io(cmd);
-	open_infile(global, cmd->io_fds, temp->next->str, temp->next->str_backup);
+	add_io_infile_data(g, cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else

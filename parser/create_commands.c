@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 09:49:23 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:52:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,24 @@ void	parse_heredoc(t_global *global, t_command **last_cmd,
 	t_token		*temp;
 	t_command	*cmd;
 	t_io_fds	*io;
+	t_list		*lst;
 
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
 	init_io(cmd);
-	io = cmd->io_fds;
-	if (!remove_old_file_ref(io, true, global))
-		return ;
-	io->infile = get_heredoc_name();
-	io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
-	if (get_heredoc(global, io))
-		io->fd_in = open(io->infile, O_RDONLY);
-	else
-		io->fd_in = -1;
+	lst = cmd->io_fds;
+	while(lst && lst->content)
+	{
+		io = (t_io_fds *) lst->content;
+		if (!remove_old_file_ref(io, true, global))
+			return ;
+		io->infile = get_heredoc_name();
+		io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
+		if (get_heredoc(global, io))
+			io->fd_in = open(io->infile, O_RDONLY);
+		else
+			io->fd_in = -1;
+	}
 	if (temp->next->next)
 		temp = temp->next->next;
 	else

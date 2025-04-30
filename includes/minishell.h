@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 10:00:50 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:29:49 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_command
 	bool				is_builtin;
 	bool				status_request;
 	pid_t				cmd_pid;
-	t_io_fds			*io_fds;
+	t_list				*io_fds;
 	struct s_command	*next;
 	struct s_command	*prev;
 }	t_command;
@@ -130,8 +130,6 @@ struct s_io_fds
 	bool	heredoc_quotes;
 	int		fd_in;
 	int		fd_out;
-	int		stdin_backup;
-	int		stdout_backup;
 };
 
 t_command	*lst_last_cmd(t_command *cmd);
