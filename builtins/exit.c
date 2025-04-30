@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 23:36:55 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 09:53:02 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	handle_exit_err(t_command *cmd, t_global *g, int code);
 
 void	ft_exit(t_global *global, char *cmd, int status)
 {
-	if (status && ft_strcmp(cmd, EXIT))
+	if (status && cmd && ft_strcmp(cmd, EXIT))
 		ft_handle_minishell_errors(cmd, status);
 	if (global)
 		free_global(global, true);

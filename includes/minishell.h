@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 23:58:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:00:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void		ft_clear_minishell_env(void *env_content_node);
 bool		restore_io(t_io_fds *io);
 void		lst_clear_cmd(t_command **lst, void (*del)(void **));
 void		ft_clear_token(t_token	**list);
-bool		remove_old_file_ref(t_io_fds *io, bool infile);
+bool		remove_old_file_ref(t_io_fds *io, bool infile, t_global *g);
 
 //free
 
@@ -210,8 +210,9 @@ void		create_commands(t_global *global, t_token *token);
 void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-void		parse_trunc(t_command **last_cmd, t_token **token_lst);
-void		parse_append(t_command **last_cmd, t_token **token_lst);
+void		parse_trunc(t_command **last_cmd, t_token **token_lst, t_global *g);
+void		parse_append(t_command **last_cmd, t_token **token_lst,
+				t_global *g);
 void		parse_pipe(t_command **last_cmd, t_token **token_lst);
 void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);

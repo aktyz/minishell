@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:10:54 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 09:49:23 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	parse_heredoc(t_global *global, t_command **last_cmd,
 	cmd = lst_last_cmd(*last_cmd);
 	init_io(cmd);
 	io = cmd->io_fds;
-	if (!remove_old_file_ref(io, true))
+	if (!remove_old_file_ref(io, true, global))
 		return ;
 	io->infile = get_heredoc_name();
 	io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
@@ -104,11 +104,11 @@ void	create_commands(t_global *global, t_token *token)
 		else if (temp->type == INPUT)
 			parse_input(global, &global->cmd, &temp);
 		else if (temp->type == TRUNC)
-			parse_trunc(&global->cmd, &temp);
+			parse_trunc(&global->cmd, &temp, global);
 		else if (temp->type == HEREDOC)
 			parse_heredoc(global, &global->cmd, &temp);
 		else if (temp->type == APPEND)
-			parse_append(&global->cmd, &temp);
+			parse_append(&global->cmd, &temp, global);
 		else if (temp->type == PIPE)
 			parse_pipe(&global->cmd, &temp);
 		else if (temp->type == END)
