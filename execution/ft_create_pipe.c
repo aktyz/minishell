@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 19:10:46 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 16:22:22 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,9 @@ static void	ft_handle_minishell_cats(t_command *cmd)
 		|| ft_strcmp(cmd->command, CAT_TAIL) == 0
 		|| ft_strcmp(cmd->command, CAT_HEAD) == 0)
 	{
-		if (((cmd->prev && !cmd->prev->pipe_output)
-				|| (cmd->io_fds && !cmd->io_fds->infile))
-			&& isatty(STDIN_FILENO) != 1)
+		if (isatty(STDIN_FILENO) != 1
+			&& ((cmd->prev && !cmd->prev->pipe_output)
+				|| (cmd->io_fds && !cmd->io_fds->infile)))
 			ft_attach_tty(cmd);
 	}
 }

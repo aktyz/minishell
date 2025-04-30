@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:11:32 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 17:57:15 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool	init_env(t_global *global, char **env)
 bool	init_global(t_global *global, char **env)
 {
 	if (!init_env(global, env))
-		ft_exit(global, "Fatal", EXIT_FAILURE);
+		ft_exit(global, "Fatal", EXIT_FAILURE, true);
 	global->token = NULL;
 	global->user_input = NULL;
 	global->is_global = true;

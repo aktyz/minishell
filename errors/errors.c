@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:14:27 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:58:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static bool	add_detail_quotes(char *command);
 int			errmsg_cmd(char *command, char *detail, char *error_message,
 				int error_nb);
-void		errmsg(char *errmsg, char *detail, int quotes);
 
 /* add_detail_quotes:
  *	Checks whether to add quotes around the error detail:
@@ -63,23 +62,10 @@ int	errmsg_cmd(char *command, char *detail, char *error_message, int error_nb)
 	return (free_ptr((void **) &msg), error_nb);
 }
 
-/* errmsg:
- *	Prints an error message that is unrelated to a specific command.
- *	Used in parsing phase for syntax errors.
- */
-void	errmsg(char *errmsg, char *detail, int quotes)
+void	ft_perror_minishell_wrapper(char *cmd)
 {
-	char	*msg;
+	char	*s;
 
-	msg = ft_strdup(MINISHELL);
-	msg = ft_strjoin(msg, errmsg);
-	if (quotes)
-		msg = ft_strjoin(msg, " '");
-	else
-		msg = ft_strjoin(msg, ": ");
-	msg = ft_strjoin(msg, detail);
-	if (quotes)
-		msg = ft_strjoin(msg, "'");
-	ft_putendl_fd(msg, STDERR_FILENO);
-	free_ptr((void **)&msg);
+	s = ft_strjoin(MINISHELL, cmd);
+	perror(s);
 }

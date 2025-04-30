@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:10:55 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 16:22:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	ft_execute(t_global *global);
 
 void	ft_process(t_global *global)
 {
-	if (global->cmd->command)
+	if (global->cmd && global->cmd->command)
 	{
 		ft_pipex(global);
 		ft_execute(global);

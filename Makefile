@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+         #
+#    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/28 21:53:42 by mwiecek          ###   ########.fr        #
+#    Updated: 2025/04/29 16:00:32 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,8 @@ SRC = main.c \
 	commands_list.c \
 	command_args.c \
 	command_args_echo.c \
-	debug/debug.c \
+	debug/debug_execution.c \
+	debug/debug_parser.c \
 	errors/errors.c \
 	execution/ft_create_pipe.c \
 	execution/ft_exec_utils.c \

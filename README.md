@@ -239,8 +239,8 @@ Upon successful completion, these functions shall open the file and return a non
 ```
 
 # Hidden
-- [ ] debug ` ` (space as a command) (seg fault)
-- [ ] debug ` cat | cat | ls `
+- [x] debug ` ` (space as a command) (seg fault)
+- [x] debug ` cat | cat | ls ` - AGAIN - BEFORE STARTING ANYTHING RUN IT FIRST IN BASH
 - [ ] where does "Key has expired No such file or directory" is comming from
 - [ ] one by one error from tester untill next evaluation or untill clear
 - [ ] how to break a pipe (`echo hi | echo >>./outfiles/outfile01 bye` or `echo hi | echo bye >>./outfiles/oufile01/ ../outfiles/outfile02`)

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:14:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/30 14:56:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,13 +249,14 @@ void		set_signals_noninteractive(void);
 // debug
 void		print_token_list(t_token **tokens);
 void		print_cmd_list(t_global *global);
+void		redirect_logs_to_terminal(void);
 
 // builtins
 int			ft_run_builtin(t_command *cmd, t_global *global);
 void		ft_run_parent_builtins(t_command *cmd, t_global *global);
 int			ft_echo(char **args);
 int			ft_cd(t_command *cmd, t_global *global);
-void		ft_exit(t_global *global, char *cmd, int status);
+void		ft_exit(t_global *global, char *cmd, int status, bool p_error);
 int			ft_pwd(void);
 void		ft_export(t_command *cmd, t_global *global);
 void		ft_unset(t_command *cmd, t_global *global);

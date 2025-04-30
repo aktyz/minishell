@@ -6,11 +6,17 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:03:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:03:44 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 15:57:38 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	print_cmd_args(t_command *cmd);
+static void	print_cmd_io(t_command *cmd);
+void		print_cmd_list(t_global *global);
+void		print_token_type(t_token *token, char *prefix);
+void		print_token_list(t_token **tokens);
 
 static void	print_cmd_args(t_command *cmd)
 {

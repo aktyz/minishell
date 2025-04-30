@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:08:19 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/04/29 17:56:51 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 		free_ptr((void **)&ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
 	if (!res)
-		ft_exit(g, "command not found", 127);
+		ft_exit(g, "command not found", 127, true);
 	return (res);
 }
 
@@ -109,11 +109,13 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global)
 	if (cmd->is_builtin && !cmd->status_request)
 	{
 		global->last_exit_code = ft_run_builtin(cmd, global);
-		ft_exit(global, cmd->command, global->last_exit_code);
+		ft_exit(global, cmd->command, global->last_exit_code, true);
 	}
 	else
 	{
+		if (!cmd->path)
+			ft_exit(global, cmd->command, 127, true);
 		execve(cmd->path, cmd->args, ft_execve_env(global->env));
-		ft_exit(global, cmd->command, EXIT_FAILURE);
+		ft_exit(global, cmd->command, EXIT_FAILURE, true);
 	}
 }
