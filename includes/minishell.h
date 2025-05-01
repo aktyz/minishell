@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 11:19:29 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/01 23:35:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,9 @@ void		ft_attach_tty(t_command *cmd);
 void		clean_unnecessary_fds(t_global *g);
 void		ft_chandle_parent_io(t_command *cmd);
 bool		process_env_variable(char *env_var, t_list **list);
-bool		ft_check_infile_sources(t_global *g, t_command *cmd);
-bool		ft_check_outfile_sources(t_global *g, t_command *cmd);
+void		ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd);
+void		ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd,
+				t_global *g);
 
 //initialization
 bool		init_global(t_global *global, char **env);
@@ -164,7 +165,6 @@ bool		init_env(t_global *global, char **env);
 void		ft_clear_minishell_env(void *env_content_node);
 void		lst_clear_cmd(t_command **lst, void (*del)(void **));
 void		ft_clear_token(t_token	**list);
-bool		remove_old_file_ref(t_io_fds *io, bool infile, t_global *g);
 
 //free
 
@@ -210,9 +210,8 @@ void		create_commands(t_global *global, t_token *token);
 void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-void		parse_trunc(t_command **last_cmd, t_token **token_lst, t_global *g);
-void		parse_append(t_command **last_cmd, t_token **token_lst,
-				t_global *g);
+void		parse_output(t_command **last_cmd, t_token **token_lst, t_global *g,
+				bool is_trunc);
 void		parse_pipe(t_command **last_cmd, t_token **token_lst);
 void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);

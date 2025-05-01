@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 19:02:52 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/01 23:35:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	parse_heredoc(t_global *global, t_command **last_cmd,
 	while(lst && lst->content)
 	{
 		io = (t_io_fds *) lst->content;
-		if (!remove_old_file_ref(io, true, global))
-			return ;
+		//if (!remove_old_file_ref(io, true, global))
+		//	return ;
 		io->infile = get_heredoc_name();
 		io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
 		if (get_heredoc(global, io))
@@ -109,11 +109,11 @@ void	create_commands(t_global *global, t_token *token)
 		else if (temp->type == INPUT)
 			parse_input(global, &global->cmd, &temp);
 		else if (temp->type == TRUNC)
-			parse_trunc(&global->cmd, &temp, global);
+			parse_output(&global->cmd, &temp, global, true);
 		else if (temp->type == HEREDOC)
 			parse_heredoc(global, &global->cmd, &temp);
 		else if (temp->type == APPEND)
-			parse_append(&global->cmd, &temp, global);
+			parse_output(&global->cmd, &temp, global, false);
 		else if (temp->type == PIPE)
 			parse_pipe(&global->cmd, &temp);
 		else if (temp->type == END)
