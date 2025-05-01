@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 19:21:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/01 11:19:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ struct s_io_fds
 	char	*outfile;
 	char	*heredoc_delimiter;
 	bool	heredoc_quotes;
+	bool	trunc;
 	int		fd_in;
 	int		fd_out;
 };
@@ -153,6 +154,7 @@ void		clean_unnecessary_fds(t_global *g);
 void		ft_chandle_parent_io(t_command *cmd);
 bool		process_env_variable(char *env_var, t_list **list);
 bool		ft_check_infile_sources(t_global *g, t_command *cmd);
+bool		ft_check_outfile_sources(t_global *g, t_command *cmd);
 
 //initialization
 bool		init_global(t_global *global, char **env);

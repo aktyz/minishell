@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 16:51:43 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/01 12:00:31 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile, t_global *g)
 // Those are checks I need to transfer to ft_create_piping
 // but the function itself is not needed here
 {
-	if (infile == true && io->infile)
-	{
-		
-	}
-	else if (infile == false && io->outfile)
+	if (infile == false && io->outfile)
 	{
 		if (io->fd_out == -1)
 			return (false);
@@ -78,28 +74,22 @@ void	parse_input(t_global *g, t_command **last_cmd, t_token **token_lst)
  * because of the existing token with f_name as an output
  *
  */
-static void	add_io_outfile_data(t_global *g, t_command *cmd, char *f_name)
+static void	add_io_outfile_data(t_global *g, t_command *cmd, char *f_name,
+	bool is_trunc)
 {
 	t_io_fds	*new;
-	
+
 	new = ft_calloc(sizeof(t_io_fds), 1);
 	new->fd_in = -1;
 	new->fd_out = -1;
 	new->outfile = ft_strdup(f_name);
+	new->trunc = is_trunc;
 	ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
-	if (new->outfile && new->outfile[0] == '\0')  // debug - in parent or in child?
-	{
-		errmsg_cmd(f_name, NULL, "ambiguous redirect", false);
-		return ;
-	}
-	new->fd_out = open(new->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664); // move to child 100%
-	if (new->fd_out == -1)
-		errmsg_cmd(new->outfile, NULL, strerror(errno), false);
 }
 
 /**
  * Function adds new entry on the io_fds list, with outfile name
- * (what about heredoc?)
+ * The content of the file will be overwritten
  *
  */
 void	parse_trunc(t_command **last_cmd, t_token **token_lst, t_global *g)
@@ -109,7 +99,7 @@ void	parse_trunc(t_command **last_cmd, t_token **token_lst, t_global *g)
 
 	temp = *token_lst;
 	cmd = lst_last_cmd(*last_cmd);
-	add_io_outfile_data(g, *last_cmd, temp->next->str);	
+	add_io_outfile_data(g, *last_cmd, temp->next->str, true);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else

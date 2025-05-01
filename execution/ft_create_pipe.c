@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 19:35:44 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/01 12:07:13 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,22 @@ static void	ft_chandle_child_pipe(t_command *cmd)
 
 static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 {
-	t_io_fds	*io;
 	// here we need to add a lot of stuff iterating through
 	// the new list of io structs
 	if (!cmd->io_fds)
 		return ;
-	if (cmd->final_io && cmd->final_io->outfile) // ??
+	if (ft_check_outfile_sources(g, cmd)) // ??
 	{
-		dup2(io->fd_out, STDOUT_FILENO);
-		close(io->fd_out);
+		if (cmd->final_io->trunc)
+			cmd->final_io->fd_out = open(cmd->final_io->outfile,
+				O_WRONLY | O_CREAT | O_TRUNC, 0664);
+		if (cmd->final_io->fd_out == -1)
+		{
+			ft_minishell_perror(g, cmd->final_io->outfile, ENOENT);
+			ft_exit(g, cmd->final_io->outfile, 1);
+		}
+		dup2(cmd->final_io->fd_out, STDOUT_FILENO);
+		close(cmd->final_io->fd_out);
 		// Moved from remove_old_file_ref
 		//if (content->outfile && content->fd_out == -1)
 			//return (false);
