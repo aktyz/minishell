@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_files.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 09:55:07 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:26:50 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile, t_global *g)
 static void	open_infile(t_global *global, t_io_fds *io, char *file,
 		char *original_filename)
 {
+	(void)original_filename;
 	if (!remove_old_file_ref(io, true, global))
 		return ;
 	io->infile = ft_strdup(file);

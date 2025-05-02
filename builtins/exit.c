@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 09:53:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:22:04 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 void		ft_exit(t_global *global, char *cmd, int status);
 void		ft_mini_exit_wrapper(t_command *cmd, t_global *g);
-static void	ft_handle_minishell_errors(char *cmd, int status);
+static void	ft_handle_minishell_errors(char *cmd);
 static int	ft_is_numeric_arg(const char *c);
 static void	handle_exit_err(t_command *cmd, t_global *g, int code);
 
 void	ft_exit(t_global *global, char *cmd, int status)
 {
 	if (status && cmd && ft_strcmp(cmd, EXIT))
-		ft_handle_minishell_errors(cmd, status);
+		ft_handle_minishell_errors(cmd);
 	if (global)
 		free_global(global, true);
 	if (global->env)
@@ -31,7 +31,7 @@ void	ft_exit(t_global *global, char *cmd, int status)
 	exit(status);
 }
 
-static void	ft_handle_minishell_errors(char *cmd, int status)
+static void	ft_handle_minishell_errors(char *cmd)
 {
 	if (ft_strcmp("Fatal", cmd) == 0)
 		errmsg_cmd(cmd, "Could not initialize environment",
@@ -42,8 +42,6 @@ static void	ft_handle_minishell_errors(char *cmd, int status)
 
 void	ft_mini_exit_wrapper(t_command *cmd, t_global *g)
 {
-	int	i;
-
 	if (cmd->args[1] && cmd->args[2])
 		return (handle_exit_err(cmd, g, 1));
 	else if (cmd->args[1] && !ft_is_numeric_arg(cmd->args[1]))

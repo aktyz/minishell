@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 09:51:27 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:26:05 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ static void	ft_swap_nodes(t_list **current, t_list **next, bool *swapped);
 
 void	ft_export(t_command *cmd, t_global *global)
 {
-	t_list			*env;
-	t_minishell_env	*content;
-	int				i;
+	t_list	*env;
+	int		i;
 
 	env = global->env;
 	i = 0;
@@ -47,7 +46,6 @@ char	**ft_execve_env(t_list *env)
 {
 	char			**execve_env;
 	t_minishell_env	*content;
-	int				i;
 	int				j;
 
 	execve_env = ft_calloc(sizeof(char *), env->lst_size + 1);
@@ -95,7 +93,7 @@ void	ft_handle_existing_var(char *cmd, t_minishell_env *content)
 	int	equal_pos;
 
 	equal_pos = ft_strlen(content->name_value[0]);
-	if (equal_pos < ft_strlen(cmd) && cmd[equal_pos] == '=')
+	if (equal_pos < (int)ft_strlen(cmd) && cmd[equal_pos] == '=')
 	{
 		free_ptr((void **)&content->name_value[0]);
 		free_ptr((void **)&content->name_value[1]);

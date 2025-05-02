@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:08:19 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 22:18:29 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void			ft_execute_child_proc(t_command *cmd, t_global *global);
 
 bool	ft_is_our_builtin(t_command *cmd, t_global *global)
 {
+	(void)global;
 	if (ft_strncmp(ECHO, cmd->command, ft_strlen(ECHO)) == 0)
 		return (true);
 	if (ft_strncmp(CD, cmd->command, ft_strlen(CD)) == 0)
@@ -47,6 +48,8 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 	char	*ex;
 
 	res = NULL;
+	ex = NULL;
+	(void)g;
 	candidates = ft_split(path, ':');
 	if (candidates)
 	{
@@ -58,7 +61,7 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 		free_ptr((void **)&ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
 	if (!res)
-		ft_exit(g, "command not found", 127);
+		res = ft_strdup(cmd);
 	return (res);
 }
 

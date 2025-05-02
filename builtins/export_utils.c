@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 12:15:55 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 21:50:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 22:40:50 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ void	ft_split_env_variable(char *name_value, char **var_name,
 		split_index = split_char - name_value;
 		total_length = ft_strlen(name_value);
 		*var_name = ft_substr(name_value, 0, split_index);
-		*var_value = ft_substr(name_value, split_index + 1, total_length
-				- split_index - 1);
+		*var_value = ft_substr(name_value, split_index + 1, total_length - split_index - 1);
 	}
 	else
 		*var_name = ft_strdup(name_value);
@@ -79,6 +78,7 @@ void	ft_handle_export(t_command *cmd, t_global *global)
 	t_minishell_env	*content;
 	t_list			*env;
 
+	(void)cmd;
 	env = global->env;
 	while (env && env->content)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 23:37:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:27:48 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	ft_minishell_perror(t_global *g, char *cmd, int status)
 {
 	char	*s;
 
+	(void)g;
 	s = ft_strjoin("minishell: ", cmd);
 	errno = status;
 	perror(s);

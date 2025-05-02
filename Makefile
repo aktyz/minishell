@@ -15,7 +15,7 @@ LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 

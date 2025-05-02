@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_input.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:52:48 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:30:13 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_attach_tty(t_command *cmd)
 {
 	int	tty_fd;
 
+	(void)cmd;
 	tty_fd = open("/dev/tty", O_RDONLY);
 	if (tty_fd == -1)
 	{

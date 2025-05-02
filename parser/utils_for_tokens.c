@@ -6,7 +6,7 @@
 /*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:12:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:53:46 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/05/02 21:38:43 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	tokenization(t_global *global)
 	i = -1;
 	start = 0;
 	status = DEFAULT;
-	while (++i <= ft_strlen(str))
+	while (++i <= (int)ft_strlen(str))
 	{
 		status = set_status(status, str, i);
 		if (status == DEFAULT)
