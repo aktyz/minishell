@@ -6,27 +6,11 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 20:21:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 20:58:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:06:44 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	clean_unnecessary_fds(t_global *g);
-bool	process_env_variable(char *env_var, t_list **list);
-
-void	clean_unnecessary_fds(t_global *g)
-{
-	t_command	*cmd;
-
-	cmd = g->cmd;
-	while (cmd)
-	{
-		if (!(cmd->command && *cmd->command))
-			ft_chandle_parent_io(cmd);
-		cmd = cmd->next;
-	}
-}
 
 bool	process_env_variable(char *env_var, t_list **list)
 {

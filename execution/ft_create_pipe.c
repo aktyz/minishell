@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 23:16:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:36:09 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void	ft_handle_minishell_cats(t_command *cmd);
 
 void	ft_handle_redirections(t_command *cmd, t_global *g)
 {
+	//if (cmd->cmd_pid == 0 || cmd->cmd_pid == -1)
+		//print_cmd_io(cmd);
 	if (cmd->cmd_pid == 0)
 	{
 		ft_chandle_child_pipe(cmd);
@@ -65,6 +67,8 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 		node = (t_io_fds *) head->content;
 		if (node->infile)
 		{
+			if (node->heredoc_delimiter != NULL)
+/**
 			if (node->heredoc_delimiter != NULL) // ??
 			{
 				free_ptr((void **) &node->heredoc_delimiter);
@@ -87,8 +91,15 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 				ft_minishell_perror(g, node->infile, ENOENT);
 				ft_exit(g, NULL, 1);
 			}
+				=> moved inside of ft_copy_input_to_final_io
+
+
+
+
+*/
+				ft_copy_input_to_final_io(node, cmd, g, true);
 			else
-				ft_copy_input_to_final_io(node, cmd);
+				ft_copy_input_to_final_io(node, cmd, g, false);
 		}
 		if (node->outfile)
 			ft_copy_output_to_final_io(node, cmd, g);
@@ -101,6 +112,8 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 			cmd->final_io->fd_in = open(cmd->final_io->infile, O_RDONLY);
 			if (cmd->final_io->fd_in == -1)
 			{
+				//if (cmd->final_io->outfile) // FOR SOME REASON THIS BELW TESTER UP
+				//	ft_craete_file(cmd->final_io->outfile, g);
 				ft_minishell_perror(g, cmd->final_io->infile, ENOENT);
 				ft_exit(g, NULL, EXIT_FAILURE);
 			}

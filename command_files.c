@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 23:35:17 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:32:38 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,60 @@
  * because of the existing token with f_name as an input
  *
  */
-static void	add_io_infile_data(t_global *global, t_command *cmd, char *f_name)
+void	add_io_infile_data(t_global *g, t_command *cmd, char *f_name,
+			bool is_heredoc)
 {
 	t_io_fds	*new;
+	t_io_fds	*heredoc_node;
+	t_list		*lst;
 
-	new = ft_calloc(sizeof(t_io_fds), 1);
-	new->fd_in = -1;
-	new->fd_out = -1;
-	new->infile = ft_strdup(f_name);
+	heredoc_node = NULL; // super important to be here
+	new = NULL;
+	if (cmd->io_fds) // we are checking where to write new input data
+	{
+		if (is_heredoc)
+		{
+			lst = cmd->io_fds;
+			while (lst && lst->content)
+			{
+				heredoc_node = (t_io_fds *) lst->content;
+				if (heredoc_node->heredoc_delimiter)
+					break ;
+				lst = lst->next;
+			}
+			if (heredoc_node->heredoc_delimiter)
+			{
+				unlink(heredoc_node->infile);
+				free_ptr((void **) &heredoc_node->heredoc_delimiter);
+				free_ptr((void **) &heredoc_node->infile);
+				new = heredoc_node;
+			}
+			else
+				heredoc_node = NULL;
+		}
+	}
+	if (!new)
+		ft_calloc_io_node(&new, g);
+	if (is_heredoc) // we are writing new input data
+	{
+		new->infile = get_heredoc_name();
+		new->heredoc_delimiter = get_delim(f_name, &(new->heredoc_quotes));
+		if (!get_heredoc(g, new))
+		{
+			ft_minishell_perror(g, new->infile, errno);
+			ft_exit(g, new->infile, 1);
+		}
+	}
+	else
+		new->infile = ft_strdup(f_name);
 	if (!cmd->io_fds)
 		cmd->io_fds = ft_lstnew(new);
-	else
+	else if (!heredoc_node)
 		ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
 	if (new->infile && new->infile[0] == '\0') // debug - in parent or in child?
 	{
 		errmsg_cmd(new->infile, NULL, strerror(errno), false);
-		ft_exit(global, NULL, EXIT_FAILURE);
+		ft_exit(g, NULL, EXIT_FAILURE);
 	}
 }
 
@@ -40,14 +78,14 @@ static void	add_io_infile_data(t_global *global, t_command *cmd, char *f_name)
  * Function adds new entry on io_fds list, with infile name
  *
  */
-void	parse_input(t_global *g, t_command **last_cmd, t_token **token_lst)
+void	parse_input(t_global *g, t_command **cmd, t_token **token_lst)
 {
 	t_token		*temp;
-	t_command	*cmd;
+	t_command	*lst_cmd;
 
 	temp = *token_lst;
-	cmd = lst_last_cmd(*last_cmd);
-	add_io_infile_data(g, cmd, temp->next->str);
+	lst_cmd = lst_last_cmd(*cmd);
+	add_io_infile_data(g, lst_cmd, temp->next->str, false);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
@@ -65,9 +103,7 @@ static void	add_io_outfile_data(t_global *g, t_command *cmd, char *f_name,
 {
 	t_io_fds	*new;
 
-	new = ft_calloc(sizeof(t_io_fds), 1);
-	new->fd_in = -1;
-	new->fd_out = -1;
+	ft_calloc_io_node(&new, g);
 	new->outfile = ft_strdup(f_name);
 	new->trunc = is_trunc;
 	if (!cmd->io_fds)

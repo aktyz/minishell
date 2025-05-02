@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 23:35:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:12:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	prep_no_arg_commands(t_global *global)
 	cmd = lst_last_cmd(global->cmd);
 }
 
-static char	*get_delim(char *delim, bool *quotes)
+char	*get_delim(char *delim, bool *quotes)
 {
 	int	len;
 
@@ -47,7 +47,7 @@ static char	*get_delim(char *delim, bool *quotes)
 	return (ft_strdup(delim));
 }
 
-static char	*get_heredoc_name(void)
+char	*get_heredoc_name(void)
 {
 	static int	i;
 	char		*name;
@@ -62,30 +62,15 @@ static char	*get_heredoc_name(void)
 	return (name);
 }
 
-void	parse_heredoc(t_global *global, t_command **last_cmd,
+void	parse_heredoc(t_global *g, t_command **cmd,
 			t_token **token_lst)
 {
 	t_token		*temp;
-	t_command	*cmd;
-	t_io_fds	*io;
-	t_list		*lst;
+	t_command	*lst_cmd;
 
 	temp = *token_lst;
-	cmd = lst_last_cmd(*last_cmd);
-	//init_io(cmd);
-	lst = cmd->io_fds;
-	while(lst && lst->content)
-	{
-		io = (t_io_fds *) lst->content;
-		//if (!remove_old_file_ref(io, true, global))
-		//	return ;
-		io->infile = get_heredoc_name();
-		io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
-		if (get_heredoc(global, io))
-			io->fd_in = open(io->infile, O_RDONLY);
-		else
-			io->fd_in = -1;
-	}
+	lst_cmd = lst_last_cmd(*cmd);
+	add_io_infile_data(g, lst_cmd, temp->next->str, true);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else

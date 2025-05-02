@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 10:08:59 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:28:57 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,12 +150,14 @@ bool		is_parent_builtin(t_command *command);
 void		ft_safe_fork(t_global *g, t_command *cmd);
 void		ft_split_child_parent_run(t_global *g, t_command *cmd);
 void		ft_attach_tty(t_command *cmd);
-void		clean_unnecessary_fds(t_global *g);
 void		ft_chandle_parent_io(t_command *cmd);
 bool		process_env_variable(char *env_var, t_list **list);
-void		ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd);
+void		ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd,
+				t_global *g, bool is_heredoc);
 void		ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd,
 				t_global *g);
+void		ft_create_file(char *f_name, t_global *g);
+void		ft_calloc_io_node(t_io_fds **ptr, t_global *g);
 
 //initialization
 bool		init_global(t_global *global, char **env);
@@ -217,6 +219,8 @@ void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
 void		ft_is_status_request(t_token *token, t_command *cmd);
 bool		get_heredoc(t_global *global, t_io_fds *io);
+char		*get_delim(char *delim, bool *quotes);
+char		*get_heredoc_name(void);
 int			var_length(char *str);
 int			create_args_echo_mode(t_token **token_node, t_command *last_cmd);
 int			add_args_echo_mode(t_token **token_node, t_command *last_cmd);
@@ -241,6 +245,8 @@ char		*replace_str_heredoc(char *str, char *var_value, int index);
 void		copy_var_value(char *new_str, char *var_value, int *j);
 char		*get_new_token_string(char *oldstr, char *var_value,
 				int newstr_size, int index);
+void		add_io_infile_data(t_global *global, t_command *cmd, char *f_name,
+				bool is_heredoc);
 
 // signals
 void		ignore_sigquit(void);

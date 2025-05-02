@@ -6,13 +6,14 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 16:46:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 10:34:53 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:30:06 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd);
+void	ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd,
+			t_global *g, bool is_heredoc);
 void	ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd,
 			t_global *g);
 
@@ -21,17 +22,31 @@ void	ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd,
  * file name with the new, latter one.
  *
  */
-void	ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd)
+void	ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd,
+			t_global *g, bool is_heredoc)
 {
 	if (cmd)
 	{
 		if (cmd->final_io == NULL)
-			cmd->final_io = ft_calloc(sizeof(t_io_fds), 1);// TODO: Create a save function to initialize t_io_fds
-		cmd->final_io->fd_in = -1;
-		cmd->final_io->fd_out = -1;
-		if (cmd->final_io->infile)
+			ft_calloc_io_node(&cmd->final_io, g);
+		else if (cmd->final_io->infile)
+		{
+			if (cmd->final_io->heredoc_delimiter == NULL && access(input->infile, F_OK) == -1)
+			{
+				if (cmd->final_io && cmd->final_io->outfile)
+					ft_create_file(cmd->final_io->outfile, g);
+				ft_minishell_perror(g, input->infile, ENOENT);
+				ft_exit(g, NULL, 1);
+			}
 			free_ptr((void **) &cmd->final_io->infile);
+		}
 		cmd->final_io->infile = ft_strdup(input->infile);
+		if (is_heredoc)
+		{
+			cmd->final_io->heredoc_delimiter = ft_strdup(input->heredoc_delimiter);
+			cmd->final_io->heredoc_quotes = input->heredoc_quotes;
+			cmd->final_io->fd_in = input->fd_in;
+		}
 	}
 }
 
@@ -47,11 +62,7 @@ void	ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd, t_global *g)
 	if (cmd)
 	{
 		if (cmd->final_io == NULL)
-		{
-			cmd->final_io = ft_calloc(sizeof(t_io_fds), 1);// TODO: Create a save function to initialize t_io_fds
-			cmd->final_io->fd_in = -1;
-			cmd->final_io->fd_out = -1;
-		}
+			ft_calloc_io_node(&cmd->final_io, g);
 		else if (cmd->final_io->outfile)
 		{
 			create_fd = open(cmd->final_io->outfile, O_WRONLY | O_CREAT, 0644);

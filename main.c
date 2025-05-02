@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 22:33:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:12:41 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ void	minishell_interactive(t_global *global)
 		global->user_input = readline(PROMPT);
 		set_signals_noninteractive();
 		if (parse_user_input(global))
-		{
-			clean_unnecessary_fds(global);
 			ft_process(global);
-		}
 		free_global(global, false);
 	}
 }
