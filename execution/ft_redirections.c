@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 16:46:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 23:05:47 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 10:34:53 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,10 @@ void	ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd, t_global *g)
 			if (create_fd == -1)
 			{
 				ft_minishell_perror(g, cmd->final_io->outfile, errno);
-				return ;
+				ft_exit(g, cmd->final_io->outfile, 1);
 			}
-			close(create_fd);
+			else
+				close(create_fd);
 			free_ptr((void **) &cmd->final_io->outfile);
 		}
 		cmd->final_io->outfile = ft_strdup(output->outfile);

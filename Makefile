@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/05/01 23:33:42 by zslowian         ###   ########.fr        #
+#    Updated: 2025/05/02 10:43:00 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,10 +79,11 @@ $(LIBFT):
 
 fclean: clean
 	@$(RM) $(NAME) $(OBJ)
+	@$(MAKE) -C $(LIBFT_F) fclean
 
 clean:
 	@$(RM) $(OBJ)
-	@$(MAKE) -C $(LIBFT_F) fclean
+	@$(MAKE) -C $(LIBFT_F) clean
 
 re: fclean all
 

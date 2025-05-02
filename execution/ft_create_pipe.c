@@ -73,14 +73,18 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 			}
 			if (access(node->infile, F_OK) == -1)
 			{
-				ft_minishell_perror(g, node->infile, ENOENT);
 				if (cmd->final_io && cmd->final_io->outfile)
 				{
 					cmd->final_io->fd_out = open(cmd->final_io->outfile, O_WRONLY | O_CREAT, 0664);
 					if (cmd->final_io->fd_out == -1)
+					{
 						ft_minishell_perror(g, cmd->final_io->outfile, errno);
+						ft_exit(g, cmd->final_io->outfile, 1);
+					}
+					else
 					close(cmd->final_io->fd_out);
 				}
+				ft_minishell_perror(g, node->infile, ENOENT);
 				ft_exit(g, NULL, 1);
 			}
 			else

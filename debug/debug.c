@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:03:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 11:34:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 10:25:02 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	print_cmd_args(t_command *cmd)
 	}
 }
 
-static void	print_cmd_io(t_command *cmd)
+void	print_cmd_io(t_command *cmd)
 {
 	t_io_fds	*io;
 	t_list		*lst;
@@ -51,6 +51,7 @@ static void	print_cmd_io(t_command *cmd)
 		}
 		lst = lst->next;
 	}
+	ft_printf("\n\n");
 }
 
 void	print_cmd_list(t_global *global)

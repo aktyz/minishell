@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 23:35:50 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 10:08:59 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,6 +250,7 @@ void		set_signals_noninteractive(void);
 // debug
 void		print_token_list(t_token **tokens);
 void		print_cmd_list(t_global *global);
+void		print_cmd_io(t_command *cmd);
 
 // builtins
 int			ft_run_builtin(t_command *cmd, t_global *global);
