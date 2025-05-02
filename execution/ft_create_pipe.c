@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 15:36:09 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 17:30:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 		node = (t_io_fds *) head->content;
 		if (node->infile)
 		{
-			if (node->heredoc_delimiter != NULL)
+			if (node->heredoc_delimiter != NULL && node->use_heredoc)
 /**
 			if (node->heredoc_delimiter != NULL) // ??
 			{
@@ -98,7 +98,7 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 
 */
 				ft_copy_input_to_final_io(node, cmd, g, true);
-			else
+			else if (node->heredoc_delimiter == NULL)
 				ft_copy_input_to_final_io(node, cmd, g, false);
 		}
 		if (node->outfile)

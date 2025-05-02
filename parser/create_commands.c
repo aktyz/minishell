@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 14:12:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 18:05:56 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	parse_heredoc(t_global *g, t_command **cmd,
 
 	temp = *token_lst;
 	lst_cmd = lst_last_cmd(*cmd);
-	add_io_infile_data(g, lst_cmd, temp->next->str, true);
+	add_io_heredoc_data(g, lst_cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 16:46:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 15:30:06 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 17:47:45 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd,
 		{
 			cmd->final_io->heredoc_delimiter = ft_strdup(input->heredoc_delimiter);
 			cmd->final_io->heredoc_quotes = input->heredoc_quotes;
-			cmd->final_io->fd_in = input->fd_in;
 		}
 	}
 }

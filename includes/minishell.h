@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 15:28:57 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 18:04:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ struct s_io_fds
 	char	*outfile;
 	char	*heredoc_delimiter;
 	bool	heredoc_quotes;
+	bool	use_heredoc;
 	bool	trunc;
 	int		fd_in;
 	int		fd_out;
@@ -245,8 +246,9 @@ char		*replace_str_heredoc(char *str, char *var_value, int index);
 void		copy_var_value(char *new_str, char *var_value, int *j);
 char		*get_new_token_string(char *oldstr, char *var_value,
 				int newstr_size, int index);
-void		add_io_infile_data(t_global *global, t_command *cmd, char *f_name,
-				bool is_heredoc);
+void		add_io_infile_data(t_global *global, t_command *cmd, char *f_name);
+void		add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter);
+
 
 // signals
 void		ignore_sigquit(void);

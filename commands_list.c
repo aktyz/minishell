@@ -3,40 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   commands_list.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 20:04:28 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/05/02 17:54:48 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	initialize_cmd(t_command **cmd)
-{
-	(*cmd)->command = NULL;
-	(*cmd)->path = NULL;
-	(*cmd)->args = NULL;
-	(*cmd)->pipe_output = false;
-	(*cmd)->pipe_fd[0] = -1;
-	(*cmd)->pipe_fd[1] = -1;
-	(*cmd)->cmd_pid = -1;
-	(*cmd)->is_builtin = false;
-	(*cmd)->status_request = false;
-	(*cmd)->prev = NULL;
-	(*cmd)->next = NULL;
-}
-
 t_command	*lst_new_cmd(bool value)
 {
 	t_command	*new_node;
 
-	new_node = (t_command *)malloc(sizeof(t_command));
-	if (!(new_node))
-		return (NULL);
-	ft_memset(new_node, 0, sizeof(t_command));
+	new_node = ft_calloc(sizeof(t_command), 1);
+	if (new_node == NULL)
+		ft_exit(NULL, "lst_new_cmd", 1);
 	new_node->pipe_output = value;
-	initialize_cmd(&new_node);
+	new_node->pipe_fd[0] = -1;
+	new_node->pipe_fd[1] = -1;
+	new_node->cmd_pid = -1;
 	return (new_node);
 }
 
