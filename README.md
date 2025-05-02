@@ -252,3 +252,6 @@ zslowian42@DESKTOP-ABUKIP9:~/42/minishell$ ./minishell
 minishell$ ls >> ./notExistig/mini < missing
 Segmentation fault (core dumped)
 ```
+
+- [ ] use CFLAGS in Makefile
+- [ ] run absolute path '/bin/ls'

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 16:04:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 19:06:42 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	free_global(t_global *global, bool clear_history)
 	if (global && global->user_input)
 		free_ptr((void **)&global->user_input);
 	if (global && global->cmd)
-		lst_clear_cmd(&global->cmd, &free_ptr);
+		ft_lstclear(&global->cmd, ft_clear_minishell_cmd);
 	if (global && global->token)
 		ft_clear_token(&global->token);
 	if (clear_history)

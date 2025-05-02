@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 18:04:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:11:17 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ typedef struct s_command
 	pid_t				cmd_pid;
 	t_list				*io_fds;
 	t_io_fds			*final_io;
-	struct s_command	*next;
-	struct s_command	*prev;
 }	t_command;
 
 typedef struct s_minishell_env
@@ -98,7 +96,7 @@ typedef struct s_global
 	t_token		*token;
 	char		*user_input;
 	t_list		*env;
-	t_command	*cmd;
+	t_list		*cmd;
 	bool		is_global;
 	int			last_exit_code;
 }	t_global;
@@ -135,11 +133,10 @@ struct s_io_fds
 	int		fd_out;
 };
 
-t_command	*lst_last_cmd(t_command *cmd);
-t_command	*lst_new_cmd(bool value);
 void		ft_process(t_global *global);
 bool		ft_is_our_builtin(t_command *cmd, t_global *global);
-void		ft_handle_redirections(t_command *cmd, t_global *g);
+void		ft_handle_redirections(t_command *cmd, t_global *g,
+				t_command *prev_cmd);
 char		**ft_execve_env(t_list *env);
 
 void		ft_split_env_variable(char *name_value, char **var_name,
@@ -149,9 +146,10 @@ char		*resolve_command_path(t_global *g, char *path, char *cmd);
 void		ft_execute_child_proc(t_command *cmd, t_global *global);
 bool		is_parent_builtin(t_command *command);
 void		ft_safe_fork(t_global *g, t_command *cmd);
-void		ft_split_child_parent_run(t_global *g, t_command *cmd);
+void		ft_split_child_parent_run(t_global *g, t_command *cmd,
+				t_command *prev_cmd);
 void		ft_attach_tty(t_command *cmd);
-void		ft_chandle_parent_io(t_command *cmd);
+void		ft_chandle_parent_io(t_command *cmd, t_command *prev_cmd);
 bool		process_env_variable(char *env_var, t_list **list);
 void		ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd,
 				t_global *g, bool is_heredoc);
@@ -166,7 +164,6 @@ bool		init_env(t_global *global, char **env);
 
 //cleanup
 void		ft_clear_minishell_env(void *env_content_node);
-void		lst_clear_cmd(t_command **lst, void (*del)(void **));
 void		ft_clear_token(t_token	**list);
 
 //free
@@ -209,13 +206,13 @@ char		*var_expander_heredoc(t_global *global, char *str);
 int			handle_quotes(t_global *global);
 
 // parse commands
-void		create_commands(t_global *global, t_token *token);
-void		parse_word(t_command **cmd, t_token **token_lst, t_global *g);
+void		create_commands(t_global *global);
+void		parse_word(t_global *g, t_command **curr_cmd, t_token **curr_token);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-void		parse_output(t_command **last_cmd, t_token **token_lst, t_global *g,
+void		parse_output(t_global *g, t_command **curr_cmd, t_token **curr_token,
 				bool is_trunc);
-void		parse_pipe(t_command **last_cmd, t_token **token_lst);
+void		parse_pipe(t_global *g, t_command **curr_cmd, t_token **curr_token);
 void		parse_heredoc(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
 void		ft_is_status_request(t_token *token, t_command *cmd);
@@ -234,7 +231,6 @@ int			count_arguments(t_token *temp);
 char		*join_vars(t_token **token_node);
 char		**copy_in_new_tab(int len, char **new_tab,
 				t_command *last_cmd, t_token *tmp);
-void		lst_add_back_cmd(t_command **alst, t_command *new_node);
 void		lstdelone_token(t_token *lst, void (*del)(void **));
 bool		quotes_in_string(char *str);
 bool		is_next_char_a_sep(char c);
@@ -248,7 +244,9 @@ char		*get_new_token_string(char *oldstr, char *var_value,
 				int newstr_size, int index);
 void		add_io_infile_data(t_global *global, t_command *cmd, char *f_name);
 void		add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter);
-
+void		ft_clear_minishell_cmd(void *cmd_content_node);
+t_command	*lst_last_cmd(t_list *lst);
+t_command	*lst_new_cmd(void);
 
 // signals
 void		ignore_sigquit(void);

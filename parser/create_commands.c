@@ -6,29 +6,31 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 18:05:56 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:06:31 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	prep_no_arg_commands(t_global *global)
+static void	populate_args_if_null(t_global *global) // co ta funkcja robi??
 {
+	t_list		*lst;
 	t_command	*cmd;
 
 	if (!global || !global->cmd)
 		return ;
-	cmd = global->cmd;
-	while (cmd && cmd->command)
+	lst = global->cmd; // take the command list
+	while (lst && lst->content) // iterate the command list
 	{
-		if (!cmd->args)
+		cmd = (t_command *) lst->content;
+		if (!cmd->args) // if there is no args - create args
 		{
 			cmd->args = malloc(sizeof * cmd->args * 2);
 			cmd->args[0] = ft_strdup(cmd->command);
 			cmd->args[1] = NULL;
 			cmd->args_size = 2;
 		}
-		cmd = cmd->next;
+		lst = lst->next;
 	}
 	cmd = lst_last_cmd(global->cmd);
 }
@@ -78,31 +80,34 @@ void	parse_heredoc(t_global *g, t_command **cmd,
 	*token_lst = temp;
 }
 
-void	create_commands(t_global *global, t_token *token)
+void	create_commands(t_global *global)
 {
-	t_token	*temp;
+	t_token		*curr_token;
+	t_command	*curr_cmd;
 
-	temp = token;
-	if (temp->type == END)
+	curr_token = global->token;
+	curr_cmd = global->cmd;
+	if (curr_token->type == END)
 		return ;
-	while (temp->next != NULL)
+	while (curr_token->next != NULL)
 	{
-		if (temp == global->token)
-			lst_add_back_cmd(&global->cmd, lst_new_cmd(false));
-		if (temp->type == WORD || temp->type == VAR)
-			parse_word(&global->cmd, &temp, global);
-		else if (temp->type == INPUT)
-			parse_input(global, &global->cmd, &temp);
-		else if (temp->type == TRUNC)
-			parse_output(&global->cmd, &temp, global, true);
-		else if (temp->type == HEREDOC)
-			parse_heredoc(global, &global->cmd, &temp);
-		else if (temp->type == APPEND)
-			parse_output(&global->cmd, &temp, global, false);
-		else if (temp->type == PIPE)
-			parse_pipe(&global->cmd, &temp);
-		else if (temp->type == END)
+		if (curr_token == global->token)
+			global->cmd = ft_lstnew(lst_new_cmd());
+		if (curr_token->type == WORD || curr_token->type == VAR)
+			parse_word(global, &curr_cmd, &curr_token);
+		/**
+		else if (curr_token->type == INPUT)
+			parse_input(global, &global->cmd, &curr_token);
+		else if (curr_token->type == TRUNC)
+			parse_output(&global->cmd, &curr_token, global, true);
+		else if (curr_token->type == HEREDOC)
+			parse_heredoc(global, &global->cmd, &curr_token);
+		else if (curr_token->type == APPEND)
+			parse_output(&global->cmd, &curr_token, global, false);*/
+		else if (curr_token->type == PIPE)
+			parse_pipe(global, &curr_cmd, &curr_token);
+		else if (curr_token->type == END)
 			break ;
 	}
-	prep_no_arg_commands(global);
+	populate_args_if_null(global);
 }

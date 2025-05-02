@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 17:54:00 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 23:35:56 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:13:09 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ int		ft_run_builtin(t_command *cmd, t_global *global);
 bool	is_parent_builtin(t_command *command);
 void	ft_safe_fork(t_global *g, t_command *cmd);
 void	ft_is_status_request(t_token *token, t_command *cmd);
-void	ft_split_child_parent_run(t_global *g, t_command *cmd);
+void	ft_split_child_parent_run(t_global *g, t_command *cmd,
+			t_command *prev_cmd);
 
 int	ft_run_builtin(t_command *cmd, t_global *global)
 {
@@ -53,9 +54,10 @@ void	ft_is_status_request(t_token *token, t_command *cmd)
 		cmd->status_request = true;
 }
 
-void	ft_split_child_parent_run(t_global *g, t_command *cmd)
+void	ft_split_child_parent_run(t_global *g, t_command *cmd,
+			t_command *prev_cmd)
 {
 	if (!is_parent_builtin(cmd))
 		ft_safe_fork(g, cmd);
-	ft_handle_redirections(cmd, g);
+	ft_handle_redirections(cmd, g, prev_cmd);
 }

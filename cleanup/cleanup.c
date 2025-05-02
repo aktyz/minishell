@@ -6,43 +6,36 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 14:12:38 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 19:03:12 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	lst_delone_cmd(t_command *lst, void (*del)(void **));
-void	lst_clear_cmd(t_command **lst, void (*del)(void **));
+void	ft_clear_minishell_cmd(void *cmd_content_node);
 void	ft_clear_minishell_env(void *env_content_node);
 void	ft_clear_token(t_token	**list);
 
-void	lst_delone_cmd(t_command *lst, void (*del)(void **))
+void	ft_clear_minishell_cmd(void *cmd_content_node)
 {
-	if (lst->command)
-		(*del)((void **)&lst->command);
-	if (lst->path)
-		(*del)((void **)&lst->path);
-	if (lst->args)
-		free_str_tab(lst->args);
-	if (lst->io_fds)
-		ft_lstclear(&lst->io_fds, free_io);
-	if (lst->final_io)
-		free_io((void *) lst->final_io);
-	(*del)((void **)&lst);
-}
+	t_command *content;
 
-void	lst_clear_cmd(t_command **lst, void (*del)(void **))
-{
-	t_command	*temp;
-
-	temp = NULL;
-	while (*lst != NULL)
-	{
-		temp = (*lst)->next;
-		lst_delone_cmd(*lst, del);
-		*lst = temp;
-	}
+	content = (t_command *) cmd_content_node;
+	if (!content)
+		return ;
+	if (content->command)
+		free_ptr((void **) content->command);
+	if (content->path)
+		free_ptr((void **) content->path);
+	if (content->args)
+		ft_clear_char_array(&content->args, content->args_size);
+	if (content->io_fds)
+		ft_lstclear(&content->io_fds, free_io);
+	if (content->final_io)
+		free_io(content->final_io);
+	if (content)
+		free(content);
+	cmd_content_node = NULL;
 }
 
 /**

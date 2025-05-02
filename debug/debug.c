@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:03:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 10:25:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 19:10:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,25 +57,20 @@ void	print_cmd_io(t_command *cmd)
 void	print_cmd_list(t_global *global)
 {
 	t_command	*cmd;
+	t_list		*lst;
 
-	cmd = global->cmd;
+	if (global && global->cmd)
+		lst = global->cmd;
 	printf("\n---- COMMAND LIST\n");
-	while (cmd)
+	while (lst)
 	{
+		cmd = (t_command *) lst->content;
 		printf("--- Command = %s\n", cmd->command);
 		print_cmd_args(cmd);
 		printf("\tPipe_output = %d\n", cmd->pipe_output);
 		print_cmd_io(cmd);
-		if (cmd->prev == NULL)
-			printf("\tprev = NULL\n");
-		else
-			printf("\tprev = %s\n", cmd->prev->command);
-		if (cmd->next == NULL)
-			printf("\tnext = NULL\n");
-		else
-			printf("\tnext = %s\n", cmd->next->command);
 		printf("\n");
-		cmd = cmd->next;
+		lst = lst->next;
 	}
 	printf("\n");
 }

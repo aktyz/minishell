@@ -6,32 +6,33 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 17:30:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:20:28 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_handle_redirections(t_command *cmd, t_global *g);
-static void	ft_chandle_child_pipe(t_command *cmd);
-static void	ft_chandle_child_io(t_command *cmd, t_global *g);
-void		ft_chandle_parent_io(t_command *cmd);
-static void	ft_handle_minishell_cats(t_command *cmd);
+void		ft_handle_redirections(t_command *cmd, t_global *g,
+				t_command *prev_cmd);
+static void	ft_chandle_child_pipe(t_command *cmd, t_command *prev_cmd);
+static void	ft_chandle_child_io(t_command *cmd, t_global *g,
+				t_command *prev_cmd);
+void		ft_chandle_parent_io(t_command *cmd, t_command *prev_cmd);
+static void	ft_handle_minishell_cats(t_command *cmd, t_command *prev_cmd);
 
-void	ft_handle_redirections(t_command *cmd, t_global *g)
+void	ft_handle_redirections(t_command *cmd, t_global *g,
+			t_command *prev_cmd)
 {
-	//if (cmd->cmd_pid == 0 || cmd->cmd_pid == -1)
-		//print_cmd_io(cmd);
 	if (cmd->cmd_pid == 0)
 	{
-		ft_chandle_child_pipe(cmd);
-		ft_chandle_child_io(cmd, g);
+		ft_chandle_child_pipe(cmd, prev_cmd);
+		ft_chandle_child_io(cmd, g, prev_cmd);
 	}
 	else if (cmd->cmd_pid > 0 || cmd->cmd_pid == -1)
-		ft_chandle_parent_io(cmd);
+		ft_chandle_parent_io(cmd, prev_cmd);
 }
 
-static void	ft_chandle_child_pipe(t_command *cmd)
+static void	ft_chandle_child_pipe(t_command *cmd, t_command *prev_cmd)
 {
 	if (cmd->pipe_output)
 	{
@@ -39,11 +40,11 @@ static void	ft_chandle_child_pipe(t_command *cmd)
 		dup2(cmd->pipe_fd[1], STDOUT_FILENO);
 		close(cmd->pipe_fd[1]);
 	}
-	if (cmd->prev && cmd->prev->pipe_output)
+	if (prev_cmd && prev_cmd->pipe_output)
 	{
-		close(cmd->prev->pipe_fd[1]);
-		dup2(cmd->prev->pipe_fd[0], STDIN_FILENO);
-		close(cmd->prev->pipe_fd[0]);
+		close(prev_cmd->pipe_fd[1]);
+		dup2(prev_cmd->pipe_fd[0], STDIN_FILENO);
+		close(prev_cmd->pipe_fd[0]);
 	}
 }
 
@@ -54,7 +55,8 @@ static void	ft_chandle_child_pipe(t_command *cmd)
  * is then opened for the execution.
  *
  */
-static void	ft_chandle_child_io(t_command *cmd, t_global *g)
+static void	ft_chandle_child_io(t_command *cmd, t_global *g,
+				t_command *prev_cmd)
 {
 	t_list		*head;
 	t_io_fds	*node;
@@ -148,10 +150,10 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g)
 			}
 		}
 	}
-	ft_handle_minishell_cats(cmd); // DEBUG IN THE END
+	ft_handle_minishell_cats(cmd, prev_cmd); // DEBUG IN THE END
 }
 
-void	ft_chandle_parent_io(t_command *cmd)
+void	ft_chandle_parent_io(t_command *cmd, t_command *prev_cmd)
 {
 	t_io_fds	*io;
 	t_list		*lst;
@@ -171,14 +173,14 @@ void	ft_chandle_parent_io(t_command *cmd)
 		//if (io && io->infile)
 		//	close(io->fd_in);
 	//}
-	if (cmd->prev && cmd->prev->pipe_output)
+	if (prev_cmd && prev_cmd->pipe_output)
 	{
-		close(cmd->prev->pipe_fd[0]);
-		close(cmd->prev->pipe_fd[1]);
+		close(prev_cmd->pipe_fd[0]);
+		close(prev_cmd->pipe_fd[1]);
 	}
 }
 
-static void	ft_handle_minishell_cats(t_command *cmd)
+static void	ft_handle_minishell_cats(t_command *cmd, t_command *prev_cmd)
 {
 	t_io_fds	*io;
 
@@ -192,7 +194,7 @@ static void	ft_handle_minishell_cats(t_command *cmd)
 		if (isatty(STDIN_FILENO) != 1)
 		{
 			if ((cmd && cmd->final_io && !cmd->final_io->infile)
-				|| (cmd->prev && !cmd->prev->pipe_output))
+				|| (prev_cmd && !prev_cmd->pipe_output))
 				ft_attach_tty(cmd);
 		}
 	}

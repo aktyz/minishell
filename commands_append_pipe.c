@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/01 23:30:22 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:08:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,10 @@
 */
 
 
-void	parse_pipe(t_command **cmd, t_token **token_lst)
+void	parse_pipe(t_global *g, t_command **curr_cmd, t_token **curr_token)
 {
-	t_command	*last_cmd;
-
-	last_cmd = lst_last_cmd(*cmd);
-	last_cmd->pipe_output = true;
-	lst_add_back_cmd(&last_cmd, lst_new_cmd(false));
-	*token_lst = (*token_lst)->next;
+	(*curr_cmd)->pipe_output = true;
+	ft_lstadd_back(&g->cmd, ft_lstnew(lst_new_cmd()));
+	*curr_cmd = lst_last_cmd(g->cmd);
+	*curr_token = (*curr_token)->next;
 }

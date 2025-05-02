@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 17:05:28 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:55:25 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,17 @@ void	add_io_infile_data(t_global *g, t_command *cmd, char *f_name)
  * Function adds new entry on io_fds list, with infile name
  *
  */
-void	parse_input(t_global *g, t_command **cmd, t_token **token_lst)
+void	parse_input(t_global *g, t_command **curr_cmd, t_token **curr_token)
 {
 	t_token		*temp;
-	t_command	*lst_cmd;
 
-	temp = *token_lst;
-	lst_cmd = lst_last_cmd(*cmd);
-	add_io_infile_data(g, lst_cmd, temp->next->str);
+	temp = *curr_token;
+	add_io_infile_data(g, *curr_cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
-	*token_lst = temp;
+	*curr_token = temp;
 }
 
 /**
@@ -78,18 +76,16 @@ static void	add_io_outfile_data(t_global *g, t_command *cmd, char *f_name,
  * The content of the file will be overwritten
  *
  */
-void	parse_output(t_command **cmd, t_token **token_lst, t_global *g,
+void	parse_output(t_global *g, t_command **curr_cmd, t_token **curr_token,
 			bool is_trunc)
 {
 	t_token		*temp;
-	t_command	*lst_cmd;
 
-	temp = *token_lst;
-	lst_cmd = lst_last_cmd(*cmd);
-	add_io_outfile_data(g, lst_cmd, temp->next->str, is_trunc);
+	temp = *curr_token;
+	add_io_outfile_data(g, *curr_cmd, temp->next->str, is_trunc);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
-	*token_lst = temp;
+	*curr_token = temp;
 }

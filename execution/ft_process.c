@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 23:36:14 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:12:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	ft_execute(t_global *global);
 
 void	ft_process(t_global *global)
 {
-	if (global->cmd && global->cmd->command)
+	if (global->cmd && global->cmd->content)
 	{
 		ft_pipex(global);
 		ft_execute(global);
@@ -63,31 +63,38 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 static void	ft_pipex(t_global *g)
 {
 	t_command	*cmd;
+	t_list		*ptr;
+	t_command	*prev_cmd;
 
-	cmd = g->cmd;
-	while (cmd)
+	ptr = g->cmd;
+	prev_cmd = NULL;
+	while (ptr)
 	{
+		cmd = (t_command *) ptr->content;
 		if (cmd->pipe_output)
 			pipe(cmd->pipe_fd);
 		if (!cmd->is_builtin)
 			cmd->path = resolve_command_path(g,
 					ft_get_env_var_value(ENV_PATH, g->env), cmd->command);
-		ft_split_child_parent_run(g, cmd);
+		ft_split_child_parent_run(g, cmd, prev_cmd);
 		if (cmd->cmd_pid == 0)
 			break ;
-		cmd = cmd->next;
+		prev_cmd = cmd;
+		ptr = ptr->next;
 	}
 }
 
 static void	ft_execute(t_global *global)
 {
 	t_command	*cmd;
+	t_list		*ptr;
 	int			wstatus;
 
-	cmd = global->cmd;
+	ptr = global->cmd;
 	wstatus = 0;
-	while (cmd)
+	while (ptr)
 	{
+		cmd = (t_command *) ptr->content;
 		if (cmd->cmd_pid == 0)
 			ft_execute_child_proc(cmd, global);
 		else
@@ -101,6 +108,6 @@ static void	ft_execute(t_global *global)
 					global->last_exit_code = WEXITSTATUS(wstatus);
 			}
 		}
-		cmd = cmd->next;
+		ptr = ptr->next;
 	}
 }
