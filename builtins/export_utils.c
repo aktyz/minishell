@@ -61,8 +61,9 @@ int	ft_handle_export_arg(char *cmd, t_global *global)
 	char	*final;
 
 	value = ft_strjoin("minishell: ", cmd);
-	final = ft_strjoin(value, ": not a valid identifier\n");
-	if (!is_valid_var_name(cmd))
+	final = ft_strjoin(*ft_split(value, '='), ": not a valid identifier\n");
+
+	if (!is_valid_var_name(ft_strdup(cmd)))
 	{
 		ft_putstr_fd(final, 2);
 		free_ptr((void **) &value);

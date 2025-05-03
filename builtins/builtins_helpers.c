@@ -19,13 +19,12 @@ void	ft_mini_export_wrapper(t_command *cmd, t_global *global);
 bool	is_valid_var_name(char *var_name)
 {
 	int		i;
-	bool	contains;
 	char	**name_value;
 
-	if (!var_name || !var_name[0] || var_name[0] == '=')
+
+	if (!var_name || !var_name[0] || var_name[0] == '=' || ft_isdigit(var_name[0]))
 		return (false);
 	i = 0;
-	contains = false;
 	if (ft_strchr(var_name, '='))
 	{
 		name_value = ft_split(var_name, '=');
@@ -38,11 +37,9 @@ bool	is_valid_var_name(char *var_name)
 		if (!(ft_isalpha(var_name[i]) || ft_isdigit(var_name[i])
 				|| var_name[i] == '_'))
 			return (false);
-		if (!contains && (ft_isalpha(var_name[i]) || var_name[i] == '_'))
-			contains = true;
 		i++;
 	}
-	return (contains);
+	return (true);
 }
 
 void	ft_update_value_or_add(char *cmd, t_global *global)
