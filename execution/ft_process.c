@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 21:12:43 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 12:01:08 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,18 @@ static void	ft_pipex(t_global *g)
 static void	ft_execute(t_global *global)
 {
 	t_command	*cmd;
+	pid_t		prev_pid;
 	t_list		*ptr;
 	int			wstatus;
 
 	ptr = global->cmd;
 	wstatus = 0;
+	prev_pid = -1;
 	while (ptr)
 	{
 		cmd = (t_command *) ptr->content;
 		if (cmd->cmd_pid == 0)
-			ft_execute_child_proc(cmd, global);
+			ft_execute_child_proc(cmd, global, prev_pid);
 		else
 		{
 			if (cmd->cmd_pid == -1)
@@ -108,6 +110,7 @@ static void	ft_execute(t_global *global)
 					global->last_exit_code = WEXITSTATUS(wstatus);
 			}
 		}
+		prev_pid = cmd->cmd_pid;
 		ptr = ptr->next;
 	}
 }

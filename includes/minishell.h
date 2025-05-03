@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 21:11:17 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 11:42:24 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,8 @@ void		ft_split_env_variable(char *name_value, char **var_name,
 				char **var_value);
 char		*ft_get_env_var_value(char *env_var_name, t_list *env);
 char		*resolve_command_path(t_global *g, char *path, char *cmd);
-void		ft_execute_child_proc(t_command *cmd, t_global *global);
+void		ft_execute_child_proc(t_command *cmd, t_global *global,
+				pid_t prev_pid);
 bool		is_parent_builtin(t_command *command);
 void		ft_safe_fork(t_global *g, t_command *cmd);
 void		ft_split_child_parent_run(t_global *g, t_command *cmd,
@@ -213,8 +214,8 @@ void		parse_input(t_global *global, t_command **last_cmd,
 void		parse_output(t_global *g, t_command **curr_cmd, t_token **curr_token,
 				bool is_trunc);
 void		parse_pipe(t_global *g, t_command **curr_cmd, t_token **curr_token);
-void		parse_heredoc(t_global *global, t_command **last_cmd,
-				t_token **token_lst);
+void		parse_heredoc(t_global *g, t_command **curr_cmd,
+				t_token **curr_token);
 void		ft_is_status_request(t_token *token, t_command *cmd);
 bool		get_heredoc(t_global *global, t_io_fds *io);
 char		*get_delim(char *delim, bool *quotes);

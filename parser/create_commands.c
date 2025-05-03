@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 21:06:31 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 11:57:47 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static void	populate_args_if_null(t_global *global) // co ta funkcja robi??
 		}
 		lst = lst->next;
 	}
-	cmd = lst_last_cmd(global->cmd);
 }
 
 char	*get_delim(char *delim, bool *quotes)
@@ -64,20 +63,18 @@ char	*get_heredoc_name(void)
 	return (name);
 }
 
-void	parse_heredoc(t_global *g, t_command **cmd,
-			t_token **token_lst)
+void	parse_heredoc(t_global *g, t_command **curr_cmd,
+			t_token **curr_token)
 {
 	t_token		*temp;
-	t_command	*lst_cmd;
 
-	temp = *token_lst;
-	lst_cmd = lst_last_cmd(*cmd);
-	add_io_heredoc_data(g, lst_cmd, temp->next->str);
+	temp = *curr_token;
+	add_io_heredoc_data(g, *curr_cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
-	*token_lst = temp;
+	*curr_token = temp;
 }
 
 void	create_commands(t_global *global)
@@ -86,23 +83,26 @@ void	create_commands(t_global *global)
 	t_command	*curr_cmd;
 
 	curr_token = global->token;
-	curr_cmd = global->cmd;
+	curr_cmd = NULL;
 	if (curr_token->type == END)
 		return ;
 	while (curr_token->next != NULL)
 	{
 		if (curr_token == global->token)
+		{
 			global->cmd = ft_lstnew(lst_new_cmd());
+			curr_cmd = (t_command *) global->cmd->content;
+		}
 		if (curr_token->type == WORD || curr_token->type == VAR)
 			parse_word(global, &curr_cmd, &curr_token);
 		/**
 		else if (curr_token->type == INPUT)
 			parse_input(global, &global->cmd, &curr_token);
 		else if (curr_token->type == TRUNC)
-			parse_output(&global->cmd, &curr_token, global, true);
+			parse_output(&global->cmd, &curr_token, global, true);*/
 		else if (curr_token->type == HEREDOC)
-			parse_heredoc(global, &global->cmd, &curr_token);
-		else if (curr_token->type == APPEND)
+			parse_heredoc(global, &curr_cmd, &curr_token);
+		/**else if (curr_token->type == APPEND)
 			parse_output(&global->cmd, &curr_token, global, false);*/
 		else if (curr_token->type == PIPE)
 			parse_pipe(global, &curr_cmd, &curr_token);
