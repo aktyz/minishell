@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 11:42:24 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:42:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,14 +150,22 @@ void		ft_safe_fork(t_global *g, t_command *cmd);
 void		ft_split_child_parent_run(t_global *g, t_command *cmd,
 				t_command *prev_cmd);
 void		ft_attach_tty(t_command *cmd);
-void		ft_chandle_parent_io(t_command *cmd, t_command *prev_cmd);
+void		ft_chandle_parent_io(t_command *cmd, t_global *g,
+				t_command *prev_cmd);
 bool		process_env_variable(char *env_var, t_list **list);
-void		ft_copy_input_to_final_io(t_io_fds *input, t_command *cmd,
+void		ft_copy_input_to_final_io(t_io_fds *node, t_command *cmd,
 				t_global *g, bool is_heredoc);
-void		ft_copy_output_to_final_io(t_io_fds *output, t_command *cmd,
+void		ft_copy_output_to_final_io(t_io_fds *node, t_command *cmd,
 				t_global *g);
 void		ft_create_file(char *f_name, t_global *g);
 void		ft_calloc_io_node(t_io_fds **ptr, t_global *g);
+void		ft_open_final_outfile(t_global *g, t_io_fds **io);
+void		ft_open_final_infile(t_global *g, t_io_fds **io);
+void		ft_handle_child_io_lst_node(t_global *g, t_command *cmd,
+				t_io_fds *node);
+void		ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
+				t_io_fds *node);
+
 
 //initialization
 bool		init_global(t_global *global, char **env);
