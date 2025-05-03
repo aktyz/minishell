@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 12:01:08 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 13:12:09 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 
 static void	ft_pipex(t_global *g)
 {
-	t_command	*cmd;
+	t_command	*curr_cmd;
 	t_list		*ptr;
 	t_command	*prev_cmd;
 
@@ -70,23 +70,23 @@ static void	ft_pipex(t_global *g)
 	prev_cmd = NULL;
 	while (ptr)
 	{
-		cmd = (t_command *) ptr->content;
-		if (cmd->pipe_output)
-			pipe(cmd->pipe_fd);
-		if (!cmd->is_builtin)
-			cmd->path = resolve_command_path(g,
-					ft_get_env_var_value(ENV_PATH, g->env), cmd->command);
-		ft_split_child_parent_run(g, cmd, prev_cmd);
-		if (cmd->cmd_pid == 0)
+		curr_cmd = (t_command *) ptr->content;
+		if (curr_cmd->pipe_output)
+			pipe(curr_cmd->pipe_fd);
+		if (!curr_cmd->is_builtin)
+			curr_cmd->path = resolve_command_path(g,
+					ft_get_env_var_value(ENV_PATH, g->env), curr_cmd->command);
+		ft_split_child_parent_run(g, curr_cmd, prev_cmd);
+		if (curr_cmd->cmd_pid == 0)
 			break ;
-		prev_cmd = cmd;
+		prev_cmd = curr_cmd;
 		ptr = ptr->next;
 	}
 }
 
 static void	ft_execute(t_global *global)
 {
-	t_command	*cmd;
+	t_command	*curr_cmd;
 	pid_t		prev_pid;
 	t_list		*ptr;
 	int			wstatus;
@@ -96,21 +96,21 @@ static void	ft_execute(t_global *global)
 	prev_pid = -1;
 	while (ptr)
 	{
-		cmd = (t_command *) ptr->content;
-		if (cmd->cmd_pid == 0)
-			ft_execute_child_proc(cmd, global, prev_pid);
+		curr_cmd = (t_command *) ptr->content;
+		if (curr_cmd->cmd_pid == 0)
+			ft_execute_child_proc(curr_cmd, global, prev_pid);
 		else
 		{
-			if (cmd->cmd_pid == -1)
-				ft_run_parent_builtins(cmd, global);
+			if (curr_cmd->cmd_pid == -1)
+				ft_run_parent_builtins(curr_cmd, global);
 			else
 			{
-				waitpid(cmd->cmd_pid, &wstatus, 0);
+				waitpid(curr_cmd->cmd_pid, &wstatus, 0);
 				if (WIFEXITED(wstatus))
 					global->last_exit_code = WEXITSTATUS(wstatus);
 			}
 		}
-		prev_pid = cmd->cmd_pid;
+		prev_pid = curr_cmd->cmd_pid;
 		ptr = ptr->next;
 	}
 }

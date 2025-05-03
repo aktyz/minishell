@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 12:39:36 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 12:58:27 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 static void	populate_args_if_null(t_global *global) // co ta funkcja robi??
 {
 	t_list		*lst;
-	t_command	*cmd;
+	t_command	*curr_cmd;
 
 	if (!global || !global->cmd)
 		return ;
 	lst = global->cmd; // take the command list
 	while (lst && lst->content) // iterate the command list
 	{
-		cmd = (t_command *) lst->content;
-		if (!cmd->args) // if there is no args - create args
+		curr_cmd = (t_command *) lst->content;
+		if (!curr_cmd->args) // if there is no args - create args
 		{
-			cmd->args = malloc(sizeof * cmd->args * 2);
-			cmd->args[0] = ft_strdup(cmd->command);
-			cmd->args[1] = NULL;
-			cmd->args_size = 2;
+			curr_cmd->args = malloc(sizeof * curr_cmd->args * 2);
+			curr_cmd->args[0] = ft_strdup(curr_cmd->command);
+			curr_cmd->args[1] = NULL;
+			curr_cmd->args_size = 2;
 		}
 		lst = lst->next;
 	}
