@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/05/02 15:23:32 by zslowian         ###   ########.fr        #
+#    Updated: 2025/05/03 15:51:51 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 

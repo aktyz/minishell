@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:01:05 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:01:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g,
 {
 	t_list		*head;
 	t_io_fds	*node;
-	int			open_flag;
 
 	if (!cmd->io_fds)
 		return ;
@@ -79,7 +78,7 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g,
 		if (cmd->final_io->outfile)
 			ft_open_final_outfile(g, &cmd->final_io);
 	}
-	//ft_handle_minishell_cats(cmd, prev_cmd); // DEBUG IN THE END
+	ft_handle_minishell_cats(cmd, prev_cmd); // DEBUG IN THE END
 }
 
 /**
@@ -116,8 +115,6 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 
 static void	ft_handle_minishell_cats(t_command *cmd, t_command *prev_cmd)
 {
-	t_io_fds	*io;
-
 	if (ft_strcmp(cmd->command, CAT_CAT) == 0
 		|| ft_strcmp(cmd->command, CAT_SORT) == 0
 		|| ft_strcmp(cmd->command, CAT_UNIQ) == 0
@@ -129,7 +126,7 @@ static void	ft_handle_minishell_cats(t_command *cmd, t_command *prev_cmd)
 		{
 			if ((cmd && cmd->final_io && !cmd->final_io->infile)
 				|| (prev_cmd && !prev_cmd->pipe_output))
-				ft_attach_tty(cmd);
+				ft_attach_tty();
 		}
 	}
 }

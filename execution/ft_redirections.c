@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 16:46:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:42:59 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:56:26 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_copy_input_to_final_io(t_io_fds *node, t_command *cmd,
 		{
 			if (cmd->final_io && cmd->final_io->outfile)
 				ft_create_file(cmd->final_io->outfile, g);
-			ft_minishell_perror(g, node->infile, ENOENT);
+			ft_minishell_perror(node->infile, ENOENT);
 			ft_exit(g, NULL, 1);
 		}
 	}
@@ -68,7 +68,7 @@ void	ft_copy_output_to_final_io(t_io_fds *node, t_command *cmd, t_global *g)
 			create_fd = open(cmd->final_io->outfile, O_WRONLY | O_CREAT, 0644);
 			if (create_fd == -1)
 			{
-				ft_minishell_perror(g, cmd->final_io->outfile, errno);
+				ft_minishell_perror(cmd->final_io->outfile, errno);
 				ft_exit(g, cmd->final_io->outfile, 1);
 			}
 			else

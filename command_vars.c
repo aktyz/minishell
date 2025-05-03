@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 20:50:36 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:00:34 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ static void	split_var_cmd_token(t_command *last_cmd, char *cmd_str)
 	free_str_tab(strs);
 }
 
-void	parse_word(t_global *g, t_command **curr_cmd, t_token **curr_token)
+void	parse_word(t_command **curr_cmd, t_token **curr_token)
 {
 	t_token		*token;
 
@@ -127,7 +127,7 @@ void	parse_word(t_global *g, t_command **curr_cmd, t_token **curr_token)
 			else
 			{
 				(*curr_cmd)->command = ft_strdup(token->str);
-				(*curr_cmd)->is_builtin = ft_is_our_builtin(*curr_cmd, g);
+				(*curr_cmd)->is_builtin = ft_is_our_builtin(*curr_cmd);
 				ft_is_status_request(token, *curr_cmd);
 			}
 			token = token->next;

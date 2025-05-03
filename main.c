@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:13:54 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 14:12:41 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:52:28 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	main(int ac, char **av, char **env)
 {
 	t_global	global;
 
+	(void)ac;
+	(void)av;
 	if (init_global(&global, env))
 		minishell_interactive(&global);
 	return (0);

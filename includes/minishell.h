@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:42:29 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:01:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ struct s_io_fds
 };
 
 void		ft_process(t_global *global);
-bool		ft_is_our_builtin(t_command *cmd, t_global *global);
+bool		ft_is_our_builtin(t_command *cmd);
 void		ft_handle_redirections(t_command *cmd, t_global *g,
 				t_command *prev_cmd);
 char		**ft_execve_env(t_list *env);
@@ -149,7 +149,7 @@ bool		is_parent_builtin(t_command *command);
 void		ft_safe_fork(t_global *g, t_command *cmd);
 void		ft_split_child_parent_run(t_global *g, t_command *cmd,
 				t_command *prev_cmd);
-void		ft_attach_tty(t_command *cmd);
+void		ft_attach_tty(void);
 void		ft_chandle_parent_io(t_command *cmd, t_global *g,
 				t_command *prev_cmd);
 bool		process_env_variable(char *env_var, t_list **list);
@@ -193,7 +193,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 int			check_var(t_token **token_lst);
 
 // errors
-void		ft_minishell_perror(t_global *g, char *cmd, int status);
+void		ft_minishell_perror(char *cmd, int status);
 int			errmsg_cmd(char *command, char *detail,
 				char *error_message, int error_nb);
 
@@ -216,7 +216,7 @@ int			handle_quotes(t_global *global);
 
 // parse commands
 void		create_commands(t_global *global);
-void		parse_word(t_global *g, t_command **curr_cmd, t_token **curr_token);
+void		parse_word(t_command **curr_cmd, t_token **curr_token);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
 void		parse_output(t_global *g, t_command **curr_cmd, t_token **curr_token,
@@ -279,7 +279,7 @@ void		ft_unset(t_command *cmd, t_global *global);
 int			ft_env(t_list *env);
 void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
 int			ft_handle_export_arg(char *cmd, t_global *global);
-void		ft_handle_export(t_command *cmd, t_global *global);
+void		ft_handle_export(t_global *global);
 void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
 bool		is_valid_var_name(char *var_name);
 void		ft_update_value_or_add(char *cmd, t_global *global);

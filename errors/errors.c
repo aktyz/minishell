@@ -6,18 +6,18 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 23:37:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:56:09 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_minishell_perror(t_global *g, char *cmd, int status);
+void		ft_minishell_perror(char *cmd, int status);
 static bool	add_detail_quotes(char *command);
 int			errmsg_cmd(char *command, char *detail, char *error_message,
 				int error_nb);
 
-void	ft_minishell_perror(t_global *g, char *cmd, int status)
+void	ft_minishell_perror(char *cmd, int status)
 {
 	char	*s;
 

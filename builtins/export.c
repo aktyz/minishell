@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 18:40:51 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:55:33 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static void	ft_swap_nodes(t_list **current, t_list **next, bool *swapped);
 void	ft_export(t_command *cmd, t_global *global)
 {
 	t_list			*env;
-	t_minishell_env	*content;
 	int				i;
 
 	env = global->env;
@@ -34,7 +33,7 @@ void	ft_export(t_command *cmd, t_global *global)
 	else
 	{
 		ft_sort_export_list(&env);
-		ft_handle_export(cmd, global);
+		ft_handle_export(global);
 	}
 }
 
@@ -48,19 +47,18 @@ char	**ft_execve_env(t_list *env)
 	char			**execve_env;
 	t_minishell_env	*content;
 	int				i;
-	int				j;
 
 	execve_env = ft_calloc(sizeof(char *), env->lst_size + 1);
 	if (!execve_env)
 		return (NULL);
-	j = 0;
+	i = 0;
 	while (env && env->content)
 	{
 		content = (t_minishell_env *)env->content;
 		if (content->export && content->name_value)
-			ft_create_execve_array_entry(&execve_env[j], content);
-		if (execve_env[j])
-			j++;
+			ft_create_execve_array_entry(&execve_env[i], content);
+		if (execve_env[i])
+			i++;
 		env = env->next;
 	}
 	return (execve_env);
@@ -95,7 +93,7 @@ void	ft_handle_existing_var(char *cmd, t_minishell_env *content)
 	int	equal_pos;
 
 	equal_pos = ft_strlen(content->name_value[0]);
-	if (equal_pos < ft_strlen(cmd) && cmd[equal_pos] == '=')
+	if (equal_pos < (int) ft_strlen(cmd) && cmd[equal_pos] == '=')
 	{
 		free_ptr((void **)&content->name_value[0]);
 		free_ptr((void **)&content->name_value[1]);

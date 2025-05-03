@@ -6,20 +6,20 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 11:58:48 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:00:00 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool			ft_is_our_builtin(t_command *cmd, t_global *global);
+bool			ft_is_our_builtin(t_command *cmd);
 char			*resolve_command_path(t_global *g, char *path, char *cmd);
 static size_t	ft_count_words(char const *s, char c);
 static void		ft_check_candidates(char ***i, char **res, char *ex);
 void			ft_execute_child_proc(t_command *cmd, t_global *global,
 					pid_t prev_pid);
 
-bool	ft_is_our_builtin(t_command *cmd, t_global *global)
+bool	ft_is_our_builtin(t_command *cmd)
 {
 	if (ft_strncmp(ECHO, cmd->command, ft_strlen(ECHO)) == 0)
 		return (true);

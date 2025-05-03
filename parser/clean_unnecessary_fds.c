@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 20:21:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 17:26:56 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 15:56:54 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter)
 	new->use_heredoc = true;
 	if (!get_heredoc(g, new))
 	{
-		ft_minishell_perror(g, new->infile, errno);
+		ft_minishell_perror(new->infile, errno);
 		ft_exit(g, new->infile, 1);
 	}
 	if (cmd->io_fds)

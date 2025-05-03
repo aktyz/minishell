@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/30 16:18:07 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:02:10 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	env_var_count(char **env)
 bool	init_env(t_global *global, char **env)
 {
 	t_list			*list;
-	t_minishell_env	*content;
 	int				i;
 
 	list = NULL;

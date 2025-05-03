@@ -6,13 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:52:48 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:01:28 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_attach_tty(t_command *cmd)
+void	ft_attach_tty(void)
 {
 	int	tty_fd;
 
