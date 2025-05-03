@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 12:03:43 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 12:39:36 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,12 @@ void	create_commands(t_global *global)
 			parse_word(global, &curr_cmd, &curr_token);
 		else if (curr_token->type == INPUT)
 			parse_input(global, &curr_cmd, &curr_token);
-		/**else if (curr_token->type == TRUNC)
-			parse_output(&global->cmd, &curr_token, global, true);*/
+		else if (curr_token->type == TRUNC)
+			parse_output(global, &curr_cmd, &curr_token, true);
 		else if (curr_token->type == HEREDOC)
 			parse_heredoc(global, &curr_cmd, &curr_token);
-		/**else if (curr_token->type == APPEND)
-			parse_output(&global->cmd, &curr_token, global, false);*/
+		else if (curr_token->type == APPEND)
+			parse_output(global, &curr_cmd, &curr_token, false);
 		else if (curr_token->type == PIPE)
 			parse_pipe(global, &curr_cmd, &curr_token);
 		else if (curr_token->type == END)
