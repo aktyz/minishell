@@ -55,6 +55,8 @@ static char	*search_env_var(t_global *global, char *var)
 			break ;
 		env = env->next;
 	}
+	if (!content->name_value[1])
+		return (NULL);
 	str = ft_strdup(content->name_value[1]);
 	return (str);
 }

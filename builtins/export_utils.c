@@ -87,7 +87,7 @@ void	ft_handle_export(t_global *global)
 		if (content->export && content->name_value)
 		{
 			if (!content->name_value[1])
-				ft_printf("declare -x %s=\"\"\n", content->name_value[0]);
+				ft_printf("declare -x %s\n", content->name_value[0]);
 			else
 				ft_printf("declare -x %s=\"%s\"\n", content->name_value[0],
 					content->name_value[1]);
