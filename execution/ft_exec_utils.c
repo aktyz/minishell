@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:00:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 19:59:28 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 	char	*ex;
 
 	res = NULL;
+	ex = NULL;
+	(void)g;
 	candidates = ft_split(path, ':');
 	if (candidates)
 	{
@@ -59,7 +61,7 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 		free_ptr((void **)&ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
 	if (!res)
-		ft_exit(g, "command not found", 127);
+		res = ft_strdup(cmd);
 	return (res);
 }
 
@@ -106,6 +108,9 @@ static void	ft_check_candidates(char ***i, char **res, char *ex)
 void	ft_execute_child_proc(t_command *cmd, t_global *global,
 			pid_t prev_pid)
 {
+	int	error;
+
+	error = 0;
 	if (prev_pid != -1)
 		waitpid(prev_pid, NULL, 0);
 	if (cmd->is_builtin && !cmd->status_request)
@@ -115,7 +120,11 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global,
 	}
 	else
 	{
+		//if (cmd->path[0] == '/' || cmd->path[0] == '.')
+		//	ft_check_path(cmd->path, &error);
+		//if (!error)
 		execve(cmd->path, cmd->args, ft_execve_env(global->env));
-		ft_exit(global, cmd->command, EXIT_FAILURE);
+		ft_minishell_perror(cmd->command, error);
+		ft_exit(global, cmd->command, error);
 	}
 }

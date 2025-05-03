@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:23:14 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 19:15:58 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <unistd.h> // pipe() fork()
 # include <signal.h> // struct sigaction
 # include <sys/stat.h> // open()
+# include <sys/sysmacros.h>
 # include <sys/wait.h> //
 
 # include <stdbool.h>
@@ -166,6 +167,7 @@ void		ft_handle_child_io_lst_node(t_global *g, t_command *cmd,
 void		ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
 				t_io_fds *node);
 void		ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid);
+void		ft_check_path(char *path, int *error);
 
 //initialization
 bool		init_global(t_global *global, char **env);
