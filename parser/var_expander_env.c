@@ -51,7 +51,7 @@ static char	*search_env_var(t_global *global, char *var)
 	while (env && env->content)
 	{
 		content = (t_minishell_env *) env->content;
-		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
+		if (ft_strncmp(content->name_value[0], var, ft_strlen(content->name_value[0])) == 0)
 			break ;
 		env = env->next;
 	}
