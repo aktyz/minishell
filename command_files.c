@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 20:55:25 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 12:06:53 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ void	add_io_infile_data(t_global *g, t_command *cmd, char *f_name)
 {
 	t_io_fds	*new;
 
-	if (!new)
-		ft_calloc_io_node(&new, g);
+	ft_calloc_io_node(&new, g);
 	new->infile = ft_strdup(f_name);
 	if (!cmd->io_fds)
 		cmd->io_fds = ft_lstnew(new);

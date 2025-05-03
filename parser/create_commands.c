@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 11:57:47 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 12:03:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,9 @@ void	create_commands(t_global *global)
 		}
 		if (curr_token->type == WORD || curr_token->type == VAR)
 			parse_word(global, &curr_cmd, &curr_token);
-		/**
 		else if (curr_token->type == INPUT)
-			parse_input(global, &global->cmd, &curr_token);
-		else if (curr_token->type == TRUNC)
+			parse_input(global, &curr_cmd, &curr_token);
+		/**else if (curr_token->type == TRUNC)
 			parse_output(&global->cmd, &curr_token, global, true);*/
 		else if (curr_token->type == HEREDOC)
 			parse_heredoc(global, &curr_cmd, &curr_token);
