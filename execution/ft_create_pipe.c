@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:01:33 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:16:34 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,14 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 	if (cmd->io_fds)
 		lst = cmd->io_fds;
 	if (cmd->cmd_pid == -1)
+	{
 		while (lst)
 		{
 			node = (t_io_fds *) lst->content;
 			ft_handle_parent_io_lst_node(g, cmd, node);
 			lst = lst->next;
 		}
-	// Don't touch the below it is working fine
+	}
 	if (prev_cmd && prev_cmd->pipe_output)
 	{
 		close(prev_cmd->pipe_fd[0]);

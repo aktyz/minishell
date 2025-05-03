@@ -6,14 +6,16 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 20:21:20 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:56:54 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:44:34 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	process_env_variable(char *env_var, t_list **list);
-void	add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter);
+bool		process_env_variable(char *env_var, t_list **list);
+void		add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter);
+static void	ft_check_preceedent_heredocs(t_list *cmd_io);
+char		*get_heredoc_name(void);
 
 bool	process_env_variable(char *env_var, t_list **list)
 {
@@ -47,25 +49,9 @@ bool	process_env_variable(char *env_var, t_list **list)
 void	add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter)
 {
 	t_io_fds	*new;
-	t_list		*lst;
-	t_io_fds	*content;
 
 	if (cmd->io_fds)
-	{
-		lst = cmd->io_fds;
-		while (lst && lst->content)
-		{
-			content = (t_io_fds *) lst->content;
-			if (content->use_heredoc)
-			{
-				unlink(content->infile);
-				//free_ptr((void **) &content->heredoc_delimiter);
-				//free_ptr((void **) &content->infile);
-				content->use_heredoc = false;
-			}
-			lst = lst->next;
-		}
-	}
+		ft_check_preceedent_heredocs(cmd->io_fds);
 	ft_calloc_io_node(&new, g);
 	new->infile = get_heredoc_name();
 	new->heredoc_delimiter = get_delim(delimiter, &(new->heredoc_quotes));
@@ -79,4 +65,40 @@ void	add_io_heredoc_data(t_global *g, t_command *cmd, char *delimiter)
 		ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
 	else
 		cmd->io_fds = ft_lstnew(new);
+}
+
+static void	ft_check_preceedent_heredocs(t_list *cmd_io)
+{
+	t_list		*lst;
+	t_io_fds	*content;
+
+	lst = cmd_io;
+	while (lst && lst->content)
+	{
+		if (lst->content)
+			content = (t_io_fds *) lst->content;
+		else
+			return ;
+		if (content->use_heredoc)
+		{
+			unlink(content->infile);
+			content->use_heredoc = false;
+		}
+		lst = lst->next;
+	}
+}
+
+char	*get_heredoc_name(void)
+{
+	static int	i;
+	char		*name;
+	char		*number;
+
+	number = ft_itoa(i);
+	if (!number)
+		return (NULL);
+	name = ft_strjoin(HEREDOC_NAME, number);
+	free(number);
+	i++;
+	return (name);
 }

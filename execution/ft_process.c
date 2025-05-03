@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 13:12:09 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:22:28 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,27 +89,13 @@ static void	ft_execute(t_global *global)
 	t_command	*curr_cmd;
 	pid_t		prev_pid;
 	t_list		*ptr;
-	int			wstatus;
 
 	ptr = global->cmd;
-	wstatus = 0;
 	prev_pid = -1;
 	while (ptr)
 	{
 		curr_cmd = (t_command *) ptr->content;
-		if (curr_cmd->cmd_pid == 0)
-			ft_execute_child_proc(curr_cmd, global, prev_pid);
-		else
-		{
-			if (curr_cmd->cmd_pid == -1)
-				ft_run_parent_builtins(curr_cmd, global);
-			else
-			{
-				waitpid(curr_cmd->cmd_pid, &wstatus, 0);
-				if (WIFEXITED(wstatus))
-					global->last_exit_code = WEXITSTATUS(wstatus);
-			}
-		}
+		ft_execute_cmd(global, curr_cmd, prev_pid);
 		prev_pid = curr_cmd->cmd_pid;
 		ptr = ptr->next;
 	}

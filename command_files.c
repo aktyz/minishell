@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 12:06:53 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:15:25 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	add_io_infile_data(t_global *g, t_command *cmd, char *f_name)
 		cmd->io_fds = ft_lstnew(new);
 	else
 		ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
-	if (new->infile && new->infile[0] == '\0') // debug - in parent or in child?
+	if (new->infile && new->infile[0] == '\0')
 	{
 		errmsg_cmd(new->infile, NULL, strerror(errno), false);
 		ft_exit(g, NULL, EXIT_FAILURE);

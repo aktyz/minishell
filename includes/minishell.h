@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:01:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:23:14 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void		ft_handle_child_io_lst_node(t_global *g, t_command *cmd,
 				t_io_fds *node);
 void		ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
 				t_io_fds *node);
-
+void		ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid);
 
 //initialization
 bool		init_global(t_global *global, char **env);
@@ -219,8 +219,8 @@ void		create_commands(t_global *global);
 void		parse_word(t_command **curr_cmd, t_token **curr_token);
 void		parse_input(t_global *global, t_command **last_cmd,
 				t_token **token_lst);
-void		parse_output(t_global *g, t_command **curr_cmd, t_token **curr_token,
-				bool is_trunc);
+void		parse_output(t_global *g, t_command **curr_cmd,
+				t_token **curr_token, bool is_trunc);
 void		parse_pipe(t_global *g, t_command **curr_cmd, t_token **curr_token);
 void		parse_heredoc(t_global *g, t_command **curr_cmd,
 				t_token **curr_token);

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:56:12 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 12:58:33 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:15:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_clear_token(t_token	**list);
 
 void	ft_clear_minishell_cmd(void *cmd_content_node)
 {
-	t_command *content;
+	t_command	*content;
 
 	content = (t_command *) cmd_content_node;
 	if (!content)

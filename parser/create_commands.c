@@ -6,24 +6,32 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:00:53 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/03 16:54:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	populate_args_if_null(t_global *global) // co ta funkcja robi??
+static void	populate_args_if_null(t_global *global);
+char		*get_delim(char *delim, bool *quotes);
+void		parse_heredoc(t_global *g, t_command **curr_cmd,
+				t_token **curr_token);
+void		create_commands(t_global *global);
+static void	ft_switch_parsing_ft(t_global *g, t_command **curr_cmd,
+				t_token **curr_token);
+
+static void	populate_args_if_null(t_global *global)
 {
 	t_list		*lst;
 	t_command	*curr_cmd;
 
 	if (!global || !global->cmd)
 		return ;
-	lst = global->cmd; // take the command list
-	while (lst && lst->content) // iterate the command list
+	lst = global->cmd;
+	while (lst && lst->content)
 	{
 		curr_cmd = (t_command *) lst->content;
-		if (!curr_cmd->args) // if there is no args - create args
+		if (!curr_cmd->args)
 		{
 			curr_cmd->args = malloc(sizeof * curr_cmd->args * 2);
 			curr_cmd->args[0] = ft_strdup(curr_cmd->command);
@@ -46,21 +54,6 @@ char	*get_delim(char *delim, bool *quotes)
 		return (ft_strtrim(delim, "\'\""));
 	}
 	return (ft_strdup(delim));
-}
-
-char	*get_heredoc_name(void)
-{
-	static int	i;
-	char		*name;
-	char		*number;
-
-	number = ft_itoa(i);
-	if (!number)
-		return (NULL);
-	name = ft_strjoin(HEREDOC_NAME, number);
-	free(number);
-	i++;
-	return (name);
 }
 
 void	parse_heredoc(t_global *g, t_command **curr_cmd,
@@ -93,20 +86,26 @@ void	create_commands(t_global *global)
 			global->cmd = ft_lstnew(lst_new_cmd());
 			curr_cmd = (t_command *) global->cmd->content;
 		}
-		if (curr_token->type == WORD || curr_token->type == VAR)
-			parse_word(&curr_cmd, &curr_token);
-		else if (curr_token->type == INPUT)
-			parse_input(global, &curr_cmd, &curr_token);
-		else if (curr_token->type == TRUNC)
-			parse_output(global, &curr_cmd, &curr_token, true);
-		else if (curr_token->type == HEREDOC)
-			parse_heredoc(global, &curr_cmd, &curr_token);
-		else if (curr_token->type == APPEND)
-			parse_output(global, &curr_cmd, &curr_token, false);
-		else if (curr_token->type == PIPE)
-			parse_pipe(global, &curr_cmd, &curr_token);
-		else if (curr_token->type == END)
+		ft_switch_parsing_ft(global, &curr_cmd, &curr_token);
+		if (curr_token->type == END)
 			break ;
 	}
 	populate_args_if_null(global);
+}
+
+static void	ft_switch_parsing_ft(t_global *g, t_command **curr_cmd,
+	t_token **curr_token)
+{
+	if ((*curr_token)->type == WORD || (*curr_token)->type == VAR)
+		parse_word(curr_cmd, curr_token);
+	else if ((*curr_token)->type == INPUT)
+		parse_input(g, curr_cmd, curr_token);
+	else if ((*curr_token)->type == TRUNC)
+		parse_output(g, curr_cmd, curr_token, true);
+	else if ((*curr_token)->type == HEREDOC)
+		parse_heredoc(g, curr_cmd, curr_token);
+	else if ((*curr_token)->type == APPEND)
+		parse_output(g, curr_cmd, curr_token, false);
+	else if ((*curr_token)->type == PIPE)
+		parse_pipe(g, curr_cmd, curr_token);
 }
