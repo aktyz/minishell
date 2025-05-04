@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 16:31:59 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 21:30:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:56:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,10 +143,7 @@ void	ft_add_new_env_var(char *var_name, t_global *global)
 {
 	t_minishell_env	*content;
 
-	content = ft_calloc(sizeof(t_minishell_env), 1);
-	if (!content)
-		return ;
-	content->name_value = ft_calloc(sizeof(char *), 2);
+	content = init_env_content(NULL, NULL);
 	ft_split_env_variable(var_name, &content->name_value[0],
 		&content->name_value[1]);
 	content->export = true;
