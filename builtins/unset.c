@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:36:57 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/27 13:32:46 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:25:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,18 @@ static void	ft_remove_node(t_list *node, t_global *global, bool *is_removed);
 
 void	ft_unset(t_command *cmd, t_global *global)
 {
-	t_minishell_env	*content;
-	t_list			*ptr;
-	int				i;
+	t_list	*lst;
+	t_list	*node_to_delete;
+	int		i;
 
 	if (!cmd->args[1])
 		return ;
+	lst = global->env;
 	i = 0;
 	while (cmd->args[++i])
 	{
-		ptr = global->env;
-		while (ptr)
-		{
-			content = (t_minishell_env *)ptr->content;
-			if (content && !ft_strcmp(cmd->args[i], content->name_value[0]))
-			{
-				ft_delete_env_node(ptr, global);
-				break ;
-			}
-			ptr = ptr->next;
-		}
+		node_to_delete = ft_return_env_list_node_ptr(lst, cmd->args[i]);
+		ft_delete_env_node(node_to_delete, global);
 	}
 }
 

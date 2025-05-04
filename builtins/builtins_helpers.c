@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 11:45:11 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 13:07:00 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:39:52 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ bool	is_valid_var_name(char *var_name)
 	if (ft_strchr(var_name, '='))
 	{
 		name_value = ft_split(var_name, '=');
+		free_ptr((void **) &var_name);
 		var_name = ft_strdup(name_value[0]);
 		ft_clear_char_array(&name_value, 2);
 	}
@@ -54,7 +55,7 @@ void	ft_update_value_or_add(char *cmd, t_global *global)
 		content = (t_minishell_env *)env->content;
 		split_ptr = ft_strchr(cmd, '=');
 		split_index = split_ptr - cmd;
-		
+
 		if (split_index != (int) ft_strlen(content->name_value[0])) {
 			env = env->next;
 			continue ;
@@ -78,8 +79,6 @@ void	ft_mini_export_wrapper(t_command *cmd, t_global *global)
 	io = NULL;
 	if (cmd->final_io)
 		io = cmd->final_io;
-	if (cmd->pipe_output || (io && io->outfile))
-		return ;
 	if ((global->cmd->content != cmd) || (io && io->infile))
 	{
 		ft_clear_char_array(&cmd->args, cmd->args_size);

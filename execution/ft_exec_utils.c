@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 08:52:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:25:57 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 	res = NULL;
 	ex = NULL;
 	(void)g;
+	if (!path)
+		return (NULL);
 	candidates = ft_split(path, ':');
 	if (candidates)
 	{
