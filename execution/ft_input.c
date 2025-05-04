@@ -69,51 +69,22 @@ void	ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid)
 	}
 }
 
-/*
-
-README.md file exists in the directory
-eqwrqwerwe there is no such file
-
-
-$ eqwrqwerwe
-eqwrqwerwe: command not found
-
-
-$ ./README.md
-bash: ./README.md: Permission denied
-
-$ README.md
-README.md: command not found
-
-$ ls
-# shows output, just like ls command
-
-$ /bin/ls
-# shows output, just like ls command
-
-$ ./bin/ls
-bash: ./bin/ls: No such file or directory
-
-
-*/
-
 void	ft_check_path(char *path, int *error)
 {
 	struct stat	info;
-	bool command_for_sure;
+	bool dir_or_cmd;
 
-	command_for_sure = (ft_strchr(path, '/') || path[0] == '.');
+	dir_or_cmd = (ft_strchr(path, '/') || path[0] == '.');
 
 	if (stat(path, &info) != 0) {
 		*error = 127;
 	}
-	if (*error && command_for_sure) {
+	if (*error && dir_or_cmd) {
 		return ft_handle_minishell_err(path, ": No such file or directory\n");
 	}
 	if (*error)
 	{
-		*error = 127;
-		if (command_for_sure) {
+		if (dir_or_cmd) {
 			*error = 126;
 			return ft_handle_minishell_err(path, ": No such file or directory\n");
 		}
@@ -129,7 +100,7 @@ void	ft_check_path(char *path, int *error)
 	else if (access(path, X_OK))
 	{
 		*error = 126;
-		if (command_for_sure) 
+		if (dir_or_cmd) 
 			ft_minishell_perror(path, EACCES);
 		else {
 			*error = 127;
@@ -139,7 +110,7 @@ void	ft_check_path(char *path, int *error)
 	}
 	if (S_ISDIR(info.st_mode)) {
 		*error = 126;
-		if (command_for_sure) 
+		if (dir_or_cmd) 
 			return ft_handle_minishell_err(path, ": Is a directory\n");
 		*error = 127;
 		return ft_handle_minishell_err(path, ": command not found\n");

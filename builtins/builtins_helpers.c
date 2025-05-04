@@ -55,6 +55,11 @@ void	ft_update_value_or_add(char *cmd, t_global *global)
 		content = (t_minishell_env *)env->content;
 		split_ptr = ft_strchr(cmd, '=');
 		split_index = split_ptr - cmd;
+		
+		if (split_index != (int) ft_strlen(content->name_value[0])) {
+			env = env->next;
+			continue ;
+		}
 		if (ft_strncmp((const char *)cmd, content->name_value[0],
 				split_index) == 0)
 		{
