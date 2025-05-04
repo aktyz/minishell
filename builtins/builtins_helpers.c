@@ -28,7 +28,6 @@ bool	is_valid_var_name(char *var_name)
 	if (ft_strchr(var_name, '='))
 	{
 		name_value = ft_split(var_name, '=');
-		free_ptr((void **) &var_name);
 		var_name = ft_strdup(name_value[0]);
 		ft_clear_char_array(&name_value, 2);
 	}
