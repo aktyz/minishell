@@ -122,8 +122,6 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global,
 	{
 		ft_check_path(cmd->path, &error);
 		if (!error)
-			ft_command_not_found(cmd->path, &error);
-		if (!error)
 		{
 			execve(cmd->path, cmd->args, ft_execve_env(global->env));
 			ft_minishell_perror(cmd->command, errno);
