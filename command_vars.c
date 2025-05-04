@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:00:34 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:39:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	parse_word(t_command **curr_cmd, t_token **curr_token)
 		{
 			if (token->type == VAR && contains_space(token->str))
 				split_var_cmd_token(*curr_cmd, token->str);
-			else
+			else if (!ft_strcmp(token->str, "") == 0)
 			{
 				(*curr_cmd)->command = ft_strdup(token->str);
 				(*curr_cmd)->is_builtin = ft_is_our_builtin(*curr_cmd);

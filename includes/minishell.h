@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 19:15:58 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:26:53 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,8 @@ void		ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
 				t_io_fds *node);
 void		ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid);
 void		ft_check_path(char *path, int *error);
+void		ft_command_not_found(char *path, int *error);
+void		ft_handle_minishell_err(char *cmd, char *error);
 
 //initialization
 bool		init_global(t_global *global, char **env);

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 19:59:28 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:52:49 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,15 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global,
 	}
 	else
 	{
-		//if (cmd->path[0] == '/' || cmd->path[0] == '.')
-		//	ft_check_path(cmd->path, &error);
-		//if (!error)
-		execve(cmd->path, cmd->args, ft_execve_env(global->env));
-		ft_minishell_perror(cmd->command, error);
+		ft_check_path(cmd->path, &error);
+		if (!error)
+			ft_command_not_found(cmd->path, &error);
+		if (!error)
+		{
+			execve(cmd->path, cmd->args, ft_execve_env(global->env));
+			ft_minishell_perror(cmd->command, errno);
+			ft_exit(global, cmd->command, errno);
+		}
 		ft_exit(global, cmd->command, error);
 	}
 }

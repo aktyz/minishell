@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:22:28 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:23:37 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,6 @@ static void	ft_pipex(t_global *g)
 		curr_cmd = (t_command *) ptr->content;
 		if (curr_cmd->pipe_output)
 			pipe(curr_cmd->pipe_fd);
-		if (!curr_cmd->is_builtin)
-			curr_cmd->path = resolve_command_path(g,
-					ft_get_env_var_value(ENV_PATH, g->env), curr_cmd->command);
 		ft_split_child_parent_run(g, curr_cmd, prev_cmd);
 		if (curr_cmd->cmd_pid == 0)
 			break ;

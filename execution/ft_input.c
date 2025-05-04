@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 19:18:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 09:04:03 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_attach_tty(void);
 void	ft_calloc_io_node(t_io_fds **ptr, t_global *g);
 void	ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid);
 void	ft_check_path(char *path, int *error);
+void	ft_command_not_found(char *path, int *error);
 
 void	ft_attach_tty(void)
 {
@@ -72,19 +73,35 @@ void	ft_check_path(char *path, int *error)
 {
 	struct stat	info;
 
-	if (!access(path, F_OK))
+	if (stat(path, &info) != 0)
 		*error = 128;
-	if (!stat(path, &info))
-		*error = 128;
-	if (S_ISDIR(info.st_mode))
-		*error = EISDIR;
-	if (!*error)
+	if (S_ISDIR(info.st_mode) && (path[0] == '/' || path[0] == '.'))
 	{
-		if (!access(path, X_OK))
-			*error = 2;
-		if (!access(path, R_OK))
-			*error = 4;
-		if (!access(path, W_OK))
-			*error = 8;
+		*error = 126;
+		ft_minishell_perror(path, EISDIR);
+	}
+	else if (S_ISDIR(info.st_mode))
+	{
+		*error = 127;
+		ft_handle_minishell_err(path, ": command not found\n");
+	}
+	if (access(path, F_OK))
+	{
+		*error = 127;
+		ft_minishell_perror(path, ENOENT);
+	}
+	else if (access(path, X_OK))
+	{
+		*error = 126;
+		ft_minishell_perror(path, EACCES);
+	}
+}
+
+void	ft_command_not_found(char *path, int *error)
+{
+	if (access(path, F_OK | X_OK))
+	{
+		*error = 127;
+		ft_handle_minishell_err(path, ": command not found\n");
 	}
 }

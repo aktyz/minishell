@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:16:34 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:56:23 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 		while (lst)
 		{
 			node = (t_io_fds *) lst->content;
-			ft_handle_parent_io_lst_node(g, cmd, node);
+			ft_handle_parent_io_lst_node(g, cmd, node); // DEBUG IN THE END
 			lst = lst->next;
 		}
 	}

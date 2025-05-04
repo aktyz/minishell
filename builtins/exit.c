@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:53:13 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:26:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 void		ft_exit(t_global *global, char *cmd, int status);
 void		ft_mini_exit_wrapper(t_command *cmd, t_global *g);
-static void	ft_handle_minishell_errors(char *cmd);
+void		ft_handle_minishell_err(char *cmd, char *error);
 static int	ft_is_numeric_arg(const char *c);
 static void	handle_exit_err(t_command *cmd, t_global *g, int code);
 
 void	ft_exit(t_global *global, char *cmd, int status)
 {
-	if (status && cmd && ft_strcmp(cmd, EXIT))
-		ft_handle_minishell_errors(cmd);
+	(void)cmd;
 	if (global)
 		free_global(global, true);
 	if (global->env)
@@ -31,13 +30,14 @@ void	ft_exit(t_global *global, char *cmd, int status)
 	exit(status);
 }
 
-static void	ft_handle_minishell_errors(char *cmd)
+void	ft_handle_minishell_err(char *cmd, char *error)
 {
-	if (ft_strcmp("Fatal", cmd) == 0)
-		errmsg_cmd(cmd, "Could not initialize environment",
-			strerror(errno), false);
-	if (ft_strcmp("command not found", cmd) == 0)
-		errmsg_cmd(cmd, NULL, strerror(127), false);
+	char	*value;
+	char	*final;
+
+	value = ft_strjoin("minishell: ", cmd);
+	final = ft_strjoin(value, error);
+	ft_putstr_fd(final, 2);
 }
 
 void	ft_mini_exit_wrapper(t_command *cmd, t_global *g)

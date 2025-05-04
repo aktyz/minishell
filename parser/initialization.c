@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:02:10 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:28:25 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ bool	init_env(t_global *global, char **env)
 bool	init_global(t_global *global, char **env)
 {
 	if (!init_env(global, env))
-		ft_exit(global, "Fatal", EXIT_FAILURE);
+	{
+		ft_handle_minishell_err("init_env", "could not initialize minishell\n");
+		ft_exit(global, "fatal", EXIT_FAILURE);
+	}
 	global->token = NULL;
 	global->user_input = NULL;
 	global->is_global = true;

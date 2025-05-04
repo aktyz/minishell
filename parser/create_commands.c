@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 16:54:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:44:46 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,10 @@ void	create_commands(t_global *global)
 		if (curr_token->type == END)
 			break ;
 	}
-	populate_args_if_null(global);
+	if (curr_cmd && curr_cmd->command)
+		populate_args_if_null(global);
+	else
+		ft_exit(global, global->user_input, EXIT_SUCCESS);
 }
 
 static void	ft_switch_parsing_ft(t_global *g, t_command **curr_cmd,
