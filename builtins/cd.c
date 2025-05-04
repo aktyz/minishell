@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 17:59:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:32:16 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ static void	handle_cd_err(char *cmd, t_global *g, int code);
 
 int	ft_cd(t_command *cmd, t_global *g)
 {
+	char	*pwd;
+	char	*old_pwd;
+
+	pwd = ft_get_env_var_value("PWD", g->env);
 	if (cmd->args[2])
 	{
 		handle_cd_err(cmd->args[0], g, 1);
@@ -33,6 +37,16 @@ int	ft_cd(t_command *cmd, t_global *g)
 		handle_cd_err(cmd->args[1], g, 2);
 		return (1);
 	}
+	old_pwd = ft_strjoin("OLDPWD=", pwd);
+	free_ptr((void **) &pwd);
+	if (cmd->args[1])
+		pwd = ft_strjoin("PWD=", ft_getcwd());
+	else
+		pwd = ft_get_env_var_value("HOME", g->env);
+	ft_update_value_or_add(old_pwd, g);
+	ft_update_value_or_add(pwd, g);
+	free_ptr((void **) &pwd);
+	free_ptr((void **) &old_pwd);
 	return (0);
 }
 

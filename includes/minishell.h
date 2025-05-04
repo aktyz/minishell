@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 21:59:08 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:33:23 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@
 # include <readline/history.h>
 
 # define TRIM_SET " \t\n"
-
-# define ENV_PATH "PATH"
-# define ENV_HOME "HOME"
 
 # define ECHO "echo"
 # define CD "cd"
@@ -277,6 +274,7 @@ int			ft_echo(char **args);
 int			ft_cd(t_command *cmd, t_global *global);
 void		ft_exit(t_global *global, char *cmd, int status);
 int			ft_pwd(void);
+char		*ft_getcwd(void);
 void		ft_export(t_command *cmd, t_global *global);
 void		ft_sort_export_list(t_list **list);
 void		ft_unset(t_command *cmd, t_global *global);
