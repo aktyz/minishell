@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:10:55 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:23:37 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	ft_execute(t_global *global);
 
 void	ft_process(t_global *global)
 {
-	if (global->cmd->command)
+	if (global->cmd && global->cmd->content)
 	{
 		ft_pipex(global);
 		ft_execute(global);
@@ -62,48 +62,38 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 
 static void	ft_pipex(t_global *g)
 {
-	t_command	*cmd;
+	t_command	*curr_cmd;
+	t_list		*ptr;
+	t_command	*prev_cmd;
 
-	cmd = g->cmd;
-	while (cmd)
+	ptr = g->cmd;
+	prev_cmd = NULL;
+	while (ptr)
 	{
-		if (cmd->pipe_output)
-			pipe(cmd->pipe_fd);
-		if (!cmd->is_builtin)
-			cmd->path = resolve_command_path(g,
-					ft_get_env_var_value(ENV_PATH, g->env), cmd->command);
-		ft_split_child_parent_run(g, cmd);
-		if (cmd->cmd_pid == 0)
-		{
-			g->is_global = false;
+		curr_cmd = (t_command *) ptr->content;
+		if (curr_cmd->pipe_output)
+			pipe(curr_cmd->pipe_fd);
+		ft_split_child_parent_run(g, curr_cmd, prev_cmd);
+		if (curr_cmd->cmd_pid == 0)
 			break ;
-		}
-		cmd = cmd->next;
+		prev_cmd = curr_cmd;
+		ptr = ptr->next;
 	}
 }
 
 static void	ft_execute(t_global *global)
 {
-	t_command	*cmd;
-	int			wstatus;
+	t_command	*curr_cmd;
+	pid_t		prev_pid;
+	t_list		*ptr;
 
-	cmd = global->cmd;
-	wstatus = 0;
-	while (cmd)
+	ptr = global->cmd;
+	prev_pid = -1;
+	while (ptr)
 	{
-		if (cmd->cmd_pid == 0)
-			ft_execute_child_proc(cmd, global);
-		else
-		{
-			if (cmd->cmd_pid == -1)
-				ft_run_parent_builtins(cmd, global);
-			else
-			{
-				waitpid(cmd->cmd_pid, &wstatus, 0);
-				if (WIFEXITED(wstatus))
-					global->last_exit_code = WEXITSTATUS(wstatus);
-			}
-		}
-		cmd = cmd->next;
+		curr_cmd = (t_command *) ptr->content;
+		ft_execute_cmd(global, curr_cmd, prev_pid);
+		prev_pid = curr_cmd->cmd_pid;
+		ptr = ptr->next;
 	}
 }

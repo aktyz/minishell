@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+         #
+#    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/04/28 21:53:42 by mwiecek          ###   ########.fr        #
+#    Updated: 2025/05/03 15:51:51 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ LIBFT = libft
 LIBFT_F = ./libft
 INCLUDES = -I ./includes -I $(LIBFT_F)/headers
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g
 LIB = -L $(LIBFT_F) -lft
 RM = rm -f
 
@@ -45,6 +45,8 @@ SRC = main.c \
 	execution/ft_exec_utils.c \
 	execution/ft_input.c \
 	execution/ft_process.c \
+	execution/ft_redirections.c \
+	execution/ft_redirects_utils.c \
 	execution/ft_run_builtin.c \
 	parser/characters.c \
 	parser/clean_unnecessary_fds.c \
@@ -78,16 +80,17 @@ $(LIBFT):
 
 fclean: clean
 	@$(RM) $(NAME) $(OBJ)
+	@$(MAKE) -C $(LIBFT_F) fclean
 
 clean:
 	@$(RM) $(OBJ)
-	@$(MAKE) -C $(LIBFT_F) fclean
+#	@$(MAKE) -C $(LIBFT_F) clean
 
 re: fclean all
 
 rebug: fclean debug clean
 
-debug: $(OBJ) $(LIBFT)
+debug: $(OBJ) #$(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline -g -pthread
 
 .PHONY: all clean fclean libft re

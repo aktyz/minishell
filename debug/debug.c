@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:03:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:03:44 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 19:10:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,51 @@ static void	print_cmd_args(t_command *cmd)
 	}
 }
 
-static void	print_cmd_io(t_command *cmd)
+void	print_cmd_io(t_command *cmd)
 {
+	t_io_fds	*io;
+	t_list		*lst;
+
 	if (!cmd->io_fds)
 		return ;
-	if (cmd->io_fds->infile)
+	lst = cmd->io_fds;
+	while (lst && lst->content)
 	{
-		printf("\tInfile: %s\n", cmd->io_fds->infile);
-		printf("\t\tfd_in: %d\n", cmd->io_fds->fd_in);
+		io = (t_io_fds *) lst->content;
+		if (io->infile)
+		{
+			printf("\tInfile: %s\n", io->infile);
+			printf("\t\tfd_in: %d\n", io->fd_in);
+		}
+		if (io->heredoc_delimiter)
+			printf("\tHeredoc delimiter: %s\n", io->heredoc_delimiter);
+		if (io->outfile)
+		{
+			printf("\tOutfile: %s\n", io->outfile);
+			printf("\t\tfd_in: %d\n", io->fd_out);
+		}
+		lst = lst->next;
 	}
-	if (cmd->io_fds->heredoc_delimiter)
-		printf("\tHeredoc delimiter: %s\n", cmd->io_fds->heredoc_delimiter);
-	if (cmd->io_fds->outfile)
-	{
-		printf("\tOutfile: %s\n", cmd->io_fds->outfile);
-		printf("\t\tfd_in: %d\n", cmd->io_fds->fd_out);
-	}
+	ft_printf("\n\n");
 }
 
 void	print_cmd_list(t_global *global)
 {
 	t_command	*cmd;
+	t_list		*lst;
 
-	cmd = global->cmd;
+	if (global && global->cmd)
+		lst = global->cmd;
 	printf("\n---- COMMAND LIST\n");
-	while (cmd)
+	while (lst)
 	{
+		cmd = (t_command *) lst->content;
 		printf("--- Command = %s\n", cmd->command);
 		print_cmd_args(cmd);
 		printf("\tPipe_output = %d\n", cmd->pipe_output);
 		print_cmd_io(cmd);
-		if (cmd->prev == NULL)
-			printf("\tprev = NULL\n");
-		else
-			printf("\tprev = %s\n", cmd->prev->command);
-		if (cmd->next == NULL)
-			printf("\tnext = NULL\n");
-		else
-			printf("\tnext = %s\n", cmd->next->command);
 		printf("\n");
-		cmd = cmd->next;
+		lst = lst->next;
 	}
 	printf("\n");
 }

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:11:32 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:28:25 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	env_var_count(char **env)
 bool	init_env(t_global *global, char **env)
 {
 	t_list			*list;
-	t_minishell_env	*content;
 	int				i;
 
 	list = NULL;
@@ -46,31 +45,16 @@ bool	init_env(t_global *global, char **env)
 bool	init_global(t_global *global, char **env)
 {
 	if (!init_env(global, env))
-		ft_exit(global, "Fatal", EXIT_FAILURE);
+	{
+		ft_handle_minishell_err("init_env", "could not initialize minishell\n");
+		ft_exit(global, "fatal", EXIT_FAILURE);
+	}
 	global->token = NULL;
 	global->user_input = NULL;
 	global->is_global = true;
 	global->cmd = NULL;
 	global->last_exit_code = 0;
 	return (true);
-}
-
-void	init_io(t_command *cmd)
-{
-	if (!cmd->io_fds)
-	{
-		cmd->io_fds = malloc(sizeof * cmd->io_fds);
-		if (!cmd->io_fds)
-			return ;
-		cmd->io_fds->infile = NULL;
-		cmd->io_fds->outfile = NULL;
-		cmd->io_fds->heredoc_delimiter = NULL;
-		cmd->io_fds->heredoc_quotes = false;
-		cmd->io_fds->fd_in = -1;
-		cmd->io_fds->fd_out = -1;
-		cmd->io_fds->stdin_backup = -1;
-		cmd->io_fds->stdout_backup = -1;
-	}
 }
 
 char	**ft_trim_user_input(char **argv, int argc)

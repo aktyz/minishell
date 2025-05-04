@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:07:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/23 18:09:52 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:33:46 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,6 @@ bool	parse_user_input(t_global *global)
 		return (false);
 	var_expander(global, &global->token);
 	handle_quotes(global);
-	create_commands(global, global->token);
+	create_commands(global);
 	return (true);
 }

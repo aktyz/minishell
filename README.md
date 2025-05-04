@@ -247,3 +247,11 @@ Upon successful completion, these functions shall open the file and return a non
 - [ ] debug: `cat <minishell.h|ls`> (Bash error: `bash: minishell.h: No such file or directory`) minishell error:minishell: minishell.h: No such file or directory + segfault
 - [ ] `export | grep hello` - parent does not set up the redirections before executing the builin he have to do
 - [ ] make sure we need to be able to call `./minishell` from our `./minishell` and if yes, implement it
+```
+zslowian42@DESKTOP-ABUKIP9:~/42/minishell$ ./minishell
+minishell$ ls >> ./notExistig/mini < missing
+Segmentation fault (core dumped)
+```
+
+- [ ] use CFLAGS in Makefile
+- [ ] run absolute path '/bin/ls'

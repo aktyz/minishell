@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:12:19 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:39:01 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int	fill_args(t_token **token_node, t_command *last_cmd)
 static void	split_var_cmd_token(t_command *last_cmd, char *cmd_str)
 {
 	t_token		*new_tokens;
-	t_token		*tmp;
 	char		**strs;
 	int			i;
 
@@ -102,7 +101,6 @@ static void	split_var_cmd_token(t_command *last_cmd, char *cmd_str)
 	last_cmd->command = ft_strdup(strs[0]);
 	if (strs[1])
 		new_tokens = lst_new_token(ft_strdup(strs[1]), NULL, WORD, DEFAULT);
-	tmp = new_tokens;
 	i = 1;
 	while (strs[++i])
 		lst_add_back_token(&new_tokens,
@@ -110,34 +108,32 @@ static void	split_var_cmd_token(t_command *last_cmd, char *cmd_str)
 	lst_add_back_token(&new_tokens,
 		lst_new_token(NULL, NULL, END, DEFAULT));
 	fill_args(&new_tokens, last_cmd);
-	lstclear_token(&tmp, &free_ptr);
+	lstclear_token(&new_tokens, &free_ptr);
 	free_str_tab(strs);
 }
 
-void	parse_word(t_command **cmd, t_token **token_lst, t_global *g)
+void	parse_word(t_command **curr_cmd, t_token **curr_token)
 {
-	t_token		*temp;
-	t_command	*last_cmd;
+	t_token		*token;
 
-	temp = *token_lst;
-	while (temp->type == WORD || temp->type == VAR)
+	token = *curr_token;
+	while (token->type == WORD || token->type == VAR)
 	{
-		last_cmd = lst_last_cmd(*cmd);
-		if (temp->prev == NULL || (temp->prev && temp->prev->type == PIPE)
-			|| last_cmd->command == NULL)
+		if (token->prev == NULL || (token->prev && token->prev->type == PIPE)
+			|| (*curr_cmd)->command == NULL)
 		{
-			if (temp->type == VAR && contains_space(temp->str))
-				split_var_cmd_token(last_cmd, temp->str);
-			else
+			if (token->type == VAR && contains_space(token->str))
+				split_var_cmd_token(*curr_cmd, token->str);
+			else if (!ft_strcmp(token->str, "") == 0)
 			{
-				last_cmd->command = ft_strdup(temp->str);
-				last_cmd->is_builtin = ft_is_our_builtin(last_cmd, g);
-				ft_is_status_request(temp, last_cmd);
+				(*curr_cmd)->command = ft_strdup(token->str);
+				(*curr_cmd)->is_builtin = ft_is_our_builtin(*curr_cmd);
+				ft_is_status_request(token, *curr_cmd);
 			}
-			temp = temp->next;
+			token = token->next;
 		}
 		else
-			fill_args(&temp, last_cmd);
+			fill_args(&token, *curr_cmd);
 	}
-	*token_lst = temp;
+	*curr_token = token;
 }

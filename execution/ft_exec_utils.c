@@ -6,19 +6,20 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 19:08:40 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:08:19 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:52:49 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool			ft_is_our_builtin(t_command *cmd, t_global *global);
+bool			ft_is_our_builtin(t_command *cmd);
 char			*resolve_command_path(t_global *g, char *path, char *cmd);
 static size_t	ft_count_words(char const *s, char c);
 static void		ft_check_candidates(char ***i, char **res, char *ex);
-void			ft_execute_child_proc(t_command *cmd, t_global *global);
+void			ft_execute_child_proc(t_command *cmd, t_global *global,
+					pid_t prev_pid);
 
-bool	ft_is_our_builtin(t_command *cmd, t_global *global)
+bool	ft_is_our_builtin(t_command *cmd)
 {
 	if (ft_strncmp(ECHO, cmd->command, ft_strlen(ECHO)) == 0)
 		return (true);
@@ -47,6 +48,8 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 	char	*ex;
 
 	res = NULL;
+	ex = NULL;
+	(void)g;
 	candidates = ft_split(path, ':');
 	if (candidates)
 	{
@@ -58,7 +61,7 @@ char	*resolve_command_path(t_global *g, char *path, char *cmd)
 		free_ptr((void **)&ex);
 	ft_clear_char_array(&candidates, ft_count_words(path, ':') + 1);
 	if (!res)
-		ft_exit(g, "command not found", 127);
+		res = ft_strdup(cmd);
 	return (res);
 }
 
@@ -102,10 +105,14 @@ static void	ft_check_candidates(char ***i, char **res, char *ex)
 	}
 }
 
-void	ft_execute_child_proc(t_command *cmd, t_global *global)
+void	ft_execute_child_proc(t_command *cmd, t_global *global,
+			pid_t prev_pid)
 {
-	if (cmd->prev && cmd->prev->cmd_pid)
-		waitpid(cmd->prev->cmd_pid, NULL, 0);
+	int	error;
+
+	error = 0;
+	if (prev_pid != -1)
+		waitpid(prev_pid, NULL, 0);
 	if (cmd->is_builtin && !cmd->status_request)
 	{
 		global->last_exit_code = ft_run_builtin(cmd, global);
@@ -113,7 +120,15 @@ void	ft_execute_child_proc(t_command *cmd, t_global *global)
 	}
 	else
 	{
-		execve(cmd->path, cmd->args, ft_execve_env(global->env));
-		ft_exit(global, cmd->command, EXIT_FAILURE);
+		ft_check_path(cmd->path, &error);
+		if (!error)
+			ft_command_not_found(cmd->path, &error);
+		if (!error)
+		{
+			execve(cmd->path, cmd->args, ft_execve_env(global->env));
+			ft_minishell_perror(cmd->command, errno);
+			ft_exit(global, cmd->command, errno);
+		}
+		ft_exit(global, cmd->command, error);
 	}
 }

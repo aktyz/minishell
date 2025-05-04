@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:53:18 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 18:21:18 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 08:26:43 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 void		ft_exit(t_global *global, char *cmd, int status);
 void		ft_mini_exit_wrapper(t_command *cmd, t_global *g);
-static void	ft_handle_minishell_errors(char *cmd, int status);
+void		ft_handle_minishell_err(char *cmd, char *error);
 static int	ft_is_numeric_arg(const char *c);
 static void	handle_exit_err(t_command *cmd, t_global *g, int code);
 
 void	ft_exit(t_global *global, char *cmd, int status)
 {
-	if (status && ft_strcmp(cmd, EXIT))
-		ft_handle_minishell_errors(cmd, status);
+	(void)cmd;
 	if (global)
 		free_global(global, true);
 	if (global->env)
@@ -31,20 +30,18 @@ void	ft_exit(t_global *global, char *cmd, int status)
 	exit(status);
 }
 
-static void	ft_handle_minishell_errors(char *cmd, int status)
+void	ft_handle_minishell_err(char *cmd, char *error)
 {
-	if (ft_strcmp("Fatal", cmd) == 0)
-		errmsg_cmd(cmd, "Could not initialize environment",
-			strerror(errno), false);
-	if (ft_strcmp("command not found", cmd) == 0)
-		errmsg_cmd(cmd, NULL, strerror(127), false);
-	errmsg_cmd(cmd, NULL, strerror(errno), false);
+	char	*value;
+	char	*final;
+
+	value = ft_strjoin("minishell: ", cmd);
+	final = ft_strjoin(value, error);
+	ft_putstr_fd(final, 2);
 }
 
 void	ft_mini_exit_wrapper(t_command *cmd, t_global *g)
 {
-	int	i;
-
 	if (cmd->args[1] && cmd->args[2])
 		return (handle_exit_err(cmd, g, 1));
 	else if (cmd->args[1] && !ft_is_numeric_arg(cmd->args[1]))
@@ -73,11 +70,22 @@ static int	ft_is_numeric_arg(const char *c)
 
 static void	handle_exit_err(t_command *cmd, t_global *g, int code)
 {
+	char	*value;
+	char	*final;
+
 	ft_printf("exit\n");
 	g->last_exit_code = code;
+	value = ft_strjoin("minishell: ", cmd->args[0]);
 	if (code == 1)
-		ft_printf("%s %s: too many arguments\n", MINISHELL, cmd->command);
+	{
+		final = ft_strjoin(value, ": too many arguments\n");
+		ft_putstr_fd(final, 2);
+	}
 	else if (code == 2)
-		ft_printf("%s %s: %s: numeric argument required\n",
-			MINISHELL, cmd->command, cmd->args[1]);
+	{
+		final = ft_strjoin(value, ": numeric argument required\n");
+		ft_putstr_fd(final, 2);
+	}
+	free_ptr((void **) &value);
+	free_ptr((void **) &final);
 }

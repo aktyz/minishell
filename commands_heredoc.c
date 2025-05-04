@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:01:33 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/05/02 13:48:22 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,10 @@ bool	fill_heredoc(t_global *global, t_io_fds *io, int fd)
 	return (ret);
 }
 
+/**
+ * Function opening and reading heredoc data.
+ *
+ */
 bool	get_heredoc(t_global *global, t_io_fds *io)
 {
 	int		tmp_fd;

@@ -3,102 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   command_files.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:25:45 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/05/03 16:15:25 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	remove_old_file_ref(t_io_fds *io, bool infile)
+/**
+ * Function creates new io_fds_struct and adds it to the cmd->io list
+ * because of the existing token with f_name as an input
+ *
+ */
+void	add_io_infile_data(t_global *g, t_command *cmd, char *f_name)
 {
-	if (infile == true && io->infile)
-	{
-		if (io->fd_in == -1 || (io->outfile && io->fd_out == -1))
-			return (false);
-		if (io->heredoc_delimiter != NULL)
-		{
-			free_ptr((void **)&io->heredoc_delimiter);
-			io->heredoc_delimiter = NULL;
-			unlink(io->infile);
-		}
-		free_ptr((void **)&io->infile);
-		close(io->fd_in);
-	}
-	else if (infile == false && io->outfile)
-	{
-		if (io->fd_out == -1 || (io->infile && io->fd_in == -1))
-			return (false);
-		free_ptr((void **)&io->outfile);
-		close(io->fd_out);
-	}
-	return (true);
-}
+	t_io_fds	*new;
 
-static void	open_infile(t_global *g, t_io_fds *io, char *file,
-	char *original_filename)
-{
-	if (!remove_old_file_ref(io, true))
-		return ;
-	io->infile = ft_strdup(file);
-	if (io->infile && io->infile[0] == '\0')
+	ft_calloc_io_node(&new, g);
+	new->infile = ft_strdup(f_name);
+	if (!cmd->io_fds)
+		cmd->io_fds = ft_lstnew(new);
+	else
+		ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
+	if (new->infile && new->infile[0] == '\0')
 	{
-		errmsg_cmd(io->infile, NULL, strerror(errno), false);
-		ft_exit(g, NULL, EXIT_FAILURE);
-	}
-	io->fd_in = open(io->infile, O_RDONLY);
-	if (io->fd_in == -1)
-	{
-		errmsg_cmd(io->infile, NULL, strerror(errno), false);
+		errmsg_cmd(new->infile, NULL, strerror(errno), false);
 		ft_exit(g, NULL, EXIT_FAILURE);
 	}
 }
 
-void	parse_input(t_global *global, t_command **last_cmd, t_token **token_lst)
+/**
+ * Function adds new entry on io_fds list, with infile name
+ *
+ */
+void	parse_input(t_global *g, t_command **curr_cmd, t_token **curr_token)
 {
 	t_token		*temp;
-	t_command	*cmd;
 
-	temp = *token_lst;
-	cmd = lst_last_cmd(*last_cmd);
-	init_io(cmd);
-	open_infile(global, cmd->io_fds, temp->next->str, temp->next->str_backup);
+	temp = *curr_token;
+	add_io_infile_data(g, *curr_cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
-	*token_lst = temp;
+	*curr_token = temp;
 }
 
-static void	open_outfile_trunc(t_io_fds *io, char *file, char *var_filename)
+/**
+ * Function creates new io_fds_struct and adds it to the cmd->io list
+ * because of the existing token with f_name as an output
+ *
+ */
+static void	add_io_outfile_data(t_global *g, t_command *cmd, char *f_name,
+	bool is_trunc)
 {
-	if (!remove_old_file_ref(io, false))
-		return ;
-	io->outfile = ft_strdup(file);
-	if (io->outfile && io->outfile[0] == '\0')
-	{
-		errmsg_cmd(var_filename, NULL, "ambiguous redirect", false);
-		return ;
-	}
-	io->fd_out = open(io->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (io->fd_out == -1)
-		errmsg_cmd(io->outfile, NULL, strerror(errno), false);
+	t_io_fds	*new;
+
+	ft_calloc_io_node(&new, g);
+	new->outfile = ft_strdup(f_name);
+	new->trunc = is_trunc;
+	if (!cmd->io_fds)
+		cmd->io_fds = ft_lstnew(new);
+	else
+		ft_lstadd_back(&cmd->io_fds, ft_lstnew(new));
 }
 
-void	parse_trunc(t_command **last_cmd, t_token **token_lst)
+/**
+ * Function adds new entry on the io_fds list, with outfile name
+ * The content of the file will be overwritten
+ *
+ */
+void	parse_output(t_global *g, t_command **curr_cmd, t_token **curr_token,
+			bool is_trunc)
 {
 	t_token		*temp;
-	t_command	*cmd;
 
-	temp = *token_lst;
-	cmd = lst_last_cmd(*last_cmd);
-	init_io(cmd);
-	open_outfile_trunc(cmd->io_fds, temp->next->str, temp->next->str_backup);
+	temp = *curr_token;
+	add_io_outfile_data(g, *curr_cmd, temp->next->str, is_trunc);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
-	*token_lst = temp;
+	*curr_token = temp;
 }

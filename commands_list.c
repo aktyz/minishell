@@ -3,65 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   commands_list.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 20:04:28 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/05/02 18:31:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	initialize_cmd(t_command **cmd)
+t_command	*lst_new_cmd(void)
 {
-	(*cmd)->command = NULL;
-	(*cmd)->path = NULL;
-	(*cmd)->args = NULL;
-	(*cmd)->pipe_output = false;
-	(*cmd)->pipe_fd[0] = -1;
-	(*cmd)->pipe_fd[1] = -1;
-	(*cmd)->cmd_pid = -1;
-	(*cmd)->is_builtin = false;
-	(*cmd)->status_request = false;
-	(*cmd)->prev = NULL;
-	(*cmd)->next = NULL;
+	t_command	*new_cmd;
+
+	new_cmd = ft_calloc(sizeof(t_command), 1);
+	if (new_cmd == NULL)
+		ft_exit(NULL, "lst_new_cmd", 1);
+	new_cmd->pipe_fd[0] = -1;
+	new_cmd->pipe_fd[1] = -1;
+	new_cmd->cmd_pid = -1;
+	return (new_cmd);
 }
 
-t_command	*lst_new_cmd(bool value)
+t_command	*lst_last_cmd(t_list *lst)
 {
-	t_command	*new_node;
-
-	new_node = (t_command *)malloc(sizeof(t_command));
-	if (!(new_node))
-		return (NULL);
-	ft_memset(new_node, 0, sizeof(t_command));
-	new_node->pipe_output = value;
-	initialize_cmd(&new_node);
-	return (new_node);
-}
-
-void	lst_add_back_cmd(t_command **alst, t_command *new_node)
-{
-	t_command	*start;
-
-	start = *alst;
-	if (start == NULL)
-	{
-		*alst = new_node;
-		return ;
-	}
-	if (alst && *alst && new_node)
-	{
-		while (start->next != NULL)
-			start = start->next;
-		start->next = new_node;
-		new_node->prev = start;
-	}
-}
-
-t_command	*lst_last_cmd(t_command *cmd)
-{
-	while (cmd->next != NULL)
-		cmd = cmd->next;
-	return (cmd);
+	while (lst->next != NULL)
+		lst = lst->next;
+	return ((t_command *) lst->content);
 }

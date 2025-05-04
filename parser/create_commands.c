@@ -6,34 +6,43 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 22:10:54 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 07:44:46 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	prep_no_arg_commands(t_global *global)
+static void	populate_args_if_null(t_global *global);
+char		*get_delim(char *delim, bool *quotes);
+void		parse_heredoc(t_global *g, t_command **curr_cmd,
+				t_token **curr_token);
+void		create_commands(t_global *global);
+static void	ft_switch_parsing_ft(t_global *g, t_command **curr_cmd,
+				t_token **curr_token);
+
+static void	populate_args_if_null(t_global *global)
 {
-	t_command	*cmd;
+	t_list		*lst;
+	t_command	*curr_cmd;
 
 	if (!global || !global->cmd)
 		return ;
-	cmd = global->cmd;
-	while (cmd && cmd->command)
+	lst = global->cmd;
+	while (lst && lst->content)
 	{
-		if (!cmd->args)
+		curr_cmd = (t_command *) lst->content;
+		if (!curr_cmd->args)
 		{
-			cmd->args = malloc(sizeof * cmd->args * 2);
-			cmd->args[0] = ft_strdup(cmd->command);
-			cmd->args[1] = NULL;
-			cmd->args_size = 2;
+			curr_cmd->args = malloc(sizeof * curr_cmd->args * 2);
+			curr_cmd->args[0] = ft_strdup(curr_cmd->command);
+			curr_cmd->args[1] = NULL;
+			curr_cmd->args_size = 2;
 		}
-		cmd = cmd->next;
+		lst = lst->next;
 	}
-	cmd = lst_last_cmd(global->cmd);
 }
 
-static char	*get_delim(char *delim, bool *quotes)
+char	*get_delim(char *delim, bool *quotes)
 {
 	int	len;
 
@@ -47,72 +56,59 @@ static char	*get_delim(char *delim, bool *quotes)
 	return (ft_strdup(delim));
 }
 
-static char	*get_heredoc_name(void)
-{
-	static int	i;
-	char		*name;
-	char		*number;
-
-	number = ft_itoa(i);
-	if (!number)
-		return (NULL);
-	name = ft_strjoin(HEREDOC_NAME, number);
-	free(number);
-	i++;
-	return (name);
-}
-
-void	parse_heredoc(t_global *global, t_command **last_cmd,
-			t_token **token_lst)
+void	parse_heredoc(t_global *g, t_command **curr_cmd,
+			t_token **curr_token)
 {
 	t_token		*temp;
-	t_command	*cmd;
-	t_io_fds	*io;
 
-	temp = *token_lst;
-	cmd = lst_last_cmd(*last_cmd);
-	init_io(cmd);
-	io = cmd->io_fds;
-	if (!remove_old_file_ref(io, true))
-		return ;
-	io->infile = get_heredoc_name();
-	io->heredoc_delimiter = get_delim(temp->next->str, &(io->heredoc_quotes));
-	if (get_heredoc(global, io))
-		io->fd_in = open(io->infile, O_RDONLY);
-	else
-		io->fd_in = -1;
+	temp = *curr_token;
+	add_io_heredoc_data(g, *curr_cmd, temp->next->str);
 	if (temp->next->next)
 		temp = temp->next->next;
 	else
 		temp = temp->next;
-	*token_lst = temp;
+	*curr_token = temp;
 }
 
-void	create_commands(t_global *global, t_token *token)
+void	create_commands(t_global *global)
 {
-	t_token	*temp;
+	t_token		*curr_token;
+	t_command	*curr_cmd;
 
-	temp = token;
-	if (temp->type == END)
+	curr_token = global->token;
+	curr_cmd = NULL;
+	if (curr_token->type == END)
 		return ;
-	while (temp->next != NULL)
+	while (curr_token->next != NULL)
 	{
-		if (temp == global->token)
-			lst_add_back_cmd(&global->cmd, lst_new_cmd(false));
-		if (temp->type == WORD || temp->type == VAR)
-			parse_word(&global->cmd, &temp, global);
-		else if (temp->type == INPUT)
-			parse_input(global, &global->cmd, &temp);
-		else if (temp->type == TRUNC)
-			parse_trunc(&global->cmd, &temp);
-		else if (temp->type == HEREDOC)
-			parse_heredoc(global, &global->cmd, &temp);
-		else if (temp->type == APPEND)
-			parse_append(&global->cmd, &temp);
-		else if (temp->type == PIPE)
-			parse_pipe(&global->cmd, &temp);
-		else if (temp->type == END)
+		if (curr_token == global->token)
+		{
+			global->cmd = ft_lstnew(lst_new_cmd());
+			curr_cmd = (t_command *) global->cmd->content;
+		}
+		ft_switch_parsing_ft(global, &curr_cmd, &curr_token);
+		if (curr_token->type == END)
 			break ;
 	}
-	prep_no_arg_commands(global);
+	if (curr_cmd && curr_cmd->command)
+		populate_args_if_null(global);
+	else
+		ft_exit(global, global->user_input, EXIT_SUCCESS);
+}
+
+static void	ft_switch_parsing_ft(t_global *g, t_command **curr_cmd,
+	t_token **curr_token)
+{
+	if ((*curr_token)->type == WORD || (*curr_token)->type == VAR)
+		parse_word(curr_cmd, curr_token);
+	else if ((*curr_token)->type == INPUT)
+		parse_input(g, curr_cmd, curr_token);
+	else if ((*curr_token)->type == TRUNC)
+		parse_output(g, curr_cmd, curr_token, true);
+	else if ((*curr_token)->type == HEREDOC)
+		parse_heredoc(g, curr_cmd, curr_token);
+	else if ((*curr_token)->type == APPEND)
+		parse_output(g, curr_cmd, curr_token, false);
+	else if ((*curr_token)->type == PIPE)
+		parse_pipe(g, curr_cmd, curr_token);
 }
