@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/29 22:02:30 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 17:59:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ static int	ft_cd_home(t_global *g, char *cmd)
 {
 	char	*path;
 
-	path = ft_get_env_var_value(ENV_HOME, g->env);
+	path = ft_get_env_var_value(g->env, "HOME");
 	if (!path)
 	{
 		handle_cd_err(cmd, g, 3);
 		return (1);
 	}
-	return (chdir(path));
+	return (free_ptr((void **) &path), chdir(path));
 }
 
 static void	handle_cd_err(char *cmd, t_global *g, int code)

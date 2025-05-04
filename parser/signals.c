@@ -47,6 +47,7 @@ void	set_signals_interactive(void)
 void	signal_print_newline(int signal)
 {
 	(void)signal;
+	write(1, "\n", 1);
 	rl_on_new_line();
 }
 

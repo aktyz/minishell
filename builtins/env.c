@@ -22,7 +22,8 @@ int	ft_env(t_list *env)
 	while (ptr && ptr->content)
 	{
 		content = (t_minishell_env *)ptr->content;
-		ft_printf("%s=%s\n", content->name_value[0], content->name_value[1]);
+		if (content->name_value[1])
+			ft_printf("%s=%s\n", content->name_value[0], content->name_value[1]);
 		ptr = ptr->next;
 	}
 	return (0);

@@ -72,18 +72,25 @@ void	ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid)
 void	ft_check_path(char *path, int *error)
 {
 	struct stat	info;
+	bool dir_or_cmd;
 
-	if (stat(path, &info) != 0)
-		*error = 128;
-	if (S_ISDIR(info.st_mode) && (path[0] == '/' || path[0] == '.'))
-	{
-		*error = 126;
-		ft_minishell_perror(path, EISDIR);
-	}
-	else if (S_ISDIR(info.st_mode))
-	{
+	dir_or_cmd = (ft_strchr(path, '/') || path[0] == '.');
+
+	if (stat(path, &info) != 0) {
 		*error = 127;
-		ft_handle_minishell_err(path, ": command not found\n");
+	}
+	if (*error && dir_or_cmd) {
+		return ft_handle_minishell_err(path, ": No such file or directory\n");
+	}
+	if (*error)
+	{
+		if (dir_or_cmd) {
+			*error = 126;
+			return ft_handle_minishell_err(path, ": No such file or directory\n");
+		}
+		else
+			return ft_handle_minishell_err(path, ": command not found\n");
+		return ;
 	}
 	if (access(path, F_OK))
 	{
@@ -93,7 +100,20 @@ void	ft_check_path(char *path, int *error)
 	else if (access(path, X_OK))
 	{
 		*error = 126;
-		ft_minishell_perror(path, EACCES);
+		if (dir_or_cmd) 
+			ft_minishell_perror(path, EACCES);
+		else {
+			*error = 127;
+			return ft_handle_minishell_err(path, ": command not found\n");
+		}
+			
+	}
+	if (S_ISDIR(info.st_mode)) {
+		*error = 126;
+		if (dir_or_cmd) 
+			return ft_handle_minishell_err(path, ": Is a directory\n");
+		*error = 127;
+		return ft_handle_minishell_err(path, ": command not found\n");
 	}
 }
 
