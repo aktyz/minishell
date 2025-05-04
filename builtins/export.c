@@ -6,22 +6,21 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:55:33 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:40:44 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void		ft_export(t_command *cmd, t_global *global);
-char		**ft_execve_env(t_list *env);
-static void	ft_sort_export_list(t_list **list);
-void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
-static void	ft_swap_nodes(t_list **current, t_list **next, bool *swapped);
+static int	ft_handle_export_arg(char *cmd, t_global *global);
+static void	ft_handle_export_no_arg(t_global *global);
+void		ft_mini_export_wrapper(t_command *cmd, t_global *global);
 
 void	ft_export(t_command *cmd, t_global *global)
 {
-	t_list			*env;
-	int				i;
+	t_list	*env;
+	int		i;
 
 	env = global->env;
 	i = 0;
@@ -33,82 +32,74 @@ void	ft_export(t_command *cmd, t_global *global)
 	else
 	{
 		ft_sort_export_list(&env);
-		ft_handle_export(global);
+		ft_handle_export_no_arg(global);
 	}
 }
 
 /**
- * Function translates our minishell t_list *env into an array required
- * by execve()
+ * This function is running whenever user provides argument to
+ * export built-in command. It needs to:
+ * - create variable if not there
+ * - update variable value if variable is there
+ * - in all cases flip env->export to true
  *
  */
-char	**ft_execve_env(t_list *env)
+static int	ft_handle_export_arg(char *cmd, t_global *global)
 {
-	char			**execve_env;
-	t_minishell_env	*content;
-	int				i;
+	char	*value;
+	char	*final;
+	char	*tmp;
 
-	execve_env = ft_calloc(sizeof(char *), env->lst_size + 1);
-	if (!execve_env)
-		return (NULL);
-	i = 0;
+	value = ft_strjoin("minishell: ", cmd);
+	final = ft_strjoin(*ft_split(value, '='), ": not a valid identifier\n");
+	tmp = ft_strdup(cmd);
+	if (!is_valid_var_name(tmp))
+	{
+		ft_putstr_fd(final, 2);
+		free_ptr((void **) &value);
+		free_ptr((void **) &final);
+		free_ptr((void **) &tmp);
+		return (1);
+	}
+	ft_update_value_or_add(cmd, global);
+	free_ptr((void **) &final);
+	free_ptr((void **) &tmp);
+	return (free_ptr((void **) &value), 0);
+}
+
+static void	ft_handle_export_no_arg(t_global *global)
+{
+	t_minishell_env	*content;
+	t_list			*env;
+
+	env = global->env;
 	while (env && env->content)
 	{
 		content = (t_minishell_env *)env->content;
 		if (content->export && content->name_value)
-			ft_create_execve_array_entry(&execve_env[i], content);
-		if (execve_env[i])
-			i++;
+		{
+			if (!content->name_value[1])
+				ft_printf("declare -x %s\n", content->name_value[0]);
+			else
+				ft_printf("declare -x %s=\"%s\"\n", content->name_value[0],
+					content->name_value[1]);
+		}
 		env = env->next;
 	}
-	return (execve_env);
 }
 
-static void	ft_sort_export_list(t_list **list)
+void	ft_mini_export_wrapper(t_command *cmd, t_global *global)
 {
-	t_list			*current;
-	t_list			*next;
-	bool			swapped;
+	t_io_fds	*io;
 
-	if (!list || !*list)
-		return ;
-	swapped = true;
-	while (swapped)
+	io = NULL;
+	if (cmd->final_io)
+		io = cmd->final_io;
+	if ((global->cmd->content != cmd) || (io && io->infile))
 	{
-		swapped = false;
-		current = *list;
-		while (current->next)
-		{
-			next = current->next;
-			if (ft_strcmp(((t_minishell_env *)current->content)->name_value[0],
-					((t_minishell_env *)next->content)->name_value[0]) > 0)
-				ft_swap_nodes(&current, &next, &swapped);
-			current = current->next;
-		}
+		ft_clear_char_array(&cmd->args, cmd->args_size);
+		cmd->args = ft_calloc(sizeof(char *), 2);
+		cmd->args[0] = ft_strdup(EXPORT);
 	}
-}
-
-void	ft_handle_existing_var(char *cmd, t_minishell_env *content)
-{
-	int	equal_pos;
-
-	equal_pos = ft_strlen(content->name_value[0]);
-	if (equal_pos < (int) ft_strlen(cmd) && cmd[equal_pos] == '=')
-	{
-		free_ptr((void **)&content->name_value[0]);
-		free_ptr((void **)&content->name_value[1]);
-		ft_split_env_variable(cmd, &content->name_value[0],
-			&content->name_value[1]);
-	}
-	content->export = true;
-}
-
-static void	ft_swap_nodes(t_list **current, t_list **next, bool *swapped)
-{
-	t_minishell_env	*temp_content;
-
-	temp_content = (*current)->content;
-	(*current)->content = (*next)->content;
-	(*next)->content = temp_content;
-	*swapped = true;
+	ft_export(cmd, global);
 }

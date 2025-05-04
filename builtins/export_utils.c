@@ -6,18 +6,43 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 12:15:55 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/03 15:54:07 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:39:29 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_split_env_variable(char *name_value, char **var_name,
-				char **var_value);
-void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
-int			ft_handle_export_arg(char *cmd, t_global *global);
-void		ft_handle_export(t_global *global);
-void		ft_add_new_env_var(char *var_name, t_global *global);
+bool	is_valid_var_name(char *var_name);
+void	ft_split_env_variable(char *name_value, char **var_name,
+			char **var_value);
+void	ft_handle_existing_var(char *cmd, t_minishell_env *content);
+void	ft_update_value_or_add(char *cmd, t_global *global);
+
+bool	is_valid_var_name(char *var_name)
+{
+	int		i;
+	char	**name_value;
+
+
+	if (!var_name || !var_name[0] || var_name[0] == '=' || ft_isdigit(var_name[0]))
+		return (false);
+	i = 0;
+	if (ft_strchr(var_name, '='))
+	{
+		name_value = ft_split(var_name, '=');
+		free_ptr((void **) &var_name);
+		var_name = ft_strdup(name_value[0]);
+		ft_clear_char_array(&name_value, 2);
+	}
+	while (var_name[i])
+	{
+		if (!(ft_isalpha(var_name[i]) || ft_isdigit(var_name[i])
+				|| var_name[i] == '_'))
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 void	ft_split_env_variable(char *name_value, char **var_name,
 			char **var_value)
@@ -40,75 +65,47 @@ void	ft_split_env_variable(char *name_value, char **var_name,
 		*var_name = ft_strdup(name_value);
 }
 
-void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content)
+void	ft_handle_existing_var(char *cmd, t_minishell_env *content)
 {
-	char	*env_var;
-	int		i;
+	int	equal_pos;
 
-	env_var = ft_calloc(sizeof(char), ft_strlen(content->name_value[0])
-			+ ft_strlen(content->name_value[1]) + 2);
-	i = ft_strlcpy(env_var, content->name_value[0],
-			ft_strlen(content->name_value[0]));
-	env_var[i] = '=';
-	ft_strlcpy(env_var + i + 1, content->name_value[1],
-		ft_strlen(content->name_value[1]));
-	*ptr = env_var;
-}
-
-int	ft_handle_export_arg(char *cmd, t_global *global)
-{
-	char	*value;
-	char	*final;
-	char	*tmp;
-
-	value = ft_strjoin("minishell: ", cmd);
-	final = ft_strjoin(*ft_split(value, '='), ": not a valid identifier\n");
-	tmp = ft_strdup(cmd);
-	if (!is_valid_var_name(tmp))
+	equal_pos = ft_strlen(content->name_value[0]);
+	if (equal_pos < (int) ft_strlen(cmd) && cmd[equal_pos] == '=')
 	{
-		ft_putstr_fd(final, 2);
-		free_ptr((void **) &value);
-		free_ptr((void **) &final);
-		free_ptr((void **) &tmp);
-		return (1);
+		free_ptr((void **)&content->name_value[0]);
+		free_ptr((void **)&content->name_value[1]);
+		ft_split_env_variable(cmd, &content->name_value[0],
+			&content->name_value[1]);
 	}
-	ft_update_value_or_add(cmd, global);
-	free_ptr((void **) &final);
-	free_ptr((void **) &tmp);
-	return (free_ptr((void **) &value), 0);
+	content->export = true;
 }
 
-void	ft_handle_export(t_global *global)
+void	ft_update_value_or_add(char *cmd, t_global *global)
 {
 	t_minishell_env	*content;
 	t_list			*env;
+	char			*split_ptr;
+	int				split_index;
 
 	env = global->env;
 	while (env && env->content)
 	{
 		content = (t_minishell_env *)env->content;
-		if (content->export && content->name_value)
+		split_ptr = ft_strchr(cmd, '=');
+		split_index = split_ptr - cmd;
+
+		if (split_index != (int) ft_strlen(content->name_value[0])) {
+			env = env->next;
+			continue ;
+		}
+		if (ft_strncmp((const char *)cmd, content->name_value[0],
+				split_index) == 0)
 		{
-			if (!content->name_value[1])
-				ft_printf("declare -x %s\n", content->name_value[0]);
-			else
-				ft_printf("declare -x %s=\"%s\"\n", content->name_value[0],
-					content->name_value[1]);
+			ft_handle_existing_var(cmd, content);
+			return ;
 		}
 		env = env->next;
 	}
-}
-
-void	ft_add_new_env_var(char *var_name, t_global *global)
-{
-	t_minishell_env	*content;
-
-	content = ft_calloc(sizeof(t_minishell_env), 1);
-	if (!content)
-		return ;
-	content->name_value = ft_calloc(sizeof(char *), 2);
-	ft_split_env_variable(var_name, &content->name_value[0],
-		&content->name_value[1]);
-	content->export = true;
-	ft_lstadd_back(&global->env, ft_lstnew(content));
+	if (!env)
+		ft_add_new_env_var(cmd, global);
 }

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 16:31:59 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 18:39:11 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:26:37 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 char	*ft_get_env_var_value(t_list *env, char *var_name);
 bool	ft_update_env_var_value(t_list *node, char *new_value);
 bool	ft_add_env_var(t_global *g, char *name, char *value);
+void	ft_add_new_env_var(char *var_name, t_global *global);
 t_list	*ft_return_env_list_node_ptr(t_list *env, char *name);
+
 
 char	*ft_get_env_var_value(t_list *env, char *var_name)
 {
@@ -126,6 +128,27 @@ bool	ft_add_env_var(t_global *g, char *name, char *value)
 	new_content->export = true;
 	ft_lstadd_back(&g->env, ft_lstnew(new_content));
 	return (true);
+}
+
+/**
+ * This function is very similar to the one above, however
+ * instead of two arguments env_var_name and env_var_value
+ * it takes a string var_name as argument consisting of:
+ * <var_name>=<var_value>
+ *
+ */
+void	ft_add_new_env_var(char *var_name, t_global *global)
+{
+	t_minishell_env	*content;
+
+	content = ft_calloc(sizeof(t_minishell_env), 1);
+	if (!content)
+		return ;
+	content->name_value = ft_calloc(sizeof(char *), 2);
+	ft_split_env_variable(var_name, &content->name_value[0],
+		&content->name_value[1]);
+	content->export = true;
+	ft_lstadd_back(&global->env, ft_lstnew(content));
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 17:57:15 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:34:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,15 +278,13 @@ int			ft_cd(t_command *cmd, t_global *global);
 void		ft_exit(t_global *global, char *cmd, int status);
 int			ft_pwd(void);
 void		ft_export(t_command *cmd, t_global *global);
+void		ft_sort_export_list(t_list **list);
 void		ft_unset(t_command *cmd, t_global *global);
 int			ft_env(t_list *env);
 char		*ft_get_env_var_value(t_list *env, char *var_name);
 bool		ft_update_env_var_value(t_list *node, char *new_value);
 bool		ft_add_env_var(t_global *g, char *name, char *value);
 t_list		*ft_return_env_list_node_ptr(t_list *env, char *name);
-void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
-int			ft_handle_export_arg(char *cmd, t_global *global);
-void		ft_handle_export(t_global *global);
 void		ft_handle_existing_var(char *cmd, t_minishell_env *content);
 bool		is_valid_var_name(char *var_name);
 void		ft_update_value_or_add(char *cmd, t_global *global);
