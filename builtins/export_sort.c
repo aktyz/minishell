@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:14:57 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 20:17:57 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:50:26 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 void		ft_sort_export_list(t_list **list);
 static void	ft_swap_nodes(t_list **current, t_list **next, bool *swapped);
 
+/**
+ * Simple bubble sort function for our env list, used when printing
+ * export with no arguments. No issues with the sorting mechanizm.
+ *
+ */
 void	ft_sort_export_list(t_list **list)
 {
 	t_list			*current;

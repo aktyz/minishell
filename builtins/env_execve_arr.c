@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 20:20:30 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 20:45:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:49:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ char		**ft_execve_env(t_list *env);
 static void	ft_create_execve_array_entry(char **ptr,
 				t_minishell_env *content);
 bool		process_env_variable(char *env_var, t_list **list);
+
 /**
  * Function translates our minishell t_list *env into an array required
- * by execve()
+ * by execve(). As our execve is working perfectly fine - DO NOT TOUCH
  *
  */
 char	**ft_execve_env(t_list *env)
@@ -58,6 +59,11 @@ static void	ft_create_execve_array_entry(char **ptr, t_minishell_env *content)
 	*ptr = env_var;
 }
 
+/**
+ * This is a special function handling env variables list creation
+ * in the initialization phase of the minishell start-up.
+ * aka: DO NOT TOUCH
+ */
 bool	process_env_variable(char *env_var, t_list **list)
 {
 	t_minishell_env	*content;

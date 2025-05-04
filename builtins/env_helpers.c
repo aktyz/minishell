@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 16:31:59 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 20:26:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 21:30:02 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ bool	ft_update_env_var_value(t_list *node, char *new_value)
 		}
 		else
 			content->name_value[1] = NULL;
+		content->export = true;
 		return (free_ptr((void **) &prev_value), true);
 	}
 	else // The variable previously had no value
@@ -83,6 +84,7 @@ bool	ft_update_env_var_value(t_list *node, char *new_value)
 			if (!content->name_value[1])
 				return (false);
 		}
+		content->export = true;
 		return (true);
 	}
 }

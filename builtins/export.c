@@ -6,20 +6,21 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 20:40:44 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 22:04:05 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void		ft_export(t_command *cmd, t_global *global);
-static int	ft_handle_export_arg(char *cmd, t_global *global);
+static bool	ft_handle_export_arg(char *cmd, t_global *global);
 static void	ft_handle_export_no_arg(t_global *global);
 void		ft_mini_export_wrapper(t_command *cmd, t_global *global);
 
 void	ft_export(t_command *cmd, t_global *global)
 {
 	t_list	*env;
+	bool	result;
 	int		i;
 
 	env = global->env;
@@ -27,7 +28,11 @@ void	ft_export(t_command *cmd, t_global *global)
 	if (cmd->args[1])
 	{
 		while (cmd->args[++i])
-			global->last_exit_code = ft_handle_export_arg(cmd->args[i], global);
+		{
+			result = ft_handle_export_arg(cmd->args[i], global);
+			if (!result)
+			global->last_exit_code = 1;
+		}
 	}
 	else
 	{
@@ -39,32 +44,41 @@ void	ft_export(t_command *cmd, t_global *global)
 /**
  * This function is running whenever user provides argument to
  * export built-in command. It needs to:
- * - create variable if not there
- * - update variable value if variable is there
- * - in all cases flip env->export to true
+ * - validate var_name, if ok it:
+ *     - create variable if not there
+ *     - update variable value if variable is there
+ * -> in all cases flip env->export to true
  *
+ * It takes export_arg argument - passed from export of structure:
+ * <var_name>=<var_value> OR <var_name>
  */
-static int	ft_handle_export_arg(char *cmd, t_global *global)
+static bool	ft_handle_export_arg(char *export_arg, t_global *global)
 {
-	char	*value;
-	char	*final;
-	char	*tmp;
+	char	*var_name;
+	char	*var_value;
+	t_list	*node;
+	bool	result;
 
-	value = ft_strjoin("minishell: ", cmd);
-	final = ft_strjoin(*ft_split(value, '='), ": not a valid identifier\n");
-	tmp = ft_strdup(cmd);
-	if (!is_valid_var_name(tmp))
+	var_value = NULL;
+	node = NULL;
+	result = false;
+	if (ft_strnchar(export_arg, '=')) // we have value but can be NULL (aka we have '=')
+		ft_split_env_variable(export_arg, &var_name, &var_value);
+	else //no value
+		var_name = ft_strdup(export_arg);
+	node = ft_return_env_list_node_ptr(global->env, var_name);
+	if (is_valid_var_name(var_name))
 	{
-		ft_putstr_fd(final, 2);
-		free_ptr((void **) &value);
-		free_ptr((void **) &final);
-		free_ptr((void **) &tmp);
-		return (1);
+		if (node)
+			result = ft_update_env_var_value(node, var_value);
+		else
+			result = ft_add_env_var(global, var_name, var_value);
 	}
-	ft_update_value_or_add(cmd, global);
-	free_ptr((void **) &final);
-	free_ptr((void **) &tmp);
-	return (free_ptr((void **) &value), 0);
+	else
+		errmsg_cmd("export", NULL, "not a valid identifier", 1);
+	if (var_value)
+		free_ptr((void **) &var_value);
+	return (free_ptr((void **) &var_name), result);
 }
 
 static void	ft_handle_export_no_arg(t_global *global)
