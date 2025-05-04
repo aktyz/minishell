@@ -34,9 +34,11 @@ static int	var_exists(t_global *global, char *var)
 	while (env && env->content)
 	{
 		content = (t_minishell_env *) env->content;
+		env = env->next;
+		if (ft_strlen(var) != ft_strlen(content->name_value[0]))
+			continue ; 
 		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
 			return (0);
-		env = env->next;
 	}
 	return (1);
 }
@@ -51,9 +53,12 @@ static char	*search_env_var(t_global *global, char *var)
 	while (env && env->content)
 	{
 		content = (t_minishell_env *) env->content;
-		if (ft_strncmp(content->name_value[0], var, ft_strlen(content->name_value[0])) == 0)
-			break ;
+		
 		env = env->next;
+		if (ft_strlen(var) != ft_strlen(content->name_value[0])) 
+			continue ;
+		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
+			break ;		
 	}
 	if (!content->name_value[1])
 		return (NULL);
