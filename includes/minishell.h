@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 08:26:53 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 17:57:15 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,6 @@ char		**ft_execve_env(t_list *env);
 
 void		ft_split_env_variable(char *name_value, char **var_name,
 				char **var_value);
-char		*ft_get_env_var_value(char *env_var_name, t_list *env);
 char		*resolve_command_path(t_global *g, char *path, char *cmd);
 void		ft_execute_child_proc(t_command *cmd, t_global *global,
 				pid_t prev_pid);
@@ -281,6 +280,10 @@ int			ft_pwd(void);
 void		ft_export(t_command *cmd, t_global *global);
 void		ft_unset(t_command *cmd, t_global *global);
 int			ft_env(t_list *env);
+char		*ft_get_env_var_value(t_list *env, char *var_name);
+bool		ft_update_env_var_value(t_list *node, char *new_value);
+bool		ft_add_env_var(t_global *g, char *name, char *value);
+t_list		*ft_return_env_list_node_ptr(t_list *env, char *name);
 void		ft_create_execve_array_entry(char **ptr, t_minishell_env *content);
 int			ft_handle_export_arg(char *cmd, t_global *global);
 void		ft_handle_export(t_global *global);

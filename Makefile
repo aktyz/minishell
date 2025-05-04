@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/05/03 15:51:51 by zslowian         ###   ########.fr        #
+#    Updated: 2025/05/04 18:02:29 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC = main.c \
 	builtins/builtins_helpers.c \
 	builtins/cd.c \
 	builtins/echo.c \
+	builtins/env_helpers.c \
 	builtins/env.c \
 	builtins/exit.c \
 	builtins/export_utils.c \

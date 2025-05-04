@@ -6,14 +6,13 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 07:23:37 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 17:57:49 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void		ft_process(t_global *global);
-char		*ft_get_env_var_value(char *env_var_name, t_list *env);
 void		ft_run_parent_builtins(t_command *cmd, t_global *global);
 static void	ft_pipex(t_global *global);
 static void	ft_execute(t_global *global);
@@ -25,20 +24,6 @@ void	ft_process(t_global *global)
 		ft_pipex(global);
 		ft_execute(global);
 	}
-}
-
-char	*ft_get_env_var_value(char *env_var_name, t_list *env)
-{
-	t_minishell_env	*content;
-
-	while (env)
-	{
-		content = (t_minishell_env *)env->content;
-		if (ft_strcmp(env_var_name, content->name_value[0]) == 0)
-			return (content->name_value[1]);
-		env = env->next;
-	}
-	return (NULL);
 }
 
 void	ft_run_parent_builtins(t_command *cmd, t_global *global)
