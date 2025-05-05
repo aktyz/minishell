@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 16:50:55 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:31:48 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,11 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 	{
 		close(prev_cmd->pipe_fd[0]);
 		close(prev_cmd->pipe_fd[1]);
+	}
+	if (cmd->final_io && cmd->final_io->outfile)
+	{
+		cmd->stdout_backup = create_stdout_backup();
+		ft_open_final_outfile(g, &cmd->final_io);
 	}
 }
 
