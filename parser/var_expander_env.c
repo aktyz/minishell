@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_expander_env.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:13:09 by zslowian          #+#    #+#             */
-/*   Updated: 2025/04/28 21:27:46 by mwiecek          ###   ########.fr       */
+/*   Updated: 2025/05/05 17:57:50 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	var_exists(t_global *global, char *var)
 		content = (t_minishell_env *) env->content;
 		env = env->next;
 		if (ft_strlen(var) != ft_strlen(content->name_value[0]))
-			continue ; 
+			continue ;
 		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
 			return (0);
 	}
@@ -53,12 +53,11 @@ static char	*search_env_var(t_global *global, char *var)
 	while (env && env->content)
 	{
 		content = (t_minishell_env *) env->content;
-		
 		env = env->next;
-		if (ft_strlen(var) != ft_strlen(content->name_value[0])) 
+		if (ft_strlen(var) != ft_strlen(content->name_value[0]))
 			continue ;
 		if (ft_strncmp(content->name_value[0], var, ft_strlen(var)) == 0)
-			break ;		
+			break ;
 	}
 	if (!content->name_value[1])
 		return (NULL);
