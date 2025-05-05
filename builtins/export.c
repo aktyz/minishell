@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 22:32:58 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:39:37 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ void	ft_mini_export_wrapper(t_command *cmd, t_global *global)
 	io = NULL;
 	if (cmd->final_io)
 		io = cmd->final_io;
+	if (cmd->args[1] && io && (io->outfile || cmd->pipe_output))
+		return ;
 	if ((global->cmd->content != cmd) || (io && io->infile))
 	{
 		ft_clear_char_array(&cmd->args, cmd->args_size);

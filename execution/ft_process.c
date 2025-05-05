@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 12:42:02 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:54:11 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,20 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *g)
 	int	check;
 
 	check = 0;
+	if (cmd->pipe_output) // if parent (execution loop) is here -> all childs spawned with fds open
+	{
+		cmd->stdout_backup = create_stdout_backup();
+		if (cmd->stdout_backup)
+			ft_exit(g, "ft_chandle_parent_io failed to create stdout backup", 1);
+		close(cmd->pipe_fd[0]);
+		dup2(cmd->pipe_fd[1], STDOUT_FILENO);
+		close(cmd->pipe_fd[1]);
+	}
+	else if (cmd->final_io && cmd->final_io->outfile)
+	{
+		cmd->stdout_backup = create_stdout_backup();
+		ft_open_final_outfile(g, &cmd->final_io);
+	}
 	if (cmd->command && ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
 		ft_mini_exit_wrapper(cmd, g);
 	else if (cmd->command && ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
@@ -68,6 +82,12 @@ static void	ft_pipex(t_global *g)
 	while (ptr)
 	{
 		curr_cmd = (t_command *) ptr->content;
+		if (curr_cmd->cmd_pid == -1 && prev_cmd
+			&& prev_cmd->cmd_pid == -1 && prev_cmd->pipe_output)
+		{
+			close(prev_cmd->pipe_fd[0]);
+			close(prev_cmd->pipe_fd[1]);
+		}
 		if (curr_cmd->pipe_output)
 			pipe(curr_cmd->pipe_fd);
 		ft_split_child_parent_run(g, curr_cmd, prev_cmd);

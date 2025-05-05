@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 12:47:21 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:50:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ static void	ft_chandle_child_io(t_command *cmd, t_global *g,
  * 1. cmd_pid > 0 - where it doesn't need to do anything - fd closing
  * 	and opening are happening insite of the forked child process
  * 2. cmd_pid == -1 - where it needs to handle io - it is running
- * 	one of it's built-in processes
+ * 	one of it's built-in processes, which:
+ * 		-> should ignore any inputs
+ * 		-> outputs should be set up with STDOUT backup to be
+ * 			restored once the parent process executed cmd built-in
  */
 void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 			t_command *prev_cmd)
@@ -103,28 +106,14 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 		while (lst)
 		{
 			node = (t_io_fds *) lst->content;
-			ft_handle_parent_io_lst_node(g, cmd, node); // DEBUG IN THE END
+			ft_handle_parent_io_lst_node(g, cmd, node);
 			lst = lst->next;
 		}
 	}
-	if (prev_cmd && prev_cmd->cmd_pid == -1 && prev_cmd->pipe_output) // executing parent built-in writing to pipe ()
-	{
-		prev_cmd->stdout_backup = create_stdout_backup();
-		if (prev_cmd->stdout_backup)
-			ft_exit(g, "ft_chandle_parent_io failed to create stdout backup", 1);
-		close(prev_cmd->pipe_fd[0]);
-		dup2(prev_cmd->pipe_fd[1], STDOUT_FILENO);
-		close(prev_cmd->pipe_fd[1]);
-	}
-	else if (prev_cmd && prev_cmd->pipe_output)
+	else if (prev_cmd && prev_cmd->pipe_output && prev_cmd->cmd_pid != -1)
 	{
 		close(prev_cmd->pipe_fd[0]);
 		close(prev_cmd->pipe_fd[1]);
-	}
-	if (cmd->final_io && cmd->final_io->outfile)
-	{
-		cmd->stdout_backup = create_stdout_backup();
-		ft_open_final_outfile(g, &cmd->final_io);
 	}
 }
 
