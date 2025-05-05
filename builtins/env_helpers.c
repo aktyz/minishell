@@ -6,37 +6,17 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 16:31:59 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 22:56:01 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:53:38 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_get_env_var_value(t_list *env, char *var_name);
 bool	ft_update_env_var_value(t_list *node, char *new_value);
 bool	ft_add_env_var(t_global *g, char *name, char *value);
 void	ft_add_new_env_var(char *var_name, t_global *global);
 t_list	*ft_return_env_list_node_ptr(t_list *env, char *name);
-
-
-char	*ft_get_env_var_value(t_list *env, char *var_name)
-{
-	t_list			*lst;
-	t_minishell_env	*content;
-
-	lst = NULL;
-	content = NULL;
-	if (!var_name)
-		return (NULL);
-	lst = ft_return_env_list_node_ptr(env, var_name);
-	if (lst)
-		content = (t_minishell_env *) lst->content;
-	else
-		return (NULL);
-	if (lst->content && content->name_value[1])
-		return (ft_strdup(content->name_value[1]));
-	return (NULL);
-}
+bool	ft_update_existing_env_value(t_minishell_env **node, char *new_value);
 
 /**
  * Please use this function only when you are sure that the node
@@ -55,38 +35,26 @@ char	*ft_get_env_var_value(t_list *env, char *var_name)
 bool	ft_update_env_var_value(t_list *node, char *new_value)
 {
 	t_minishell_env	*content;
-	char			*prev_value;
+	bool			res;
 
-	prev_value = NULL;
+	res = false;
 	if (!node)
-		return (false);
-	content = (t_minishell_env *) node->content;
-	if (content->name_value[1]) // The variable already has a value
-	{
-		prev_value = ft_strdup(content->name_value[1]);
-		free_ptr((void **) &content->name_value[1]);
-		if (new_value)
-		{
-			content->name_value[1] = ft_strdup(new_value);
-			if (!content->name_value[1])
-				return (free_ptr((void **) &prev_value), false);
-		}
-		else
-			content->name_value[1] = NULL;
-		content->export = true;
-		return (free_ptr((void **) &prev_value), true);
-	}
-	else // The variable previously had no value
+		return (res);
+	content = (t_minishell_env *)node->content;
+	if (content->name_value[1])
+		res = ft_update_existing_env_value(&content, new_value);
+	else
 	{
 		if (new_value)
 		{
 			content->name_value[1] = ft_strdup(new_value);
 			if (!content->name_value[1])
-				return (false);
+				return (res);
+			res = true;
 		}
-		content->export = true;
-		return (true);
 	}
+	content->export = true;
+	return (res);
 }
 
 /**
@@ -111,22 +79,12 @@ bool	ft_add_env_var(t_global *g, char *name, char *value)
 		ft_minishell_perror("ft_add_env_var", 1);
 		ft_exit(g, "env_list not initialized", EXIT_FAILURE);
 	}
-	new_content = ft_calloc(sizeof(t_minishell_env), 1);
-	if (!new_content)
+	new_content = init_env_content(name, value);
+	if (new_content == NULL)
 	{
-		ft_minishell_perror("ft_calloc", 1);
-		return (false);
+		ft_minishell_perror("ft_add_env_var", 1);
+		ft_exit(g, "new env node not initialized", EXIT_FAILURE);
 	}
-	new_content->name_value = ft_calloc(sizeof(char *), 2);
-	if (!new_content->name_value)
-	{
-		free_ptr((void **) &new_content);
-		ft_minishell_perror("ft_calloc", 1);
-		return (false);
-	}
-	new_content->name_value[0] = ft_strdup(name);
-	if (value)
-		new_content->name_value[1] = ft_strdup(value);
 	new_content->export = true;
 	ft_lstadd_back(&g->env, ft_lstnew(new_content));
 	return (true);
@@ -170,10 +128,27 @@ t_list	*ft_return_env_list_node_ptr(t_list *env, char *name)
 	lst = env;
 	while (lst && lst->content)
 	{
-		content = (t_minishell_env *) lst->content;
+		content = (t_minishell_env *)lst->content;
 		if (ft_strcmp(name, content->name_value[0]) == 0)
 			return (lst);
 		lst = lst->next;
 	}
 	return (lst);
+}
+
+bool	ft_update_existing_env_value(t_minishell_env **node, char *new_value)
+{
+	char	*prev_value;
+
+	prev_value = ft_strdup((*node)->name_value[1]);
+	free_ptr((void **) &(*node)->name_value[1]);
+	if (new_value)
+	{
+		(*node)->name_value[1] = ft_strdup(new_value);
+		if (!(*node)->name_value[1])
+			return (free_ptr((void **) &prev_value), false);
+	}
+	else
+		(*node)->name_value[1] = NULL;
+	return (true);
 }

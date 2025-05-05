@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 12:15:55 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 21:59:20 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:37:08 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@ void	ft_split_env_variable(char *name_value, char **var_name,
 
 bool	is_valid_var_name(char *var_name)
 {
-	int		i;
+	int	i;
 
-	if (!var_name || !var_name[0] || var_name[0] == '=' || ft_isdigit(var_name[0]))
+	if (!var_name || !var_name[0] || var_name[0] == '='
+		|| ft_isdigit(var_name[0]))
 		return (false);
 	i = 0;
 	while (var_name[i])
@@ -34,7 +35,7 @@ bool	is_valid_var_name(char *var_name)
 }
 
 void	ft_split_env_variable(char *name_value, char **var_name,
-			char **var_value)
+		char **var_value)
 {
 	char	*split_char;
 	int		split_index;

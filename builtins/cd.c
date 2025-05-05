@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 23:34:55 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:36:30 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ int	ft_cd(t_command *cmd, t_global *g)
 		home = ft_get_env_var_value(g->env, "HOME");
 		if (home)
 			result = ft_handle_one_arg_cd(home, pwd_backup, g);
-		free_ptr((void **) &home);
+		free_ptr((void **)&home);
 	}
 	else
 		result = ft_handle_one_arg_cd(cmd->args[1], pwd_backup, g);
-	free_ptr((void **) &pwd_backup);
+	free_ptr((void **)&pwd_backup);
 	if (result == true)
 		return (1);
 	return (0);
@@ -65,12 +65,14 @@ static bool	ft_handle_one_arg_cd(char *new_pwd, char *pwd_backup, t_global *g)
 	if (ptr)
 		ft_update_env_var_value(ptr, pwd_backup);
 	else
-		ft_lstadd_back(&g->env, ft_lstnew(init_env_content("OLDPWD", pwd_backup)));
+		ft_lstadd_back(&g->env, ft_lstnew(init_env_content("OLDPWD",
+					pwd_backup)));
 	ptr = ft_return_env_list_node_ptr(g->env, "PWD");
 	if (ptr)
 		ft_update_env_var_value(ptr, new_directory);
 	else
-		ft_lstadd_back(&g->env, ft_lstnew(init_env_content("PWD", new_directory)));
+		ft_lstadd_back(&g->env, ft_lstnew(init_env_content("PWD",
+					new_directory)));
 	return (0);
 }
 
@@ -96,6 +98,6 @@ static void	handle_cd_err(char *cmd, t_global *g, int code)
 		final = ft_strjoin(value, ": HOME not set\n");
 		ft_putstr_fd(final, 2);
 	}
-	free_ptr((void **) &value);
-	free_ptr((void **) &final);
+	free_ptr((void **)&value);
+	free_ptr((void **)&final);
 }
