@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 21:59:08 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:35:35 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@
 # include <readline/history.h>
 
 # define TRIM_SET " \t\n"
-
-# define ENV_PATH "PATH"
-# define ENV_HOME "HOME"
 
 # define ECHO "echo"
 # define CD "cd"
@@ -134,41 +131,42 @@ struct s_io_fds
 	int		fd_out;
 };
 
-void		ft_process(t_global *global);
-bool		ft_is_our_builtin(t_command *cmd);
-void		ft_handle_redirections(t_command *cmd, t_global *g,
-				t_command *prev_cmd);
-char		**ft_execve_env(t_list *env);
+void			ft_process(t_global *global);
+bool			ft_is_our_builtin(t_command *cmd);
+void			ft_handle_redirections(t_command *cmd, t_global *g,
+					t_command *prev_cmd);
+char			**ft_execve_env(t_list *env);
 
-void		ft_split_env_variable(char *name_value, char **var_name,
-				char **var_value);
-char		*resolve_command_path(t_global *g, char *path, char *cmd);
-void		ft_execute_child_proc(t_command *cmd, t_global *global,
-				pid_t prev_pid);
-bool		is_parent_builtin(t_command *command);
-void		ft_safe_fork(t_global *g, t_command *cmd);
-void		ft_split_child_parent_run(t_global *g, t_command *cmd,
-				t_command *prev_cmd);
-void		ft_attach_tty(void);
-void		ft_chandle_parent_io(t_command *cmd, t_global *g,
-				t_command *prev_cmd);
-bool		process_env_variable(char *env_var, t_list **list);
-void		ft_copy_input_to_final_io(t_io_fds *node, t_command *cmd,
-				t_global *g, bool is_heredoc);
-void		ft_copy_output_to_final_io(t_io_fds *node, t_command *cmd,
-				t_global *g);
-void		ft_create_file(char *f_name, t_global *g);
-void		ft_calloc_io_node(t_io_fds **ptr, t_global *g);
-void		ft_open_final_outfile(t_global *g, t_io_fds **io);
-void		ft_open_final_infile(t_global *g, t_io_fds **io);
-void		ft_handle_child_io_lst_node(t_global *g, t_command *cmd,
-				t_io_fds *node);
-void		ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
-				t_io_fds *node);
-void		ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid);
-void		ft_check_path(char *path, int *error);
-void		ft_command_not_found(char *path, int *error);
-void		ft_handle_minishell_err(char *cmd, char *error);
+void			ft_split_env_variable(char *name_value, char **var_name,
+					char **var_value);
+char			*resolve_command_path(t_global *g, char *path, char *cmd);
+void			ft_execute_child_proc(t_command *cmd, t_global *global,
+					pid_t prev_pid);
+bool			is_parent_builtin(t_command *command);
+void			ft_safe_fork(t_global *g, t_command *cmd);
+void			ft_split_child_parent_run(t_global *g, t_command *cmd,
+					t_command *prev_cmd);
+void			ft_attach_tty(void);
+void			ft_chandle_parent_io(t_command *cmd, t_global *g,
+					t_command *prev_cmd);
+bool			process_env_variable(char *env_var, t_list **list);
+void			ft_copy_input_to_final_io(t_io_fds *node, t_command *cmd,
+					t_global *g, bool is_heredoc);
+void			ft_copy_output_to_final_io(t_io_fds *node, t_command *cmd,
+					t_global *g);
+void			ft_create_file(char *f_name, t_global *g);
+void			ft_calloc_io_node(t_io_fds **ptr, t_global *g);
+void			ft_open_final_outfile(t_global *g, t_io_fds **io);
+void			ft_open_final_infile(t_global *g, t_io_fds **io);
+void			ft_handle_child_io_lst_node(t_global *g, t_command *cmd,
+					t_io_fds *node);
+void			ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
+					t_io_fds *node);
+void			ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid);
+void			ft_check_path(char *path, int *error);
+void			ft_command_not_found(char *path, int *error);
+void			ft_handle_minishell_err(char *cmd, char *error);
+t_minishell_env	*init_env_content(char *name, char *value);
 
 //initialization
 bool		init_global(t_global *global, char **env);
@@ -277,6 +275,7 @@ int			ft_echo(char **args);
 int			ft_cd(t_command *cmd, t_global *global);
 void		ft_exit(t_global *global, char *cmd, int status);
 int			ft_pwd(void);
+char		*ft_getcwd(void);
 void		ft_export(t_command *cmd, t_global *global);
 void		ft_sort_export_list(t_list **list);
 void		ft_unset(t_command *cmd, t_global *global);

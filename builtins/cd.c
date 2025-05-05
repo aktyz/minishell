@@ -6,47 +6,72 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:22:35 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 17:59:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:34:55 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int			ft_cd(t_command *cmd, t_global *g);
-static int	ft_cd_home(t_global *g, char *cmd);
+static bool	ft_handle_one_arg_cd(char *new_pwd, char *pwd_backup, t_global *g);
 static void	handle_cd_err(char *cmd, t_global *g, int code);
 
 int	ft_cd(t_command *cmd, t_global *g)
 {
+	char	*pwd_backup;
+	char	*home;
+	bool	result;
+
+	result = false;
 	if (cmd->args[2])
 	{
 		handle_cd_err(cmd->args[0], g, 1);
 		return (1);
 	}
+	pwd_backup = ft_get_env_var_value(g->env, "PWD");
 	if (!cmd->args[1])
 	{
-		if (ft_cd_home(g, cmd->command) == -1)
-			return (1);
+		home = ft_get_env_var_value(g->env, "HOME");
+		if (home)
+			result = ft_handle_one_arg_cd(home, pwd_backup, g);
+		free_ptr((void **) &home);
 	}
-	else if (chdir(cmd->args[1]) == -1)
-	{
-		handle_cd_err(cmd->args[1], g, 2);
+	else
+		result = ft_handle_one_arg_cd(cmd->args[1], pwd_backup, g);
+	free_ptr((void **) &pwd_backup);
+	if (result == true)
 		return (1);
-	}
 	return (0);
 }
 
-static int	ft_cd_home(t_global *g, char *cmd)
+/**
+ * Function should switch pwd to new_pwd value, updating env
+ * variables: $PWD and $OLDPWD
+ *
+ */
+static bool	ft_handle_one_arg_cd(char *new_pwd, char *pwd_backup, t_global *g)
 {
-	char	*path;
+	t_list	*ptr;
+	char	*new_directory;
 
-	path = ft_get_env_var_value(g->env, "HOME");
-	if (!path)
+	ptr = NULL;
+	if (chdir(new_pwd) == -1)
 	{
-		handle_cd_err(cmd, g, 3);
+		handle_cd_err(new_pwd, g, 2);
 		return (1);
 	}
-	return (free_ptr((void **) &path), chdir(path));
+	new_directory = ft_getcwd();
+	ptr = ft_return_env_list_node_ptr(g->env, "OLDPWD");
+	if (ptr)
+		ft_update_env_var_value(ptr, pwd_backup);
+	else
+		ft_lstadd_back(&g->env, ft_lstnew(init_env_content("OLDPWD", pwd_backup)));
+	ptr = ft_return_env_list_node_ptr(g->env, "PWD");
+	if (ptr)
+		ft_update_env_var_value(ptr, new_directory);
+	else
+		ft_lstadd_back(&g->env, ft_lstnew(init_env_content("PWD", new_directory)));
+	return (0);
 }
 
 static void	handle_cd_err(char *cmd, t_global *g, int code)

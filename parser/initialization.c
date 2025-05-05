@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:04:07 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 08:28:25 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/04 23:00:03 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,27 @@ bool	init_env(t_global *global, char **env)
 	}
 	global->env = list;
 	return (true);
+}
+
+t_minishell_env	*init_env_content(char *name, char *value)
+{
+	t_minishell_env	*new;
+
+	new = ft_calloc(sizeof(t_minishell_env), 1);
+	if (!new)
+		return (NULL);
+	new->name_value = ft_calloc(sizeof(char *), 2);
+	if (!new->name_value)
+	{
+		ft_minishell_perror("ft_calloc", 1);
+		free_ptr((void **) &new);
+		return (NULL);
+	}
+	if (name)
+		new->name_value[0] = ft_strdup(name);
+	if (value)
+		new->name_value[1] = ft_strdup(value);
+	return (new);
 }
 
 bool	init_global(t_global *global, char **env)
