@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 23:35:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:12:38 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_command
 	int					pipe_fd[2];
 	bool				is_builtin;
 	bool				status_request;
+	int					stdout_backup;
 	pid_t				cmd_pid;
 	t_list				*io_fds;
 	t_io_fds			*final_io;
@@ -167,6 +168,8 @@ void			ft_check_path(char *path, int *error);
 void			ft_command_not_found(char *path, int *error);
 void			ft_handle_minishell_err(char *cmd, char *error);
 t_minishell_env	*init_env_content(char *name, char *value);
+int				create_stdout_backup(void);
+int				restore_stdout_from_backup(int backup_fd);
 
 //initialization
 bool		init_global(t_global *global, char **env);

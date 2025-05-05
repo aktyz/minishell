@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 17:54:00 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 22:33:14 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:45:42 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ void	ft_split_child_parent_run(t_global *g, t_command *cmd,
 {
 	char	*path_values;
 
-	path_values = ft_get_env_var_value(g->env, "PATH");
 	if (!is_parent_builtin(cmd))
 		ft_safe_fork(g, cmd);
 	if (cmd->cmd_pid == 0 && ft_strcmp(cmd->command, "\0") == 0)
 		ft_exit(g, cmd->command, EXIT_SUCCESS);
-	if (!cmd->is_builtin && path_values)
+	if (cmd->cmd_pid == 0)
 	{
+		path_values = ft_get_env_var_value(g->env, "PATH");
 		cmd->path = resolve_command_path(g, path_values, cmd->command);
 		free_ptr((void **) &path_values);
 	}
