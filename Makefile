@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/05/04 20:40:31 by zslowian         ###   ########.fr        #
+#    Updated: 2025/05/05 10:11:41 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ SRC = main.c \
 	execution/ft_redirections.c \
 	execution/ft_redirects_utils.c \
 	execution/ft_run_builtin.c \
+	execution/ft_std_backup.c \
 	parser/characters.c \
 	parser/clean_unnecessary_fds.c \
 	parser/create_commands.c \

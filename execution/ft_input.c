@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 09:04:03 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:01:49 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid)
 	wstatus = 0;
 	if (cmd->cmd_pid == 0)
 		ft_execute_child_proc(cmd, g, prev_pid);
-	else
+	else if (g->is_global)
 	{
 		if (cmd->cmd_pid == -1)
 			ft_run_parent_builtins(cmd, g);
@@ -100,17 +100,17 @@ void	ft_check_path(char *path, int *error)
 	else if (access(path, X_OK))
 	{
 		*error = 126;
-		if (dir_or_cmd) 
+		if (dir_or_cmd)
 			ft_minishell_perror(path, EACCES);
 		else {
 			*error = 127;
 			return ft_handle_minishell_err(path, ": command not found\n");
 		}
-			
+
 	}
 	if (S_ISDIR(info.st_mode)) {
 		*error = 126;
-		if (dir_or_cmd) 
+		if (dir_or_cmd)
 			return ft_handle_minishell_err(path, ": Is a directory\n");
 		*error = 127;
 		return ft_handle_minishell_err(path, ": command not found\n");

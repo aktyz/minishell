@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 17:57:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:19:15 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	ft_run_parent_builtins(t_command *cmd, t_global *global)
 		ft_printf("%s %s: command not found\n", MINISHELL, cmd->command);
 		global->last_exit_code = 127;
 	}
+	if (cmd->pipe_output || (cmd->final_io && cmd->final_io->outfile))
+		restore_stdout_from_backup(cmd->stdout_backup);
 }
 
 static void	ft_pipex(t_global *g)

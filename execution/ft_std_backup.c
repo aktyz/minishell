@@ -1,34 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_list.c                                    :+:      :+:    :+:   */
+/*   ft_std_backup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 17:58:27 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 10:06:19 by zslowian         ###   ########.fr       */
+/*   Created: 2025/05/05 10:11:06 by zslowian          #+#    #+#             */
+/*   Updated: 2025/05/05 10:26:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_command	*lst_new_cmd(void)
-{
-	t_command	*new_cmd;
+int	create_stdout_backup(void);
+int	restore_stdout_from_backup(int backup_fd);
 
-	new_cmd = ft_calloc(sizeof(t_command), 1);
-	if (new_cmd == NULL)
-		ft_exit(NULL, "lst_new_cmd", 1);
-	new_cmd->pipe_fd[0] = -1;
-	new_cmd->pipe_fd[1] = -1;
-	new_cmd->cmd_pid = -1;
-	new_cmd->stdout_backup = -1;
-	return (new_cmd);
+int	create_stdout_backup(void)
+{
+	int	backup_fd;
+
+	backup_fd = dup(STDOUT_FILENO);
+	if (backup_fd == -1)
+	{
+		perror("dup failed");
+		return -1;
+	}
+	return backup_fd;
 }
 
-t_command	*lst_last_cmd(t_list *lst)
+int	restore_stdout_from_backup(int backup_fd)
 {
-	while (lst->next != NULL)
-		lst = lst->next;
-	return ((t_command *) lst->content);
+	if	(dup2(backup_fd, STDOUT_FILENO) == -1)
+	{
+		perror("dup2 failed");
+		return -1;
+	}
+	close(backup_fd);
+	return 0;
 }
