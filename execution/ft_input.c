@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_input.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mwiecek <mwiecek@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 18:11:44 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:55:32 by mwiecek          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,13 @@ void	ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid)
 	}
 }
 
-void	ft_check_path(char *path, int *error)
+void	ft_check_error(char *path, int *error, bool *dir_or_cmd)
 {
-	struct stat	info;
-	bool		dir_or_cmd;
-
-	dir_or_cmd = (ft_strchr(path, '/') || path[0] == '.');
-	if (stat(path, &info) != 0)
-		*error = 127;
-	if (*error && dir_or_cmd)
+	if (*error && *dir_or_cmd)
 		return (ft_handle_minishell_err(path, ": No such file or directory\n"));
 	if (*error)
 	{
-		if (dir_or_cmd)
+		if (*dir_or_cmd)
 		{
 			*error = 126;
 			return (ft_handle_minishell_err(path,
@@ -90,6 +84,10 @@ void	ft_check_path(char *path, int *error)
 		else
 			return (ft_handle_minishell_err(path, ": command not found\n"));
 	}
+}
+
+void	ft_check_error2(char* path, int *error, bool *dir_or_cmd)
+{
 	if (access(path, F_OK))
 	{
 		*error = 127;
@@ -106,13 +104,25 @@ void	ft_check_path(char *path, int *error)
 			return (ft_handle_minishell_err(path, ": command not found\n"));
 		}
 	}
+}
+
+void	ft_check_path(char *path, int *error)
+{
+	struct stat	info;
+	bool		dir_or_cmd;
+
+	dir_or_cmd = (ft_strchr(path, '/') || path[0] == '.');
+	if (stat(path, &info) != 0)
+		*error = 127;
+	ft_check_error(path, error, &dir_or_cmd);
+	ft_check_error2(path, error, &dir_or_cmd);
 	if (S_ISDIR(info.st_mode))
 	{
 		*error = 126;
 		if (dir_or_cmd)
 			return (ft_handle_minishell_err(path, ": Is a directory\n"));
 		*error = 127;
-		return (ft_handle_minishell_err(path, ": command not found\n"));
+		ft_handle_minishell_err(path, ": command not found\n");
 	}
 }
 
