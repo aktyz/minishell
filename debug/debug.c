@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:03:42 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/02 19:10:35 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:49:07 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	print_cmd_list(t_global *global)
 	t_command	*cmd;
 	t_list		*lst;
 
+	lst = NULL;
 	if (global && global->cmd)
 		lst = global->cmd;
 	printf("\n---- COMMAND LIST\n");
