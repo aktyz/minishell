@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 12:26:51 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 12:47:21 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 	if (prev_cmd && prev_cmd->cmd_pid == -1 && prev_cmd->pipe_output) // executing parent built-in writing to pipe ()
 	{
 		prev_cmd->stdout_backup = create_stdout_backup();
+		if (prev_cmd->stdout_backup)
+			ft_exit(g, "ft_chandle_parent_io failed to create stdout backup", 1);
 		close(prev_cmd->pipe_fd[0]);
 		dup2(prev_cmd->pipe_fd[1], STDOUT_FILENO);
 		close(prev_cmd->pipe_fd[1]);

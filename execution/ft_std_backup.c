@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:11:06 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 10:26:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 12:42:05 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@ int	create_stdout_backup(void)
 {
 	int	backup_fd;
 
+	backup_fd = 0;
 	backup_fd = dup(STDOUT_FILENO);
 	if (backup_fd == -1)
 	{
 		perror("dup failed");
-		return -1;
+		return (-1);
 	}
-	return backup_fd;
+	return (backup_fd);
 }
 
 int	restore_stdout_from_backup(int backup_fd)
@@ -33,8 +34,8 @@ int	restore_stdout_from_backup(int backup_fd)
 	if	(dup2(backup_fd, STDOUT_FILENO) == -1)
 	{
 		perror("dup2 failed");
-		return -1;
+		return (-1);
 	}
 	close(backup_fd);
-	return 0;
+	return (0);
 }

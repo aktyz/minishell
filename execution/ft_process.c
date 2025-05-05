@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:11:29 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 10:19:15 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 12:42:02 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,35 @@ void	ft_process(t_global *global)
 	}
 }
 
-void	ft_run_parent_builtins(t_command *cmd, t_global *global)
+void	ft_run_parent_builtins(t_command *cmd, t_global *g)
 {
+	int	check;
+
+	check = 0;
 	if (cmd->command && ft_strncmp(cmd->command, EXIT, ft_strlen(EXIT)) == 0)
-		ft_mini_exit_wrapper(cmd, global);
+		ft_mini_exit_wrapper(cmd, g);
 	else if (cmd->command && ft_strncmp(cmd->command, CD, ft_strlen(CD)) == 0)
-		global->last_exit_code = ft_cd(cmd, global);
+		g->last_exit_code = ft_cd(cmd, g);
 	else if (cmd->command && ft_strncmp(cmd->command,
 			EXPORT, ft_strlen(EXPORT)) == 0)
-		ft_mini_export_wrapper(cmd, global);
+		ft_mini_export_wrapper(cmd, g);
 	else if (cmd->command && ft_strncmp(cmd->command,
 			UNSET, ft_strlen(UNSET)) == 0)
-		ft_unset(cmd, global);
+		ft_unset(cmd, g);
 	else if (cmd->status_request)
 	{
 		ft_printf("%s %s: command not found\n", MINISHELL, cmd->command);
-		global->last_exit_code = 127;
+		g->last_exit_code = 127;
 	}
 	if (cmd->pipe_output || (cmd->final_io && cmd->final_io->outfile))
-		restore_stdout_from_backup(cmd->stdout_backup);
+	{
+		check = restore_stdout_from_backup(cmd->stdout_backup);
+		if (check)
+		{
+			ft_minishell_perror("ft_run_parent_builtins failed to restore stdout backup", 1);
+			ft_exit(g, "ft_run_parent_builtins failed to restore stdout backup", 1);
+		}
+	}
 }
 
 static void	ft_pipex(t_global *g)
