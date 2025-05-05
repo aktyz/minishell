@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 17:33:45 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/04 22:32:58 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:38:27 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_export(t_command *cmd, t_global *global)
 		{
 			result = ft_handle_export_arg(cmd->args[i], global);
 			if (!result)
-			global->last_exit_code = 1;
+				global->last_exit_code = 1;
 		}
 	}
 	else
@@ -62,9 +62,9 @@ static bool	ft_handle_export_arg(char *export_arg, t_global *global)
 	var_value = NULL;
 	node = NULL;
 	result = false;
-	if (ft_strnchar(export_arg, '=')) // we have value but can be NULL (aka we have '=')
+	if (ft_strnchar(export_arg, '='))
 		ft_split_env_variable(export_arg, &var_name, &var_value);
-	else //no value
+	else
 		var_name = ft_strdup(export_arg);
 	node = ft_return_env_list_node_ptr(global->env, var_name);
 	if (is_valid_var_name(var_name))
@@ -77,8 +77,8 @@ static bool	ft_handle_export_arg(char *export_arg, t_global *global)
 	else
 		errmsg_cmd("export", NULL, "not a valid identifier", 1);
 	if (var_value)
-		free_ptr((void **) &var_value);
-	return (free_ptr((void **) &var_name), result);
+		free_ptr((void **)&var_value);
+	return (free_ptr((void **)&var_name), result);
 }
 
 static void	ft_handle_export_no_arg(t_global *global)
