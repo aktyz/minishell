@@ -6,7 +6,7 @@
 #    By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 15:20:00 by zslowian          #+#    #+#              #
-#    Updated: 2025/05/05 10:11:41 by zslowian         ###   ########.fr        #
+#    Updated: 2025/05/05 18:55:32 by zslowian         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ SRC = main.c \
 	execution/ft_create_pipe.c \
 	execution/ft_exec_utils.c \
 	execution/ft_input.c \
+	execution/ft_parent.c \
 	execution/ft_process.c \
 	execution/ft_redirections.c \
 	execution/ft_redirects_utils.c \
@@ -87,13 +88,13 @@ fclean: clean
 
 clean:
 	@$(RM) $(OBJ)
-#	@$(MAKE) -C $(LIBFT_F) clean
+	@$(MAKE) -C $(LIBFT_F) clean
 
 re: fclean all
 
 rebug: fclean debug clean
 
-debug: $(OBJ) #$(LIBFT)
+debug: $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME) -l readline -g -pthread
 
 .PHONY: all clean fclean libft re

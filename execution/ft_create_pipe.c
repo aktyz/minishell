@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 09:56:26 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 18:13:17 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:20:24 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,25 +107,7 @@ void	ft_chandle_parent_io(t_command *cmd, t_global *g,
 			lst = lst->next;
 		}
 	}
-	if (prev_cmd && prev_cmd->cmd_pid == -1 && prev_cmd->pipe_output)
-	{
-		prev_cmd->stdout_backup = create_stdout_backup();
-		if (prev_cmd->stdout_backup)
-			ft_exit(g, "failed to create stdout backup", 1);
-		close(prev_cmd->pipe_fd[0]);
-		dup2(prev_cmd->pipe_fd[1], STDOUT_FILENO);
-		close(prev_cmd->pipe_fd[1]);
-	}
-	else if (prev_cmd && prev_cmd->pipe_output)
-	{
-		close(prev_cmd->pipe_fd[0]);
-		close(prev_cmd->pipe_fd[1]);
-	}
-	if (cmd->final_io && cmd->final_io->outfile)
-	{
-		cmd->stdout_backup = create_stdout_backup();
-		ft_open_final_outfile(g, &cmd->final_io);
-	}
+	ft_prepare_parent_process_fds(g, cmd, prev_cmd);
 }
 
 static void	ft_handle_minishell_cats(t_command *cmd, t_command *prev_cmd)

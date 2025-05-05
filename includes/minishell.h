@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 17:55:16 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:01:40 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,8 @@ void						ft_handle_minishell_err(char *cmd, char *error);
 t_minishell_env				*init_env_content(char *name, char *value);
 int							create_stdout_backup(void);
 int							restore_stdout_from_backup(int backup_fd);
+void						ft_prepare_parent_process_fds(t_global *g,
+								t_command *cmd, t_command *prev_cmd);
 
 // initialization
 bool						init_global(t_global *global, char **env);
@@ -201,6 +203,10 @@ int							check_var(t_token **token_lst);
 void						ft_minishell_perror(char *cmd, int status);
 int							errmsg_cmd(char *command, char *detail,
 								char *error_message, int error_nb);
+void						ft_check_error(char *path, int *error,
+								bool *dir_or_cmd);
+void						ft_check_error2(char *path, int *error,
+								bool *dir_or_cmd);
 
 // characters
 bool						input_is_space(char *input);
