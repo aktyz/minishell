@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 18:19:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 19:00:22 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:31:27 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,8 @@ void	ft_prepare_parent_process_fds(t_global *g, t_command *cmd,
 	}
 }
 
-void	ft_check_error(char *path, int *error, bool *dir_or_cmd)
-{
-	if (*error && *dir_or_cmd)
-		return (ft_handle_minishell_err(path, ": No such file or directory\n"));
-	if (*error)
-	{
-		if (*dir_or_cmd)
-		{
-			*error = 126;
-			return (ft_handle_minishell_err(path,
-					": No such file or directory\n"));
-		}
-		else
-			return (ft_handle_minishell_err(path, ": command not found\n"));
-	}
-}
-
-void	ft_check_error2(char *path, int *error, bool *dir_or_cmd)
+void	ft_check_existence_and_permissions(char *path, int *error,
+			bool dir_or_cmd)
 {
 	if (access(path, F_OK))
 	{
@@ -71,4 +55,14 @@ void	ft_check_error2(char *path, int *error, bool *dir_or_cmd)
 			return (ft_handle_minishell_err(path, ": command not found\n"));
 		}
 	}
+}
+
+void	ft_check_directory_path(char *path, int *error,
+			bool dir_or_cmd)
+{
+	*error = 126;
+	if (dir_or_cmd)
+		return (ft_handle_minishell_err(path, ": Is a directory\n"));
+	*error = 127;
+	return (ft_handle_minishell_err(path, ": command not found\n"));
 }

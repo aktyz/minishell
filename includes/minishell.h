@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:15:23 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 19:01:40 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:33:19 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,10 +203,10 @@ int							check_var(t_token **token_lst);
 void						ft_minishell_perror(char *cmd, int status);
 int							errmsg_cmd(char *command, char *detail,
 								char *error_message, int error_nb);
-void						ft_check_error(char *path, int *error,
-								bool *dir_or_cmd);
-void						ft_check_error2(char *path, int *error,
-								bool *dir_or_cmd);
+void						ft_check_existence_and_permissions(char *path,
+								int *error, bool dir_or_cmd);
+void						ft_check_directory_path(char *path, int *error,
+								bool dir_or_cmd);
 
 // characters
 bool						input_is_space(char *input);

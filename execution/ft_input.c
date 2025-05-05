@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 19:00:15 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:32:17 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,16 +77,23 @@ void	ft_check_path(char *path, int *error)
 	dir_or_cmd = (ft_strchr(path, '/') || path[0] == '.');
 	if (stat(path, &info) != 0)
 		*error = 127;
-	ft_check_error(path, error, &dir_or_cmd);
-	ft_check_error2(path, error, &dir_or_cmd);
-	if (S_ISDIR(info.st_mode))
+	if (*error && dir_or_cmd)
+		return (ft_handle_minishell_err(path, ": No such file or directory\n"));
+	if (*error)
 	{
-		*error = 126;
 		if (dir_or_cmd)
-			return (ft_handle_minishell_err(path, ": Is a directory\n"));
-		*error = 127;
-		ft_handle_minishell_err(path, ": command not found\n");
+		{
+			*error = 126;
+			return (ft_handle_minishell_err(path,
+					": No such file or directory\n"));
+		}
+		else
+			return (ft_handle_minishell_err(path, ": command not found\n"));
 	}
+	if (*error == 0)
+		ft_check_existence_and_permissions(path, error, dir_or_cmd);
+	if (*error == 0 && S_ISDIR(info.st_mode))
+		ft_check_directory_path(path, error, dir_or_cmd);
 }
 
 void	ft_command_not_found(char *path, int *error)
