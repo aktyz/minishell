@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:19:15 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 10:18:42 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:59:10 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,13 @@ void	ft_handle_child_io_lst_node(t_global *g, t_command *cmd, t_io_fds *node)
 void	ft_handle_parent_io_lst_node(t_global *g, t_command *cmd,
 			t_io_fds *node)
 {
-	if (node->infile) // delete - parent builtins should not have any inputs
+	if (node->infile)
 	{
 		if (node->heredoc_delimiter != NULL && node->use_heredoc)
 			ft_copy_input_to_final_io(node, cmd, g, true);
 		else if (node->heredoc_delimiter == NULL)
 			ft_copy_input_to_final_io(node, cmd, g, false);
 	}
-	if (node->outfile) // make sure we are restoring stdout
+	if (node->outfile)
 		ft_copy_output_to_final_io(node, cmd, g);
 }

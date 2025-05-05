@@ -6,7 +6,7 @@
 /*   By: zslowian <zslowian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 18:48:04 by zslowian          #+#    #+#             */
-/*   Updated: 2025/05/05 10:01:49 by zslowian         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:11:44 by zslowian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,25 +72,23 @@ void	ft_execute_cmd(t_global *g, t_command *cmd, pid_t prev_pid)
 void	ft_check_path(char *path, int *error)
 {
 	struct stat	info;
-	bool dir_or_cmd;
+	bool		dir_or_cmd;
 
 	dir_or_cmd = (ft_strchr(path, '/') || path[0] == '.');
-
-	if (stat(path, &info) != 0) {
+	if (stat(path, &info) != 0)
 		*error = 127;
-	}
-	if (*error && dir_or_cmd) {
-		return ft_handle_minishell_err(path, ": No such file or directory\n");
-	}
+	if (*error && dir_or_cmd)
+		return (ft_handle_minishell_err(path, ": No such file or directory\n"));
 	if (*error)
 	{
-		if (dir_or_cmd) {
+		if (dir_or_cmd)
+		{
 			*error = 126;
-			return ft_handle_minishell_err(path, ": No such file or directory\n");
+			return (ft_handle_minishell_err(path,
+					": No such file or directory\n"));
 		}
 		else
-			return ft_handle_minishell_err(path, ": command not found\n");
-		return ;
+			return (ft_handle_minishell_err(path, ": command not found\n"));
 	}
 	if (access(path, F_OK))
 	{
@@ -102,18 +100,19 @@ void	ft_check_path(char *path, int *error)
 		*error = 126;
 		if (dir_or_cmd)
 			ft_minishell_perror(path, EACCES);
-		else {
+		else
+		{
 			*error = 127;
-			return ft_handle_minishell_err(path, ": command not found\n");
+			return (ft_handle_minishell_err(path, ": command not found\n"));
 		}
-
 	}
-	if (S_ISDIR(info.st_mode)) {
+	if (S_ISDIR(info.st_mode))
+	{
 		*error = 126;
 		if (dir_or_cmd)
-			return ft_handle_minishell_err(path, ": Is a directory\n");
+			return (ft_handle_minishell_err(path, ": Is a directory\n"));
 		*error = 127;
-		return ft_handle_minishell_err(path, ": command not found\n");
+		return (ft_handle_minishell_err(path, ": command not found\n"));
 	}
 }
 
